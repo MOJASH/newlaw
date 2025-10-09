@@ -100,6 +100,15 @@
             margin-left: 10px;
         }
         
+        .notice-info {
+            background-color: #e8f4fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            border-right: 4px solid #2c5aa0;
+            display: none;
+        }
+        
         button {
             background-color: var(--primary-color);
             color: white;
@@ -234,7 +243,7 @@
             </div>
             
             <div class="form-section">
-                <h2>الرواتب المستحقة (الرواتب غير مقبوضة)</h2>
+                <h2>الرواتب المستحقة</h2>
                 
                 <div class="input-group">
                     <label for="unpaidMonths">عدد أشهر الرواتب المستحقة</label>
@@ -242,13 +251,13 @@
                 </div>
 
                 <div class="input-group">
-                    <label for="unpaidDays">عدد أيام الراتب المستحقة (أيام إضافية)</label>
-                    <input type="number" id="unpaidDays" min="0" step="1" value="0" placeholder="أيام إضافية غير مكتملة الشهر">
+                    <label for="unpaidDays">عدد الأيام مستحقة الأجر التي لم يتم الحصول عليها</label>
+                    <input type="number" id="unpaidDays" min="0" step="1" value="0">
                 </div>
 
                 <div class="input-group">
-                    <label for="vacationDays">عدد أيام الإجازات المستحقة (الغير مأخوذة)</label>
-                    <input type="number" id="vacationDays" min="0" step="1" value="0" placeholder="أيام الإجازات التي لم يحصل عليها">
+                    <label for="vacationDays">عدد أيام الإجازات مستحقة الأجر التي لم يتم الحصول عليها</label>
+                    <input type="number" id="vacationDays" min="0" step="1" value="0">
                 </div>
                 
                 <div class="input-group">
@@ -267,8 +276,12 @@
                 </div>
                 
                 <div class="checkbox-group">
-                    <input type="checkbox" id="noticeMonth" checked>
-                    <label for="noticeMonth">يستحق بدل شهر الإشعار (راتب شهر كامل)</label>
+                    <input type="checkbox" id="noticeMonth">
+                    <label for="noticeMonth">يستحق بدل شهر الإشعار</label>
+                </div>
+
+                <div class="notice-info" id="noticeInfo">
+                    بدل شهر الإشعار يساوي راتب شهر كامل
                 </div>
 
                 <div class="input-group">
@@ -286,7 +299,7 @@
                 </div>
                 
                 <div class="input-group">
-                    <label for="terminationType">نوع إنهاء الخدمة</label>
+                    <label for="terminationType">سبب إنهاء الخدمة</label>
                     <select id="terminationType">
                         <option value="mutual">إنهاء الخدمة برضا الطرفين</option>
                         <option value="indefinite">فصل تعسفي (عقد غير محدد المدة)</option>
@@ -317,7 +330,7 @@
                 
                 <div class="input-group">
                     <label for="overtimeDays">عدد أيام العمل الإضافي</label>
-                    <input type="number" id="overtimeDays" min="0" step="1" value="0" placeholder="إجمالي عدد أيام العمل الإضافي">
+                    <input type="number" id="overtimeDays" min="0" step="1" value="0">
                 </div>
             </div>
             
@@ -351,7 +364,7 @@
 
         <div class="footer">
             <p>تم إنشاء هذه الصفحة بواسطة المحامي محمد الشوحه</p>
-            <p>للاستشارات القانونية وفق قانون العمل الأردني</p>
+            <p>تم إنشاء هذه الحاسبة وفقاً لقانون العمل الأردني وتعديلاته</p>
         </div>
     </div>
 
@@ -380,6 +393,16 @@
                 socialSecurityDetails.style.display = 'none';
             }
         });
+
+        // إظهار/إخفاء معلومات بدل شهر الإشعار
+        document.getElementById('noticeMonth').addEventListener('change', function() {
+            const noticeInfo = document.getElementById('noticeInfo');
+            if (this.checked) {
+                noticeInfo.style.display = 'block';
+            } else {
+                noticeInfo.style.display = 'none';
+            }
+        });
         
         function calculateRights() {
             // الحصول على القيم من النموذج
@@ -404,6 +427,9 @@
             // حساب الأجر اليومي والشهري (باستخدام 30 يومًا)
             const dailyWage = wageType === 'daily' ? lastWage : lastWage / 30;
             const monthlyWage = wageType === 'monthly' ? lastWage : lastWage * 30;
+            
+            // حساب الأجر الساعي (8 ساعات عمل يومياً)
+            const hourlyWage = dailyWage / 8;
             
             // حساب الرواتب المستحقة (أشهر + أيام)
             const unpaidSalaries = (unpaidMonths * monthlyWage) + (unpaidDays * dailyWage);
@@ -451,11 +477,12 @@
             // حساب بدل شهر الإشعار (راتب شهر كامل)
             const noticeAllowance = noticeMonth ? monthlyWage : 0;
             
-            // حساب العمل الإضافي (125% لجميع الساعات في الأيام العادية)
+            // حساب العمل الإضافي (125% من الأجر الساعي)
             let overtimePay = 0;
             if (overtimeHours > 0 && overtimeDays > 0) {
-                // 125% لجميع ساعات العمل الإضافي
-                overtimePay = overtimeHours * dailyWage * 1.25 * overtimeDays;
+                // 125% من الأجر الساعي لجميع ساعات العمل الإضافي
+                const totalOvertimeHours = overtimeHours * overtimeDays;
+                overtimePay = totalOvertimeHours * hourlyWage * 1.25;
             }
             
             // حساب العمل في العطل والأعياد
@@ -486,7 +513,9 @@
                 workedMonths,
                 unpaidDays,
                 vacationDays,
-                overtimeDays
+                overtimeDays,
+                overtimeHours,
+                hourlyWage
             });
         }
         
@@ -536,6 +565,12 @@
             if (results.vacationDays > 0) {
                 vacationDaysText = `<li>أيام الإجازات المستحقة: ${results.vacationDays} يوم</li>`;
             }
+
+            let overtimeText = "";
+            if (results.overtimeHours > 0 && results.overtimeDays > 0) {
+                const totalOvertimeHours = results.overtimeHours * results.overtimeDays;
+                overtimeText = `<li>العمل الإضافي: ${totalOvertimeHours} ساعة × ${results.hourlyWage.toFixed(2)} دينار (الأجر الساعي) × 125%</li>`;
+            }
             
             explanationSection.innerHTML = `
                 <h3>تفاصيل الحسابات:</h3>
@@ -546,7 +581,7 @@
                     ${unpaidDaysText}
                     ${vacationDaysText}
                     <li>بدل شهر الإشعار: ${document.getElementById('noticeMonth').checked ? 'راتب شهر كامل' : 'غير مستحق'}</li>
-                    <li>العمل الإضافي: ${document.getElementById('overtimeHours').value} ساعة × ${results.overtimeDays} يوم × 125%</li>
+                    ${overtimeText}
                     <li>العمل في العطل: ${document.getElementById('holidayDays').value} يوم × 150% من الأجر اليومي</li>
                     <li>العمل في الجمع: ${document.getElementById('fridayDays').value} يوم × 150% من الأجر اليومي</li>
                 </ul>
