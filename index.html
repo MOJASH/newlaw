@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>حاسبة الحقوق العملية - قانون العمل الأردني</title>
+    <title>حاسبة الحقوق العمالية - قانون العمل الأردني</title>
     <style>
         :root {
             --primary-color: #2c5aa0;
@@ -38,6 +38,18 @@
             padding: 20px;
             border-radius: 8px 8px 0 0;
             text-align: center;
+            position: relative;
+        }
+        
+        .creator-info {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 12px;
         }
         
         h1 {
@@ -156,6 +168,24 @@
             margin-top: 10px;
             border-right: 4px solid #2c5aa0;
         }
+
+        .social-security-details {
+            display: none;
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-right: 4px solid #2c5aa0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 8px;
+        }
         
         @media (max-width: 600px) {
             .container {
@@ -165,13 +195,23 @@
             .form-section {
                 padding: 15px;
             }
+            
+            .creator-info {
+                position: static;
+                transform: none;
+                margin-bottom: 10px;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>حاسبة الحقوق العملية</h1>
+            <div class="creator-info">
+                أنشئت بواسطة: المحامي محمد الشوحه
+            </div>
+            <h1>حاسبة الحقوق العمالية</h1>
             <p>بناءً على قانون العمل الأردني، أدخل معلوماتك لحساب مستحقاتك.</p>
         </header>
         
@@ -200,6 +240,16 @@
                     <label for="unpaidMonths">عدد أشهر الرواتب المستحقة</label>
                     <input type="number" id="unpaidMonths" min="0" step="1" value="0">
                 </div>
+
+                <div class="input-group">
+                    <label for="unpaidDays">عدد أيام الراتب المستحقة (أيام إضافية)</label>
+                    <input type="number" id="unpaidDays" min="0" step="1" value="0" placeholder="أيام إضافية غير مكتملة الشهر">
+                </div>
+
+                <div class="input-group">
+                    <label for="vacationDays">عدد أيام الإجازات المستحقة (الغير مأخوذة)</label>
+                    <input type="number" id="vacationDays" min="0" step="1" value="0" placeholder="أيام الإجازات التي لم يحصل عليها">
+                </div>
                 
                 <div class="input-group">
                     <label for="serviceDuration">مدة الخدمة (بالسنوات)</label>
@@ -220,10 +270,25 @@
                     <input type="checkbox" id="noticeMonth" checked>
                     <label for="noticeMonth">يستحق بدل شهر الإشعار (راتب شهر كامل)</label>
                 </div>
+
+                <div class="input-group">
+                    <label for="socialSecurity">هل كان العامل مشتركاً بالضمان الاجتماعي؟</label>
+                    <select id="socialSecurity">
+                        <option value="yes">نعم - مشترك بالضمان الاجتماعي</option>
+                        <option value="no">لا - غير مشترك بالضمان الاجتماعي</option>
+                    </select>
+                </div>
+
+                <div class="social-security-details" id="socialSecurityDetails">
+                    <div class="input-group">
+                        <label>ملاحظة: حسب المادة (73) من قانون العمل الأردني، يحق للعامل غير المشترك بالضمان الاجتماعي الحصول على تعويض نهاية الخدمة بواقع أجر شهر عن كل سنة عمل</label>
+                    </div>
+                </div>
                 
                 <div class="input-group">
                     <label for="terminationType">نوع إنهاء الخدمة</label>
                     <select id="terminationType">
+                        <option value="mutual">إنهاء الخدمة برضا الطرفين</option>
                         <option value="indefinite">فصل تعسفي (عقد غير محدد المدة)</option>
                         <option value="definite">فصل تعسفي (عقد محدد المدة)</option>
                     </select>
@@ -251,8 +316,8 @@
                 </div>
                 
                 <div class="input-group">
-                    <label for="overtimeDays">عدد أيام العمل الإضافي في الشهر</label>
-                    <input type="number" id="overtimeDays" min="0" step="1" value="0">
+                    <label for="overtimeDays">عدد أيام العمل الإضافي</label>
+                    <input type="number" id="overtimeDays" min="0" step="1" value="0" placeholder="إجمالي عدد أيام العمل الإضافي">
                 </div>
             </div>
             
@@ -283,6 +348,11 @@
                 <!-- سيتم ملء الشرح هنا بواسطة JavaScript -->
             </div>
         </div>
+
+        <div class="footer">
+            <p>تم إنشاء هذه الصفحة بواسطة المحامي محمد الشوحه</p>
+            <p>للاستشارات القانونية وفق قانون العمل الأردني</p>
+        </div>
     </div>
 
     <script>
@@ -300,17 +370,30 @@
                 contractDetails.style.display = 'none';
             }
         });
+
+        // إظهار/إخفاء تفاصيل الضمان الاجتماعي
+        document.getElementById('socialSecurity').addEventListener('change', function() {
+            const socialSecurityDetails = document.getElementById('socialSecurityDetails');
+            if (this.value === 'no') {
+                socialSecurityDetails.style.display = 'block';
+            } else {
+                socialSecurityDetails.style.display = 'none';
+            }
+        });
         
         function calculateRights() {
             // الحصول على القيم من النموذج
             const wageType = document.getElementById('wageType').value;
             const lastWage = parseFloat(document.getElementById('lastWage').value);
             const unpaidMonths = parseInt(document.getElementById('unpaidMonths').value);
+            const unpaidDays = parseInt(document.getElementById('unpaidDays').value);
+            const vacationDays = parseInt(document.getElementById('vacationDays').value);
             const serviceDuration = parseFloat(document.getElementById('serviceDuration').value);
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
             const noticeMonth = document.getElementById('noticeMonth').checked;
             const terminationType = document.getElementById('terminationType').value;
+            const socialSecurity = document.getElementById('socialSecurity').value;
             const overtimeHours = parseFloat(document.getElementById('overtimeHours').value);
             const overtimeDays = parseInt(document.getElementById('overtimeDays').value);
             const holidayDays = parseInt(document.getElementById('holidayDays').value);
@@ -322,32 +405,47 @@
             const dailyWage = wageType === 'daily' ? lastWage : lastWage / 30;
             const monthlyWage = wageType === 'monthly' ? lastWage : lastWage * 30;
             
-            // حساب الرواتب المستحقة
-            const unpaidSalaries = unpaidMonths * monthlyWage;
+            // حساب الرواتب المستحقة (أشهر + أيام)
+            const unpaidSalaries = (unpaidMonths * monthlyWage) + (unpaidDays * dailyWage);
             
-            // حساب بدل الفصل التعسفي
-            let unfairDismissalCompensation = 0;
+            // حساب بدل الإجازات المستحقة
+            const vacationPay = vacationDays * dailyWage;
+            
+            // حساب بدل نهاية الخدمة
+            let endOfServiceCompensation = 0;
             let explanation = "";
             
-            if (terminationType === 'indefinite') {
-                // فصل تعسفي لعقد غير محدد المدة
-                // نصف شهر عن كل سنة من سنوات الخدمة بما لا يقل عن أجر شهرين
-                unfairDismissalCompensation = monthlyWage * serviceDuration / 2;
+            if (socialSecurity === 'no') {
+                // غير مشترك بالضمان الاجتماعي - أجر شهر عن كل سنة
+                endOfServiceCompensation = monthlyWage * serviceDuration;
+                explanation = `تعويض نهاية الخدمة (غير مشترك بالضمان): أجر شهر عن كل سنة (${serviceDuration} سنوات) = ${endOfServiceCompensation.toFixed(2)} دينار`;
                 
-                // الحد الأدنى شهرين
-                const minimumCompensation = monthlyWage * 2;
-                if (unfairDismissalCompensation < minimumCompensation) {
-                    unfairDismissalCompensation = minimumCompensation;
-                    explanation = `بدل الفصل التعسفي: نصف شهر عن كل سنة (${serviceDuration} سنوات) = ${(monthlyWage * serviceDuration / 2).toFixed(2)} دينار، ولكن بما لا يقل عن أجر شهرين (${minimumCompensation.toFixed(2)} دينار)`;
-                } else {
-                    explanation = `بدل الفصل التعسفي: نصف شهر عن كل سنة (${serviceDuration} سنوات) = ${unfairDismissalCompensation.toFixed(2)} دينار`;
+            } else {
+                // مشترك بالضمان الاجتماعي - حسب نوع إنهاء الخدمة
+                if (terminationType === 'mutual') {
+                    // إنهاء برضا الطرفين - نصف شهر عن كل سنة
+                    endOfServiceCompensation = monthlyWage * serviceDuration / 2;
+                    explanation = `تعويض نهاية الخدمة (رضا الطرفين): نصف شهر عن كل سنة (${serviceDuration} سنوات) = ${endOfServiceCompensation.toFixed(2)} دينار`;
+                    
+                } else if (terminationType === 'indefinite') {
+                    // فصل تعسفي لعقد غير محدد المدة
+                    endOfServiceCompensation = monthlyWage * serviceDuration / 2;
+                    
+                    // الحد الأدنى شهرين
+                    const minimumCompensation = monthlyWage * 2;
+                    if (endOfServiceCompensation < minimumCompensation) {
+                        endOfServiceCompensation = minimumCompensation;
+                        explanation = `بدل الفصل التعسفي: نصف شهر عن كل سنة (${serviceDuration} سنوات) = ${(monthlyWage * serviceDuration / 2).toFixed(2)} دينار، ولكن بما لا يقل عن أجر شهرين (${minimumCompensation.toFixed(2)} دينار)`;
+                    } else {
+                        explanation = `بدل الفصل التعسفي: نصف شهر عن كل سنة (${serviceDuration} سنوات) = ${endOfServiceCompensation.toFixed(2)} دينار`;
+                    }
+                    
+                } else if (terminationType === 'definite') {
+                    // فصل تعسفي لعقد محدد المدة - الأجر عن الأشهر المتبقية
+                    const remainingMonths = contractDuration - workedMonths;
+                    endOfServiceCompensation = monthlyWage * remainingMonths;
+                    explanation = `بدل الفصل التعسفي: أجر ${remainingMonths} شهر المتبقية من العقد = ${endOfServiceCompensation.toFixed(2)} دينار`;
                 }
-                
-            } else if (terminationType === 'definite') {
-                // فصل تعسفي لعقد محدد المدة - الأجر عن الأشهر المتبقية
-                const remainingMonths = contractDuration - workedMonths;
-                unfairDismissalCompensation = monthlyWage * remainingMonths;
-                explanation = `بدل الفصل التعسفي: أجر ${remainingMonths} شهر المتبقية من العقد = ${unfairDismissalCompensation.toFixed(2)} دينار`;
             }
             
             // حساب بدل شهر الإشعار (راتب شهر كامل)
@@ -355,7 +453,7 @@
             
             // حساب العمل الإضافي (125% لجميع الساعات في الأيام العادية)
             let overtimePay = 0;
-            if (overtimeHours > 0) {
+            if (overtimeHours > 0 && overtimeDays > 0) {
                 // 125% لجميع ساعات العمل الإضافي
                 overtimePay = overtimeHours * dailyWage * 1.25 * overtimeDays;
             }
@@ -369,12 +467,13 @@
             const fridayPay = fridayDays * dailyWage * 1.5;
             
             // إجمالي المستحقات
-            const totalRights = unpaidSalaries + unfairDismissalCompensation + noticeAllowance + overtimePay + holidayPay + fridayPay;
+            const totalRights = unpaidSalaries + vacationPay + endOfServiceCompensation + noticeAllowance + overtimePay + holidayPay + fridayPay;
             
             // عرض النتائج
             displayResults({
                 unpaidSalaries,
-                unfairDismissalCompensation,
+                vacationPay,
+                endOfServiceCompensation,
                 noticeAllowance,
                 overtimePay,
                 holidayPay,
@@ -382,8 +481,12 @@
                 totalRights,
                 explanation,
                 terminationType,
+                socialSecurity,
                 contractDuration,
-                workedMonths
+                workedMonths,
+                unpaidDays,
+                vacationDays,
+                overtimeDays
             });
         }
         
@@ -394,7 +497,8 @@
             
             const items = [
                 { label: 'الرواتب المستحقة', value: results.unpaidSalaries.toFixed(2) },
-                { label: 'بدل الفصل التعسفي', value: results.unfairDismissalCompensation.toFixed(2) },
+                { label: 'بدل الإجازات المستحقة', value: results.vacationPay.toFixed(2) },
+                { label: results.socialSecurity === 'no' ? 'تعويض نهاية الخدمة (غير مشترك بالضمان)' : 'بدل نهاية الخدمة', value: results.endOfServiceCompensation.toFixed(2) },
                 { label: 'بدل شهر الإشعار', value: results.noticeAllowance.toFixed(2) },
                 { label: 'أجر العمل الإضافي', value: results.overtimePay.toFixed(2) },
                 { label: 'أجر العطل الرسمية', value: results.holidayPay.toFixed(2) },
@@ -422,6 +526,16 @@
                     <li>الأشهر المتبقية: ${remainingMonths} شهر</li>
                 `;
             }
+
+            let unpaidDaysText = "";
+            if (results.unpaidDays > 0) {
+                unpaidDaysText = `<li>الأيام الإضافية المستحقة: ${results.unpaidDays} يوم</li>`;
+            }
+
+            let vacationDaysText = "";
+            if (results.vacationDays > 0) {
+                vacationDaysText = `<li>أيام الإجازات المستحقة: ${results.vacationDays} يوم</li>`;
+            }
             
             explanationSection.innerHTML = `
                 <h3>تفاصيل الحسابات:</h3>
@@ -429,8 +543,10 @@
                     <li>${results.explanation}</li>
                     ${contractDetails}
                     <li>الرواتب المستحقة: ${document.getElementById('unpaidMonths').value} أشهر × الراتب الشهري</li>
+                    ${unpaidDaysText}
+                    ${vacationDaysText}
                     <li>بدل شهر الإشعار: ${document.getElementById('noticeMonth').checked ? 'راتب شهر كامل' : 'غير مستحق'}</li>
-                    <li>العمل الإضافي: ${document.getElementById('overtimeHours').value} ساعة/يوم × ${document.getElementById('overtimeDays').value} يوم × 125%</li>
+                    <li>العمل الإضافي: ${document.getElementById('overtimeHours').value} ساعة × ${results.overtimeDays} يوم × 125%</li>
                     <li>العمل في العطل: ${document.getElementById('holidayDays').value} يوم × 150% من الأجر اليومي</li>
                     <li>العمل في الجمع: ${document.getElementById('fridayDays').value} يوم × 150% من الأجر اليومي</li>
                 </ul>
