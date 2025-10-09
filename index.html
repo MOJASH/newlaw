@@ -217,6 +217,37 @@
             border-right: 4px solid #2c5aa0;
         }
 
+        .annual-leave-details {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-right: 4px solid #2c5aa0;
+        }
+
+        .annual-leave-result {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-right: 4px solid #2c5aa0;
+        }
+
+        .annual-leave-result h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .annual-leave-result .result-item {
+            padding: 5px 0;
+            font-size: 14px;
+        }
+
+        .annual-leave-result .result-item:last-child {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
         .footer {
             text-align: center;
             margin-top: 30px;
@@ -454,6 +485,10 @@
             <h2>نتائج حساب المستحقات</h2>
             <div id="resultContent">
                 <!-- سيتم ملء النتائج هنا بواسطة JavaScript -->
+            </div>
+            
+            <div class="annual-leave-result" id="annualLeaveResult">
+                <!-- سيتم ملء نتائج الإجازات السنوية هنا بواسطة JavaScript -->
             </div>
             
             <div class="explanation" id="explanationSection">
@@ -759,8 +794,11 @@
             // معدل العمل في الجمعة: 150%
             const fridayPay = fridayDays * dailyWage * 1.5;
             
+            // حساب الإجازات السنوية المستحقة
+            const annualLeaveResult = calculateAnnualLeave(serviceYears, serviceMonths, dailyWage);
+            
             // إجمالي المستحقات
-            const totalRights = unpaidSalaries + vacationPay + endOfServiceCompensation + noticeAllowance + overtimePay + holidayPay + fridayPay + arbitraryDismissalCompensation;
+            const totalRights = unpaidSalaries + vacationPay + endOfServiceCompensation + noticeAllowance + overtimePay + holidayPay + fridayPay + arbitraryDismissalCompensation + annualLeaveResult.totalLeavePay;
             
             // عرض النتائج
             displayResults({
@@ -788,12 +826,54 @@
                 noticeMonth,
                 totalServiceMonths,
                 monthlyWage,
-                arbitraryDismissal
+                arbitraryDismissal,
+                annualLeaveResult
             });
+        }
+        
+        function calculateAnnualLeave(serviceYears, serviceMonths, dailyWage) {
+            let totalLeaveDays = 0;
+            let totalLeavePay = 0;
+            let explanation = "";
+            let note = "";
+            
+            // حساب إجمالي مدة الخدمة بالأشهر
+            const totalServiceMonths = (serviceYears * 12) + serviceMonths;
+            
+            // إذا كانت مدة الخدمة أقل من 5 سنوات (60 شهر)
+            if (totalServiceMonths < 60) {
+                // يستحق 14 يوم إجازة سنوية عن كل سنة
+                // يتم احتساب آخر سنتين فقط
+                const lastTwoYearsMonths = Math.min(totalServiceMonths, 24);
+                totalLeaveDays = (14 / 12) * lastTwoYearsMonths;
+                totalLeavePay = totalLeaveDays * dailyWage;
+                
+                explanation = `عدد أيام الإجازة السنوية المستحقة: (14 يوم ÷ 12 شهر) × ${lastTwoYearsMonths} شهر (آخر سنتين) = ${totalLeaveDays.toFixed(2)} يوم`;
+                note = "ملاحظة: يتم احتساب الإجازات السنوية عن آخر سنتين فقط من مدة الخدمة";
+            } 
+            // إذا كانت مدة الخدمة 5 سنوات أو أكثر
+            else {
+                // يستحق 21 يوم إجازة سنوية عن كل سنة
+                // يتم احتساب آخر سنتين فقط
+                const lastTwoYearsMonths = Math.min(totalServiceMonths, 24);
+                totalLeaveDays = (21 / 12) * lastTwoYearsMonths;
+                totalLeavePay = totalLeaveDays * dailyWage;
+                
+                explanation = `عدد أيام الإجازة السنوية المستحقة: (21 يوم ÷ 12 شهر) × ${lastTwoYearsMonths} شهر (آخر سنتين) = ${totalLeaveDays.toFixed(2)} يوم`;
+                note = "ملاحظة: يتم احتساب الإجازات السنوية عن آخر سنتين فقط من مدة الخدمة";
+            }
+            
+            return {
+                totalLeaveDays: totalLeaveDays,
+                totalLeavePay: totalLeavePay,
+                explanation: explanation,
+                note: note
+            };
         }
         
         function displayResults(results) {
             const resultContent = document.getElementById('resultContent');
+            const annualLeaveResult = document.getElementById('annualLeaveResult');
             const explanationSection = document.getElementById('explanationSection');
             resultContent.innerHTML = '';
             
@@ -825,6 +905,23 @@
                 `;
                 resultContent.appendChild(div);
             });
+            
+            // عرض نتائج الإجازات السنوية
+            annualLeaveResult.innerHTML = `
+                <h4>الإجازات السنوية المستحقة</h4>
+                <div class="result-item">
+                    <span>عدد أيام الإجازة السنوية المستحقة</span>
+                    <span>${results.annualLeaveResult.totalLeaveDays.toFixed(2)} يوم</span>
+                </div>
+                <div class="result-item">
+                    <span>أجر الإجازات السنوية المستحقة</span>
+                    <span>${results.annualLeaveResult.totalLeavePay.toFixed(2)} دينار</span>
+                </div>
+                <div class="annual-leave-details">
+                    <p>${results.annualLeaveResult.explanation}</p>
+                    <p><strong>${results.annualLeaveResult.note}</strong></p>
+                </div>
+            `;
             
             // عرض شرح مفصل للحسابات
             let contractDetails = "";
