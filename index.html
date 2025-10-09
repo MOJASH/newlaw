@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حاسبة الحقوق العملية - قانون العمل الأردني</title>
+    <style>
+        :root {
+            --primary-color: #2c5aa0;
+            --secondary-color: #f8f9fa;
+            --accent-color: #e63946;
+            --text-color: #333;
+            --border-color: #ddd;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+        }
+        
+        .form-section {
+            background-color: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .input-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-group input {
+            width: auto;
+            margin-left: 10px;
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 18px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #1e3d6f;
+        }
+        
+        .result-section {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .result-item:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--primary-color);
+        }
+
+        .explanation {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-right: 4px solid var(--primary-color);
+        }
+
+        .explanation h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        .explanation ul {
+            padding-right: 20px;
+        }
+
+        .explanation li {
+            margin-bottom: 5px;
+        }
+
+        .contract-details {
+            display: none;
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border-right: 4px solid #2c5aa0;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .form-section {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>حاسبة الحقوق العملية</h1>
+            <p>بناءً على قانون العمل الأردني، أدخل معلوماتك لحساب مستحقاتك.</p>
+        </header>
+        
+        <form id="rightsCalculator">
+            <div class="form-section">
+                <h2>معلومات الأجر الأساسي</h2>
+                
+                <div class="input-group">
+                    <label for="wageType">نوع الأجر</label>
+                    <select id="wageType">
+                        <option value="daily">أجر يومي</option>
+                        <option value="monthly">أجر شهري</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="lastWage">الراتب الأساسي الأخير (دينار)</label>
+                    <input type="number" id="lastWage" min="0" step="0.01" required>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>الرواتب المستحقة (الرواتب غير مقبوضة)</h2>
+                
+                <div class="input-group">
+                    <label for="unpaidMonths">عدد أشهر الرواتب المستحقة</label>
+                    <input type="number" id="unpaidMonths" min="0" step="1" value="0">
+                </div>
+                
+                <div class="input-group">
+                    <label for="serviceDuration">مدة الخدمة (بالسنوات)</label>
+                    <input type="number" id="serviceDuration" min="0" step="0.5" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="startDate">تاريخ بداية العمل</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="endDate">تاريخ إنهاء العمل</label>
+                    <input type="date" id="endDate" required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="noticeMonth" checked>
+                    <label for="noticeMonth">يستحق بدل شهر الإشعار (راتب شهر كامل)</label>
+                </div>
+                
+                <div class="input-group">
+                    <label for="terminationType">نوع إنهاء الخدمة</label>
+                    <select id="terminationType">
+                        <option value="indefinite">فصل تعسفي (عقد غير محدد المدة)</option>
+                        <option value="definite">فصل تعسفي (عقد محدد المدة)</option>
+                    </select>
+                </div>
+
+                <div class="contract-details" id="contractDetails">
+                    <div class="input-group">
+                        <label for="contractDuration">مدة العقد (بالأشهر)</label>
+                        <input type="number" id="contractDuration" min="1" step="1" value="12">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="workedMonths">عدد الأشهر التي عملتها في العقد</label>
+                        <input type="number" id="workedMonths" min="0" step="1" value="0">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>العمل الإضافي</h2>
+                
+                <div class="input-group">
+                    <label for="overtimeHours">عدد ساعات العمل الإضافي في اليوم</label>
+                    <input type="number" id="overtimeHours" min="0" step="0.5" value="0">
+                </div>
+                
+                <div class="input-group">
+                    <label for="overtimeDays">عدد أيام العمل الإضافي في الشهر</label>
+                    <input type="number" id="overtimeDays" min="0" step="1" value="0">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>العمل في العطل والأعياد وأيام الجمعة</h2>
+                
+                <div class="input-group">
+                    <label for="holidayDays">عدد أيام العطل الرسمية والدينية التي عملت بها</label>
+                    <input type="number" id="holidayDays" min="0" step="1" value="0">
+                </div>
+                
+                <div class="input-group">
+                    <label for="fridayDays">عدد أيام الجمعة التي عملت بها</label>
+                    <input type="number" id="fridayDays" min="0" step="1" value="0">
+                </div>
+            </div>
+            
+            <button type="submit">احسب المستحقات</button>
+        </form>
+        
+        <div class="result-section" id="resultSection">
+            <h2>نتائج حساب المستحقات</h2>
+            <div id="resultContent">
+                <!-- سيتم ملء النتائج هنا بواسطة JavaScript -->
+            </div>
+            
+            <div class="explanation" id="explanationSection">
+                <!-- سيتم ملء الشرح هنا بواسطة JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('rightsCalculator').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateRights();
+        });
+
+        // إظهار/إخفاء تفاصيل العقد المحدد المدة
+        document.getElementById('terminationType').addEventListener('change', function() {
+            const contractDetails = document.getElementById('contractDetails');
+            if (this.value === 'definite') {
+                contractDetails.style.display = 'block';
+            } else {
+                contractDetails.style.display = 'none';
+            }
+        });
+        
+        function calculateRights() {
+            // الحصول على القيم من النموذج
+            const wageType = document.getElementById('wageType').value;
+            const lastWage = parseFloat(document.getElementById('lastWage').value);
+            const unpaidMonths = parseInt(document.getElementById('unpaidMonths').value);
+            const serviceDuration = parseFloat(document.getElementById('serviceDuration').value);
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const noticeMonth = document.getElementById('noticeMonth').checked;
+            const terminationType = document.getElementById('terminationType').value;
+            const overtimeHours = parseFloat(document.getElementById('overtimeHours').value);
+            const overtimeDays = parseInt(document.getElementById('overtimeDays').value);
+            const holidayDays = parseInt(document.getElementById('holidayDays').value);
+            const fridayDays = parseInt(document.getElementById('fridayDays').value);
+            const contractDuration = parseInt(document.getElementById('contractDuration').value);
+            const workedMonths = parseInt(document.getElementById('workedMonths').value);
+            
+            // حساب الأجر اليومي والشهري (باستخدام 30 يومًا)
+            const dailyWage = wageType === 'daily' ? lastWage : lastWage / 30;
+            const monthlyWage = wageType === 'monthly' ? lastWage : lastWage * 30;
+            
+            // حساب الرواتب المستحقة
+            const unpaidSalaries = unpaidMonths * monthlyWage;
+            
+            // حساب بدل الفصل التعسفي
+            let unfairDismissalCompensation = 0;
+            let explanation = "";
+            
+            if (terminationType === 'indefinite') {
+                // فصل تعسفي لعقد غير محدد المدة
+                // نصف شهر عن كل سنة من سنوات الخدمة بما لا يقل عن أجر شهرين
+                unfairDismissalCompensation = monthlyWage * serviceDuration / 2;
+                
+                // الحد الأدنى شهرين
+                const minimumCompensation = monthlyWage * 2;
+                if (unfairDismissalCompensation < minimumCompensation) {
+                    unfairDismissalCompensation = minimumCompensation;
+                    explanation = `بدل الفصل التعسفي: نصف شهر عن كل سنة (${serviceDuration} سنوات) = ${(monthlyWage * serviceDuration / 2).toFixed(2)} دينار، ولكن بما لا يقل عن أجر شهرين (${minimumCompensation.toFixed(2)} دينار)`;
+                } else {
+                    explanation = `بدل الفصل التعسفي: نصف شهر عن كل سنة (${serviceDuration} سنوات) = ${unfairDismissalCompensation.toFixed(2)} دينار`;
+                }
+                
+            } else if (terminationType === 'definite') {
+                // فصل تعسفي لعقد محدد المدة - الأجر عن الأشهر المتبقية
+                const remainingMonths = contractDuration - workedMonths;
+                unfairDismissalCompensation = monthlyWage * remainingMonths;
+                explanation = `بدل الفصل التعسفي: أجر ${remainingMonths} شهر المتبقية من العقد = ${unfairDismissalCompensation.toFixed(2)} دينار`;
+            }
+            
+            // حساب بدل شهر الإشعار (راتب شهر كامل)
+            const noticeAllowance = noticeMonth ? monthlyWage : 0;
+            
+            // حساب العمل الإضافي (125% لجميع الساعات في الأيام العادية)
+            let overtimePay = 0;
+            if (overtimeHours > 0) {
+                // 125% لجميع ساعات العمل الإضافي
+                overtimePay = overtimeHours * dailyWage * 1.25 * overtimeDays;
+            }
+            
+            // حساب العمل في العطل والأعياد
+            // معدل العمل في العطل: 150%
+            const holidayPay = holidayDays * dailyWage * 1.5;
+            
+            // حساب العمل في أيام الجمعة
+            // معدل العمل في الجمعة: 150%
+            const fridayPay = fridayDays * dailyWage * 1.5;
+            
+            // إجمالي المستحقات
+            const totalRights = unpaidSalaries + unfairDismissalCompensation + noticeAllowance + overtimePay + holidayPay + fridayPay;
+            
+            // عرض النتائج
+            displayResults({
+                unpaidSalaries,
+                unfairDismissalCompensation,
+                noticeAllowance,
+                overtimePay,
+                holidayPay,
+                fridayPay,
+                totalRights,
+                explanation,
+                terminationType,
+                contractDuration,
+                workedMonths
+            });
+        }
+        
+        function displayResults(results) {
+            const resultContent = document.getElementById('resultContent');
+            const explanationSection = document.getElementById('explanationSection');
+            resultContent.innerHTML = '';
+            
+            const items = [
+                { label: 'الرواتب المستحقة', value: results.unpaidSalaries.toFixed(2) },
+                { label: 'بدل الفصل التعسفي', value: results.unfairDismissalCompensation.toFixed(2) },
+                { label: 'بدل شهر الإشعار', value: results.noticeAllowance.toFixed(2) },
+                { label: 'أجر العمل الإضافي', value: results.overtimePay.toFixed(2) },
+                { label: 'أجر العطل الرسمية', value: results.holidayPay.toFixed(2) },
+                { label: 'أجر أيام الجمعة', value: results.fridayPay.toFixed(2) },
+                { label: 'إجمالي المستحقات', value: results.totalRights.toFixed(2) }
+            ];
+            
+            items.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'result-item';
+                div.innerHTML = `
+                    <span>${item.label}</span>
+                    <span>${item.value} دينار</span>
+                `;
+                resultContent.appendChild(div);
+            });
+            
+            // عرض شرح مفصل للحسابات
+            let contractDetails = "";
+            if (results.terminationType === 'definite') {
+                const remainingMonths = results.contractDuration - results.workedMonths;
+                contractDetails = `
+                    <li>مدة العقد: ${results.contractDuration} شهر</li>
+                    <li>الأشهر التي عملتها: ${results.workedMonths} شهر</li>
+                    <li>الأشهر المتبقية: ${remainingMonths} شهر</li>
+                `;
+            }
+            
+            explanationSection.innerHTML = `
+                <h3>تفاصيل الحسابات:</h3>
+                <ul>
+                    <li>${results.explanation}</li>
+                    ${contractDetails}
+                    <li>الرواتب المستحقة: ${document.getElementById('unpaidMonths').value} أشهر × الراتب الشهري</li>
+                    <li>بدل شهر الإشعار: ${document.getElementById('noticeMonth').checked ? 'راتب شهر كامل' : 'غير مستحق'}</li>
+                    <li>العمل الإضافي: ${document.getElementById('overtimeHours').value} ساعة/يوم × ${document.getElementById('overtimeDays').value} يوم × 125%</li>
+                    <li>العمل في العطل: ${document.getElementById('holidayDays').value} يوم × 150% من الأجر اليومي</li>
+                    <li>العمل في الجمع: ${document.getElementById('fridayDays').value} يوم × 150% من الأجر اليومي</li>
+                </ul>
+            `;
+            
+            document.getElementById('resultSection').style.display = 'block';
+        }
+        
+        // تعيين التواريخ الافتراضية
+        window.onload = function() {
+            const today = new Date();
+            const threeYearsAgo = new Date();
+            threeYearsAgo.setFullYear(today.getFullYear() - 3);
+            
+            document.getElementById('startDate').valueAsDate = threeYearsAgo;
+            document.getElementById('endDate').valueAsDate = today;
+        };
+    </script>
+</body>
+</html>
