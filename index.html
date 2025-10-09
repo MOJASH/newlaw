@@ -44,12 +44,9 @@
         .creator-info {
             position: absolute;
             left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255,255,255,0.2);
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 12px;
+            top: 10px;
+            font-size: 10px;
+            opacity: 0.7;
         }
         
         h1 {
@@ -240,6 +237,33 @@
             margin-top: 5px;
         }
         
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .action-buttons button {
+            flex: 1;
+            font-size: 16px;
+        }
+        
+        .print-btn {
+            background-color: #28a745;
+        }
+        
+        .print-btn:hover {
+            background-color: #218838;
+        }
+        
+        .pdf-btn {
+            background-color: #dc3545;
+        }
+        
+        .pdf-btn:hover {
+            background-color: #c82333;
+        }
+        
         @media (max-width: 600px) {
             .container {
                 padding: 10px;
@@ -259,15 +283,18 @@
             .service-duration-group {
                 flex-direction: column;
             }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <div class="creator-info">أنشئت بواسطة: المحامي محمد الشوحه</div>
+        
         <header>
-            <div class="creator-info">
-                أنشئت بواسطة: المحامي محمد الشوحه
-            </div>
             <h1>حاسبة الحقوق العمالية</h1>
             <p class="header-subtitle">بناءً على قانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته</p>
             <p class="header-instruction">أدخل معلوماتك لحساب مستحقاتك</p>
@@ -427,6 +454,11 @@
             <div class="explanation" id="explanationSection">
                 <!-- سيتم ملء الشرح هنا بواسطة JavaScript -->
             </div>
+            
+            <div class="action-buttons">
+                <button type="button" class="print-btn" id="printBtn">طباعة النتائج</button>
+                <button type="button" class="pdf-btn" id="pdfBtn">حفظ كـ PDF</button>
+            </div>
         </div>
 
         <div class="footer">
@@ -436,6 +468,10 @@
         </div>
     </div>
 
+    <!-- مكتبة jsPDF لحفظ النتائج بصيغة PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
     <script>
         document.getElementById('rightsCalculator').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -501,6 +537,72 @@
             }
         });
         
+        // زر الطباعة
+        document.getElementById('printBtn').addEventListener('click', function() {
+            window.print();
+        });
+        
+        // زر حفظ PDF
+        document.getElementById('pdfBtn').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'pt', 'a4');
+            
+            // الحصول على تاريخ اليوم
+            const today = new Date();
+            const dateStr = today.toLocaleDateString('ar-EG');
+            
+            // إضافة عنوان التقرير
+            doc.setFontSize(18);
+            doc.text('تقرير حساب الحقوق العمالية', 300, 40, { align: 'center' });
+            
+            // إضافة التاريخ
+            doc.setFontSize(12);
+            doc.text(`تاريخ التقرير: ${dateStr}`, 500, 70, { align: 'right' });
+            
+            // إضافة معلومات المستخدم
+            const wageType = document.getElementById('wageType').value === 'daily' ? 'يومي' : 'شهري';
+            const lastWage = document.getElementById('lastWage').value;
+            const serviceYears = document.getElementById('serviceYears').value;
+            const serviceMonths = document.getElementById('serviceMonths').value;
+            
+            doc.setFontSize(14);
+            doc.text('معلومات العامل:', 500, 100, { align: 'right' });
+            doc.setFontSize(12);
+            doc.text(`نوع الأجر: ${wageType}`, 500, 120, { align: 'right' });
+            doc.text(`الراتب الأساسي: ${lastWage} دينار`, 500, 140, { align: 'right' });
+            doc.text(`مدة الخدمة: ${serviceYears} سنة و ${serviceMonths} شهر`, 500, 160, { align: 'right' });
+            
+            // إضافة النتائج
+            const resultItems = document.querySelectorAll('.result-item');
+            let yPosition = 200;
+            
+            doc.setFontSize(14);
+            doc.text('النتائج:', 500, yPosition, { align: 'right' });
+            yPosition += 30;
+            
+            doc.setFontSize(12);
+            resultItems.forEach(item => {
+                const label = item.children[0].textContent;
+                const value = item.children[1].textContent;
+                
+                doc.text(`${label}: ${value}`, 500, yPosition, { align: 'right' });
+                yPosition += 20;
+                
+                // إذا تجاوزنا صفحة واحدة، نضيف صفحة جديدة
+                if (yPosition > 700) {
+                    doc.addPage();
+                    yPosition = 40;
+                }
+            });
+            
+            // إضافة التوقيع
+            doc.setFontSize(10);
+            doc.text('تم إنشاء هذا التقرير بواسطة حاسبة الحقوق العمالية - المحامي محمد الشوحه', 300, 750, { align: 'center' });
+            
+            // حفظ الملف
+            doc.save('تقرير_الحقوق_العمالية.pdf');
+        });
+        
         function calculateRights() {
             // الحصول على القيم من النموذج
             const wageType = document.getElementById('wageType').value;
@@ -560,6 +662,7 @@
                     
                 } else if (terminationType === 'indefinite') {
                     // فصل تعسفي لعقد غير محدد المدة
+                    // حساب بدل الفصل التعسفي: نصف شهر عن كل سنة خدمة
                     const monthlyCompensation = monthlyWage / 12;
                     endOfServiceCompensation = monthlyCompensation * totalServiceMonths / 2;
                     
