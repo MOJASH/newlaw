@@ -287,14 +287,6 @@
             background-color: #218838;
         }
         
-        .pdf-btn {
-            background-color: #dc3545;
-        }
-        
-        .pdf-btn:hover {
-            background-color: #c82333;
-        }
-        
         @media (max-width: 600px) {
             .container {
                 padding: 10px;
@@ -337,7 +329,7 @@
                 
                 <div class="input-group">
                     <label for="wageType">نوع الأجر</label>
-                    <select id="wageType">
+                    <select id="wageType" tabindex="1">
                         <option value="daily">أجر يومي</option>
                         <option value="monthly">أجر شهري</option>
                     </select>
@@ -345,7 +337,7 @@
                 
                 <div class="input-group">
                     <label for="lastWage">الراتب الأساسي الأخير (دينار)</label>
-                    <input type="number" id="lastWage" min="0" step="0.01" required>
+                    <input type="number" id="lastWage" min="0" step="0.01" required tabindex="2">
                 </div>
             </div>
             
@@ -354,7 +346,7 @@
                 
                 <div class="input-group">
                     <label for="contractType">نوع العقد</label>
-                    <select id="contractType">
+                    <select id="contractType" tabindex="3">
                         <option value="indefinite">عقد غير محدد المدة</option>
                         <option value="definite">عقد محدد المدة</option>
                     </select>
@@ -362,17 +354,17 @@
                 
                 <div class="input-group">
                     <label for="unpaidMonths">عدد أشهر الرواتب المستحقة</label>
-                    <input type="number" id="unpaidMonths" min="0" step="1" value="0">
+                    <input type="number" id="unpaidMonths" min="0" step="1" value="0" tabindex="4">
                 </div>
 
                 <div class="input-group">
                     <label for="unpaidDays">عدد الأيام مستحقة الأجر التي لم يتم الحصول عليها</label>
-                    <input type="number" id="unpaidDays" min="0" step="1" value="0">
+                    <input type="number" id="unpaidDays" min="0" step="1" value="0" tabindex="5">
                 </div>
 
                 <div class="input-group">
                     <label for="vacationDays">عدد أيام الإجازات مستحقة الأجر التي لم يتم الحصول عليها</label>
-                    <input type="number" id="vacationDays" min="0" step="1" value="0">
+                    <input type="number" id="vacationDays" min="0" step="1" value="0" tabindex="6">
                 </div>
                 
                 <div class="input-group">
@@ -380,27 +372,27 @@
                     <div class="service-duration-group">
                         <div class="input-group">
                             <label for="serviceYears">السنوات</label>
-                            <input type="number" id="serviceYears" min="0" step="1" value="0">
+                            <input type="number" id="serviceYears" min="0" step="1" value="0" tabindex="7">
                         </div>
                         <div class="input-group">
                             <label for="serviceMonths">الأشهر</label>
-                            <input type="number" id="serviceMonths" min="0" max="11" step="1" value="0">
+                            <input type="number" id="serviceMonths" min="0" max="11" step="1" value="0" tabindex="8">
                         </div>
                     </div>
                 </div>
                 
                 <div class="input-group">
                     <label for="startDate">تاريخ بداية العمل</label>
-                    <input type="date" id="startDate" required>
+                    <input type="date" id="startDate" required tabindex="9">
                 </div>
                 
                 <div class="input-group">
                     <label for="endDate">تاريخ إنهاء العمل</label>
-                    <input type="date" id="endDate" required>
+                    <input type="date" id="endDate" required tabindex="10">
                 </div>
                 
                 <div class="checkbox-group" id="noticeMonthGroup">
-                    <input type="checkbox" id="noticeMonth">
+                    <input type="checkbox" id="noticeMonth" tabindex="11">
                     <label for="noticeMonth">يستحق بدل شهر الإشعار</label>
                 </div>
 
@@ -410,7 +402,7 @@
 
                 <div class="input-group">
                     <label for="socialSecurity">هل كان العامل مشتركاً بالضمان الاجتماعي؟</label>
-                    <select id="socialSecurity">
+                    <select id="socialSecurity" tabindex="12">
                         <option value="yes">نعم - مشترك بالضمان الاجتماعي</option>
                         <option value="no">لا - غير مشترك بالضمان الاجتماعي</option>
                     </select>
@@ -424,7 +416,7 @@
                 
                 <div class="input-group">
                     <label for="terminationType">سبب إنهاء الخدمة</label>
-                    <select id="terminationType">
+                    <select id="terminationType" tabindex="13">
                         <option value="mutual">إنهاء الخدمة برضا الطرفين</option>
                         <option value="indefinite">فصل تعسفي (عقد غير محدد المدة)</option>
                         <option value="definite">فصل تعسفي (عقد محدد المدة)</option>
@@ -432,19 +424,19 @@
                 </div>
 
                 <div class="checkbox-group" id="arbitraryDismissalGroup" style="display: none;">
-                    <input type="checkbox" id="arbitraryDismissal">
+                    <input type="checkbox" id="arbitraryDismissal" tabindex="14">
                     <label for="arbitraryDismissal">يستحق بدل فصل تعسفي (نصف شهر عن كل سنة خدمة بما لا يقل عن شهرين)</label>
                 </div>
 
                 <div class="contract-details" id="contractDetails">
                     <div class="input-group">
                         <label for="contractDuration">مدة العقد (بالأشهر)</label>
-                        <input type="number" id="contractDuration" min="1" step="1" value="12">
+                        <input type="number" id="contractDuration" min="1" step="1" value="12" tabindex="15">
                     </div>
                     
                     <div class="input-group">
                         <label for="workedMonths">عدد الأشهر التي عملتها في العقد</label>
-                        <input type="number" id="workedMonths" min="0" step="1" value="0">
+                        <input type="number" id="workedMonths" min="0" step="1" value="0" tabindex="16">
                     </div>
                 </div>
             </div>
@@ -454,12 +446,12 @@
                 
                 <div class="input-group">
                     <label for="overtimeHours">عدد ساعات العمل الإضافي في اليوم</label>
-                    <input type="number" id="overtimeHours" min="0" step="0.5" value="0">
+                    <input type="number" id="overtimeHours" min="0" step="0.5" value="0" tabindex="17">
                 </div>
                 
                 <div class="input-group">
                     <label for="overtimeDays">عدد أيام العمل الإضافي</label>
-                    <input type="number" id="overtimeDays" min="0" step="1" value="0">
+                    <input type="number" id="overtimeDays" min="0" step="1" value="0" tabindex="18">
                 </div>
             </div>
             
@@ -468,17 +460,17 @@
                 
                 <div class="input-group">
                     <label for="holidayDays">عدد أيام العطل الرسمية والدينية التي عملت بها</label>
-                    <input type="number" id="holidayDays" min="0" step="1" value="0">
+                    <input type="number" id="holidayDays" min="0" step="1" value="0" tabindex="19">
                 </div>
                 
                 <div class="input-group">
                     <label for="fridayDays">عدد أيام الجمعة التي عملت بها</label>
-                    <input type="number" id="fridayDays" min="0" step="1" value="0">
+                    <input type="number" id="fridayDays" min="0" step="1" value="0" tabindex="20">
                 </div>
             </div>
             
-            <button type="submit">احسب المستحقات</button>
-            <button type="button" class="reset-btn" id="resetBtn">تفريغ الحقول</button>
+            <button type="submit" tabindex="21">احسب المستحقات</button>
+            <button type="button" class="reset-btn" id="resetBtn" tabindex="22">تفريغ الحقول</button>
         </form>
         
         <div class="result-section" id="resultSection">
@@ -497,7 +489,6 @@
             
             <div class="action-buttons">
                 <button type="button" class="print-btn" id="printBtn">طباعة النتائج</button>
-                <button type="button" class="pdf-btn" id="pdfBtn">حفظ كـ PDF</button>
             </div>
         </div>
 
@@ -508,10 +499,6 @@
         </div>
     </div>
 
-    <!-- مكتبة jsPDF لحفظ النتائج بصيغة PDF -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
     <script>
         document.getElementById('rightsCalculator').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -606,65 +593,17 @@
             window.print();
         });
         
-        // زر حفظ PDF
-        document.getElementById('pdfBtn').addEventListener('click', function() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF('p', 'pt', 'a4');
-            
-            // الحصول على تاريخ اليوم
-            const today = new Date();
-            const dateStr = today.toLocaleDateString('ar-EG');
-            
-            // إضافة عنوان التقرير
-            doc.setFontSize(18);
-            doc.text('تقرير حساب الحقوق العمالية', 300, 40, { align: 'center' });
-            
-            // إضافة التاريخ
-            doc.setFontSize(12);
-            doc.text(`تاريخ التقرير: ${dateStr}`, 500, 70, { align: 'right' });
-            
-            // إضافة معلومات المستخدم
-            const wageType = document.getElementById('wageType').value === 'daily' ? 'يومي' : 'شهري';
-            const lastWage = document.getElementById('lastWage').value;
-            const serviceYears = document.getElementById('serviceYears').value;
-            const serviceMonths = document.getElementById('serviceMonths').value;
-            
-            doc.setFontSize(14);
-            doc.text('معلومات العامل:', 500, 100, { align: 'right' });
-            doc.setFontSize(12);
-            doc.text(`نوع الأجر: ${wageType}`, 500, 120, { align: 'right' });
-            doc.text(`الراتب الأساسي: ${lastWage} دينار`, 500, 140, { align: 'right' });
-            doc.text(`مدة الخدمة: ${serviceYears} سنة و ${serviceMonths} شهر`, 500, 160, { align: 'right' });
-            
-            // إضافة النتائج
-            const resultItems = document.querySelectorAll('.result-item');
-            let yPosition = 200;
-            
-            doc.setFontSize(14);
-            doc.text('النتائج:', 500, yPosition, { align: 'right' });
-            yPosition += 30;
-            
-            doc.setFontSize(12);
-            resultItems.forEach(item => {
-                const label = item.children[0].textContent;
-                const value = item.children[1].textContent;
-                
-                doc.text(`${label}: ${value}`, 500, yPosition, { align: 'right' });
-                yPosition += 20;
-                
-                // إذا تجاوزنا صفحة واحدة، نضيف صفحة جديدة
-                if (yPosition > 700) {
-                    doc.addPage();
-                    yPosition = 40;
+        // إضافة وظيفة للانتقال بين الحقول عند الضغط على Enter
+        document.querySelectorAll('input, select').forEach((field, index, fields) => {
+            field.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const nextIndex = index + 1;
+                    if (nextIndex < fields.length) {
+                        fields[nextIndex].focus();
+                    }
                 }
             });
-            
-            // إضافة التوقيع
-            doc.setFontSize(10);
-            doc.text('تم إنشاء هذا التقرير بواسطة حاسبة الحقوق العمالية - المحامي محمد الشوحه', 300, 750, { align: 'center' });
-            
-            // حفظ الملف
-            doc.save('تقرير_الحقوق_العمالية.pdf');
         });
         
         function calculateRights() {
