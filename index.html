@@ -400,6 +400,11 @@
                     </select>
                 </div>
 
+                <div class="checkbox-group" id="arbitraryDismissalGroup" style="display: none;">
+                    <input type="checkbox" id="arbitraryDismissal">
+                    <label for="arbitraryDismissal">يستحق بدل فصل تعسفي (نصف شهر عن كل سنة خدمة بما لا يقل عن شهرين)</label>
+                </div>
+
                 <div class="contract-details" id="contractDetails">
                     <div class="input-group">
                         <label for="contractDuration">مدة العقد (بالأشهر)</label>
@@ -487,6 +492,8 @@
             document.getElementById('noticeInfo').style.display = 'none';
             document.getElementById('noticeMonthGroup').classList.remove('disabled');
             document.getElementById('noticeMonth').disabled = false;
+            document.getElementById('arbitraryDismissalGroup').style.display = 'none';
+            document.getElementById('arbitraryDismissal').checked = false;
             
             // إعادة تعيين التواريخ الافتراضية
             const today = new Date();
@@ -502,6 +509,7 @@
             const contractDetails = document.getElementById('contractDetails');
             const noticeMonthGroup = document.getElementById('noticeMonthGroup');
             const noticeMonth = document.getElementById('noticeMonth');
+            const arbitraryDismissalGroup = document.getElementById('arbitraryDismissalGroup');
             
             if (this.value === 'definite') {
                 contractDetails.style.display = 'block';
@@ -509,13 +517,34 @@
                 noticeMonth.checked = false;
                 noticeMonth.disabled = true;
                 document.getElementById('terminationType').value = 'definite';
+                arbitraryDismissalGroup.style.display = 'none';
+                document.getElementById('arbitraryDismissal').checked = false;
             } else {
                 contractDetails.style.display = 'none';
                 noticeMonthGroup.classList.remove('disabled');
                 noticeMonth.disabled = false;
                 document.getElementById('terminationType').value = 'indefinite';
+                updateArbitraryDismissalGroup();
             }
         });
+
+        // التحكم في إظهار/إخفاء خيار بدل الفصل التعسفي
+        document.getElementById('terminationType').addEventListener('change', function() {
+            updateArbitraryDismissalGroup();
+        });
+
+        function updateArbitraryDismissalGroup() {
+            const arbitraryDismissalGroup = document.getElementById('arbitraryDismissalGroup');
+            const contractType = document.getElementById('contractType').value;
+            const terminationType = document.getElementById('terminationType').value;
+            
+            if (contractType === 'indefinite' && terminationType === 'indefinite') {
+                arbitraryDismissalGroup.style.display = 'flex';
+            } else {
+                arbitraryDismissalGroup.style.display = 'none';
+                document.getElementById('arbitraryDismissal').checked = false;
+            }
+        }
 
         // إظهار/إخفاء تفاصيل الضمان الاجتماعي
         document.getElementById('socialSecurity').addEventListener('change', function() {
@@ -624,6 +653,7 @@
             const fridayDays = parseInt(document.getElementById('fridayDays').value);
             const contractDuration = parseInt(document.getElementById('contractDuration').value);
             const workedMonths = parseInt(document.getElementById('workedMonths').value);
+            const arbitraryDismissal = document.getElementById('arbitraryDismissal').checked;
             
             // حساب إجمالي مدة الخدمة بالأشهر
             const totalServiceMonths = (serviceYears * 12) + serviceMonths;
@@ -644,6 +674,25 @@
             // حساب بدل نهاية الخدمة
             let endOfServiceCompensation = 0;
             let explanation = "";
+            
+            // حساب بدل الفصل التعسفي إذا تم اختياره
+            let arbitraryDismissalCompensation = 0;
+            let arbitraryDismissalExplanation = "";
+            
+            if (arbitraryDismissal && contractType === 'indefinite' && terminationType === 'indefinite') {
+                // حساب بدل الفصل التعسفي: نصف شهر عن كل سنة خدمة بما لا يقل عن شهرين
+                const monthlyCompensation = monthlyWage / 2;
+                arbitraryDismissalCompensation = (monthlyCompensation * serviceYears) + (monthlyCompensation * serviceMonths / 12);
+                
+                // الحد الأدنى شهرين
+                const minimumCompensation = monthlyWage * 2;
+                if (arbitraryDismissalCompensation < minimumCompensation) {
+                    arbitraryDismissalCompensation = minimumCompensation;
+                    arbitraryDismissalExplanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceYears} سنة + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceMonths} شهر ÷ 12 = ${(monthlyCompensation * serviceYears + monthlyCompensation * serviceMonths / 12).toFixed(2)} دينار، ولكن بما لا يقل عن أجر شهرين (${minimumCompensation.toFixed(2)} دينار)`;
+                } else {
+                    arbitraryDismissalExplanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceYears} سنة + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceMonths} شهر ÷ 12 = ${arbitraryDismissalCompensation.toFixed(2)} دينار`;
+                }
+            }
             
             if (socialSecurity === 'no') {
                 // غير مشترك بالضمان الاجتماعي - أجر شهر عن كل سنة
@@ -711,7 +760,7 @@
             const fridayPay = fridayDays * dailyWage * 1.5;
             
             // إجمالي المستحقات
-            const totalRights = unpaidSalaries + vacationPay + endOfServiceCompensation + noticeAllowance + overtimePay + holidayPay + fridayPay;
+            const totalRights = unpaidSalaries + vacationPay + endOfServiceCompensation + noticeAllowance + overtimePay + holidayPay + fridayPay + arbitraryDismissalCompensation;
             
             // عرض النتائج
             displayResults({
@@ -722,8 +771,10 @@
                 overtimePay,
                 holidayPay,
                 fridayPay,
+                arbitraryDismissalCompensation,
                 totalRights,
                 explanation,
+                arbitraryDismissalExplanation,
                 terminationType,
                 socialSecurity,
                 contractType,
@@ -736,7 +787,8 @@
                 hourlyWage,
                 noticeMonth,
                 totalServiceMonths,
-                monthlyWage
+                monthlyWage,
+                arbitraryDismissal
             });
         }
         
@@ -749,12 +801,20 @@
                 { label: 'الرواتب المستحقة', value: results.unpaidSalaries.toFixed(2) },
                 { label: 'بدل الإجازات المستحقة', value: results.vacationPay.toFixed(2) },
                 { label: results.socialSecurity === 'no' ? 'تعويض نهاية الخدمة (غير مشترك بالضمان)' : 'بدل نهاية الخدمة', value: results.endOfServiceCompensation.toFixed(2) },
-                { label: 'بدل شهر الإشعار', value: results.noticeAllowance.toFixed(2) },
+                { label: 'بدل شهر الإشعار', value: results.noticeAllowance.toFixed(2) }
+            ];
+            
+            // إضافة بدل الفصل التعسفي إذا كان موجوداً
+            if (results.arbitraryDismissalCompensation > 0) {
+                items.push({ label: 'بدل الفصل التعسفي', value: results.arbitraryDismissalCompensation.toFixed(2) });
+            }
+            
+            items.push(
                 { label: 'أجر العمل الإضافي', value: results.overtimePay.toFixed(2) },
                 { label: 'أجر العطل الرسمية', value: results.holidayPay.toFixed(2) },
                 { label: 'أجر أيام الجمعة', value: results.fridayPay.toFixed(2) },
                 { label: 'إجمالي المستحقات', value: results.totalRights.toFixed(2) }
-            ];
+            );
             
             items.forEach(item => {
                 const div = document.createElement('div');
@@ -800,10 +860,16 @@
                 noticeText = `<li>بدل شهر الإشعار: ${results.noticeMonth ? 'راتب شهر كامل' : 'غير مستحق'}</li>`;
             }
             
+            let arbitraryDismissalText = "";
+            if (results.arbitraryDismissal) {
+                arbitraryDismissalText = `<li>${results.arbitraryDismissalExplanation}</li>`;
+            }
+            
             explanationSection.innerHTML = `
                 <h3>تفاصيل الحسابات:</h3>
                 <ul>
                     <li>${results.explanation}</li>
+                    ${arbitraryDismissalText}
                     <li>إجمالي مدة الخدمة: ${results.totalServiceMonths} شهر (${document.getElementById('serviceYears').value} سنة و ${document.getElementById('serviceMonths').value} شهر)</li>
                     ${contractDetails}
                     <li>الرواتب المستحقة: ${document.getElementById('unpaidMonths').value} أشهر × الراتب الشهري</li>
