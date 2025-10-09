@@ -286,6 +286,15 @@
         .print-btn:hover {
             background-color: #218838;
         }
+
+        .result-note {
+            background-color: #e8f4fd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+            border-right: 4px solid #2c5aa0;
+            font-size: 14px;
+        }
         
         @media (max-width: 600px) {
             .container {
@@ -396,22 +405,12 @@
                     <label for="noticeMonth">يستحق بدل شهر الإشعار</label>
                 </div>
 
-                <div class="notice-info" id="noticeInfo">
-                    بدل شهر الإشعار يساوي راتب شهر كامل
-                </div>
-
                 <div class="input-group">
                     <label for="socialSecurity">هل كان العامل مشتركاً بالضمان الاجتماعي؟</label>
                     <select id="socialSecurity" tabindex="12">
                         <option value="yes">نعم - مشترك بالضمان الاجتماعي</option>
                         <option value="no">لا - غير مشترك بالضمان الاجتماعي</option>
                     </select>
-                </div>
-
-                <div class="social-security-details" id="socialSecurityDetails">
-                    <div class="input-group">
-                        <label>ملاحظة: حسب المادة (73) من قانون العمل الأردني، يحق للعامل غير المشترك بالضمان الاجتماعي الحصول على تعويض نهاية الخدمة بواقع أجر شهر عن كل سنة عمل</label>
-                    </div>
                 </div>
                 
                 <div class="input-group">
@@ -568,31 +567,6 @@
             }
         }
 
-        // إظهار/إخفاء تفاصيل الضمان الاجتماعي
-        document.getElementById('socialSecurity').addEventListener('change', function() {
-            const socialSecurityDetails = document.getElementById('socialSecurityDetails');
-            if (this.value === 'no') {
-                socialSecurityDetails.style.display = 'block';
-            } else {
-                socialSecurityDetails.style.display = 'none';
-            }
-        });
-
-        // إظهار/إخفاء معلومات بدل شهر الإشعار
-        document.getElementById('noticeMonth').addEventListener('change', function() {
-            const noticeInfo = document.getElementById('noticeInfo');
-            if (this.checked) {
-                noticeInfo.style.display = 'block';
-            } else {
-                noticeInfo.style.display = 'none';
-            }
-        });
-        
-        // زر الطباعة
-        document.getElementById('printBtn').addEventListener('click', function() {
-            window.print();
-        });
-        
         // إضافة وظيفة للانتقال بين الحقول عند الضغط على Enter
         document.querySelectorAll('input, select').forEach((field, index, fields) => {
             field.addEventListener('keydown', function(e) {
@@ -648,6 +622,7 @@
             // حساب بدل نهاية الخدمة
             let endOfServiceCompensation = 0;
             let explanation = "";
+            let socialSecurityNote = "";
             
             // حساب بدل الفصل التعسفي إذا تم اختياره
             let arbitraryDismissalCompensation = 0;
@@ -674,6 +649,7 @@
                 const monthlyCompensation = monthlyWage / 12;
                 endOfServiceCompensation = monthlyCompensation * totalServiceMonths;
                 explanation = `تعويض نهاية الخدمة (غير مشترك بالضمان): (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths} شهر = ${endOfServiceCompensation.toFixed(2)} دينار`;
+                socialSecurityNote = "ملاحظة: حسب المادة (73) من قانون العمل الأردني، يحق للعامل غير المشترك بالضمان الاجتماعي الحصول على تعويض نهاية الخدمة بواقع أجر شهر عن كل سنة عمل";
                 
             } else {
                 // مشترك بالضمان الاجتماعي - حسب نوع إنهاء الخدمة
@@ -708,13 +684,16 @@
             
             // حساب بدل شهر الإشعار (راتب شهر كامل)
             let noticeAllowance = 0;
+            let noticeNote = "";
             if (contractType === 'indefinite' && noticeMonth) {
                 noticeAllowance = monthlyWage;
+                noticeNote = "ملاحظة: بدل شهر الإشعار يساوي راتب شهر كامل";
             } else if (contractType === 'definite' && terminationType === 'definite') {
                 // لا يستحق بدل شهر الإشعار في حالة الفصل التعسفي للعقد محدد المدة
                 noticeAllowance = 0;
             } else if (noticeMonth) {
                 noticeAllowance = monthlyWage;
+                noticeNote = "ملاحظة: بدل شهر الإشعار يساوي راتب شهر كامل";
             }
             
             // حساب العمل الإضافي (125% من الأجر الساعي)
@@ -766,7 +745,9 @@
                 totalServiceMonths,
                 monthlyWage,
                 arbitraryDismissal,
-                annualLeaveResult
+                annualLeaveResult,
+                socialSecurityNote,
+                noticeNote
             });
         }
         
@@ -843,6 +824,22 @@
                     <span>${item.value} دينار</span>
                 `;
                 resultContent.appendChild(div);
+                
+                // إضافة ملاحظة بدل شهر الإشعار بعد عرضه
+                if (item.label === 'بدل شهر الإشعار' && results.noticeNote) {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'result-note';
+                    noteDiv.innerHTML = results.noticeNote;
+                    resultContent.appendChild(noteDiv);
+                }
+                
+                // إضافة ملاحظة الضمان الاجتماعي بعد عرض تعويض نهاية الخدمة
+                if (item.label.includes('تعويض نهاية الخدمة') && results.socialSecurityNote) {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'result-note';
+                    noteDiv.innerHTML = results.socialSecurityNote;
+                    resultContent.appendChild(noteDiv);
+                }
             });
             
             // عرض نتائج الإجازات السنوية
