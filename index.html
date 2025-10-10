@@ -350,7 +350,8 @@
             border-radius: 4px;
             margin-top: 4px;
             border-right: 4px solid #2c5aa0;
-            font-size: 12px;
+            font-size: 11px;
+            color: #555;
         }
 
         /* تنبيه الاستشارة القانونية */
@@ -604,7 +605,7 @@
             
             <!-- التنبيه المطلوب -->
             <div class="legal-notice">
-                تنبيه: هذه الحاسبة هي أداة استرشادية فقط، وهي غير ملزمة لأي جهة. يوصى دائماً باستشارة جهة مختصة للحصول على نتائج دقيقة.
+                تنبيه: هذه الحاسبة هي أداة إسترشادية فقط، وهي غير ملزمة لأي جهة. يوصى دائماً بإستشارة جهة مختصة للحصول على نتائج دقيقة.
             </div>
             
             <div class="action-buttons">
@@ -628,7 +629,7 @@
             particlesJS('particles-js', {
                 particles: {
                     number: {
-                        value: 150,  // زيادة عدد الجسيمات
+                        value: 200,  // زيادة عدد الجسيمات
                         density: {
                             enable: true,
                             value_area: 800
@@ -648,7 +649,7 @@
                         }
                     },
                     opacity: {
-                        value: 0.7,  // زيادة الشفافية
+                        value: 0.8,  // زيادة الشفافية
                         random: true,
                         anim: {
                             enable: false,
@@ -671,12 +672,12 @@
                         enable: true,
                         distance: 120,  // تقليل المسافة بين الروابط
                         color: "#ffffff",  // جعل الروابط بيضاء
-                        opacity: 0.3,  // تقليل شفافية الروابط
+                        opacity: 0.4,  // زيادة شفافية الروابط
                         width: 1
                     },
                     move: {
                         enable: true,
-                        speed: 2.5,  // زيادة سرعة الحركة
+                        speed: 3,  // زيادة سرعة الحركة
                         direction: "none",
                         random: true,
                         straight: false,
@@ -721,7 +722,7 @@
                             duration: 0.4
                         },
                         push: {
-                            particles_nb: 6  // زيادة عدد الجسيمات المضاف عند النقر
+                            particles_nb: 8  // زيادة عدد الجسيمات المضاف عند النقر
                         },
                         remove: {
                             particles_nb: 2
@@ -1078,6 +1079,46 @@
                     const noteDiv = document.createElement('div');
                     noteDiv.className = 'result-note';
                     noteDiv.innerHTML = results.socialSecurityNote;
+                    resultContent.appendChild(noteDiv);
+                }
+                
+                // إضافة ملاحظة بدل الإجازات المستحقة
+                if (item.label === 'بدل الإجازات المستحقة') {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'result-note';
+                    noteDiv.innerHTML = "يتم احتساب الإجازات السنوية عن آخر سنتين فقط من انتهاء خدمة العامل لدى صاحب العمل";
+                    resultContent.appendChild(noteDiv);
+                }
+                
+                // إضافة ملاحظة بدل الفصل التعسفي
+                if (item.label === 'بدل الفصل التعسفي') {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'result-note';
+                    noteDiv.innerHTML = "ملاحظة: حسب المادة 25 من قانون العمل الأردني، يحق للعامل المطالبة ببدل الفصل التعسفي في حال إنهاء خدمته دون سبب مشروع";
+                    resultContent.appendChild(noteDiv);
+                }
+                
+                // إضافة ملاحظة أجر العمل الإضافي
+                if (item.label === 'أجر العمل الإضافي') {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'result-note';
+                    noteDiv.innerHTML = "ملاحظة: حسب المادة 59 من قانون العمل الأردني، يستحق العامل أجراً إضافياً عن ساعات العمل الإضافي بنسبة 125% من الأجر الأساسي";
+                    resultContent.appendChild(noteDiv);
+                }
+                
+                // إضافة ملاحظة أجر العطل الرسمية
+                if (item.label === 'أجر العطل الرسمية') {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'result-note';
+                    noteDiv.innerHTML = "ملاحظة: حسب المادة 62 من قانون العمل الأردني، يستحق العامل أجراً إضافياً عن العمل في العطل الرسمية بنسبة 150% من الأجر الأساسي";
+                    resultContent.appendChild(noteDiv);
+                }
+                
+                // إضافة ملاحظة أجر أيام الجمعة
+                if (item.label === 'أجر أيام الجمعة') {
+                    const noteDiv = document.createElement('div');
+                    noteDiv.className = 'result-note';
+                    noteDiv.innerHTML = "ملاحظة: حسب المادة 62 من قانون العمل الأردني، يستحق العامل أجراً إضافياً عن العمل في أيام الراحة الأسبوعية (الجمعة) بنسبة 150% من الأجر الأساسي";
                     resultContent.appendChild(noteDiv);
                 }
             });
