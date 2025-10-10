@@ -489,17 +489,21 @@
                             <label for="serviceMonths">الأشهر</label>
                             <input type="number" id="serviceMonths" min="0" max="11" step="1" tabindex="8">
                         </div>
+                        <div class="input-group">
+                            <label for="serviceDays">الأيام</label>
+                            <input type="number" id="serviceDays" min="0" max="30" step="1" tabindex="9">
+                        </div>
                     </div>
                     
                     <div class="compact-row">
                         <div class="input-group">
                             <label for="startDate">بداية العمل</label>
-                            <input type="date" id="startDate" required tabindex="9">
+                            <input type="date" id="startDate" required tabindex="10">
                         </div>
                         
                         <div class="input-group">
                             <label for="endDate">نهاية العمل</label>
-                            <input type="date" id="endDate" required tabindex="10">
+                            <input type="date" id="endDate" required tabindex="11">
                         </div>
                     </div>
                 </div>
@@ -508,13 +512,13 @@
                     <h2>تفاصيل إنهاء الخدمة</h2>
                     
                     <div class="checkbox-group" id="noticeMonthGroup">
-                        <input type="checkbox" id="noticeMonth" tabindex="11">
+                        <input type="checkbox" id="noticeMonth" tabindex="12">
                         <label for="noticeMonth">يستحق بدل شهر الإشعار</label>
                     </div>
 
                     <div class="input-group">
                         <label for="socialSecurity">الضمان الاجتماعي</label>
-                        <select id="socialSecurity" tabindex="12">
+                        <select id="socialSecurity" tabindex="13">
                             <option value="yes">نعم - مشترك</option>
                             <option value="no">لا - غير مشترك</option>
                         </select>
@@ -522,7 +526,7 @@
                     
                     <div class="input-group">
                         <label for="terminationType">سبب إنهاء الخدمة</label>
-                        <select id="terminationType" tabindex="13">
+                        <select id="terminationType" tabindex="14">
                             <option value="mutual">إنهاء برضا الطرفين</option>
                             <option value="indefinite">فصل تعسفي (عقد غير محدد)</option>
                             <option value="definite">فصل تعسفي (عقد محدد)</option>
@@ -530,7 +534,7 @@
                     </div>
 
                     <div class="checkbox-group" id="arbitraryDismissalGroup" style="display: none;">
-                        <input type="checkbox" id="arbitraryDismissal" tabindex="14">
+                        <input type="checkbox" id="arbitraryDismissal" tabindex="15">
                         <label for="arbitraryDismissal">يستحق بدل فصل تعسفي</label>
                     </div>
                 </div>
@@ -541,12 +545,12 @@
                     <div class="compact-row">
                         <div class="input-group">
                             <label for="overtimeHours">ساعات إضافية/يوم</label>
-                            <input type="number" id="overtimeHours" min="0" step="0.5" tabindex="17">
+                            <input type="number" id="overtimeHours" min="0" step="0.5" tabindex="18">
                         </div>
                         
                         <div class="input-group">
                             <label for="overtimeDays">أيام عمل إضافي</label>
-                            <input type="number" id="overtimeDays" min="0" step="1" tabindex="18">
+                            <input type="number" id="overtimeDays" min="0" step="1" tabindex="19">
                         </div>
                     </div>
                 </div>
@@ -557,12 +561,12 @@
                     <div class="compact-row">
                         <div class="input-group">
                             <label for="holidayDays">أيام العطل الرسمية</label>
-                            <input type="number" id="holidayDays" min="0" step="1" tabindex="19">
+                            <input type="number" id="holidayDays" min="0" step="1" tabindex="20">
                         </div>
                         
                         <div class="input-group">
                             <label for="fridayDays">أيام الجمعة</label>
-                            <input type="number" id="fridayDays" min="0" step="1" tabindex="20">
+                            <input type="number" id="fridayDays" min="0" step="1" tabindex="21">
                         </div>
                     </div>
                 </div>
@@ -573,19 +577,19 @@
                 <div class="compact-row">
                     <div class="input-group">
                         <label for="contractDuration">مدة العقد (أشهر)</label>
-                        <input type="number" id="contractDuration" min="1" step="1" tabindex="15">
+                        <input type="number" id="contractDuration" min="1" step="1" tabindex="16">
                     </div>
                     
                     <div class="input-group">
                         <label for="workedMonths">الأشهر التي عملتها</label>
-                        <input type="number" id="workedMonths" min="0" step="1" tabindex="16">
+                        <input type="number" id="workedMonths" min="0" step="1" tabindex="17">
                     </div>
                 </div>
             </div>
             
             <div class="action-buttons">
-                <button type="submit" tabindex="21">احسب المستحقات</button>
-                <button type="button" class="reset-btn" id="resetBtn" tabindex="22">تفريغ الحقول</button>
+                <button type="submit" tabindex="22">احسب المستحقات</button>
+                <button type="button" class="reset-btn" id="resetBtn" tabindex="23">تفريغ الحقول</button>
             </div>
         </form>
         
@@ -831,6 +835,7 @@
             const vacationDays = parseInt(document.getElementById('vacationDays').value) || 0;
             const serviceYears = parseInt(document.getElementById('serviceYears').value) || 0;
             const serviceMonths = parseInt(document.getElementById('serviceMonths').value) || 0;
+            const serviceDays = parseInt(document.getElementById('serviceDays').value) || 0;
             const startDate = new Date(document.getElementById('startDate').value);
             const endDate = new Date(document.getElementById('endDate').value);
             const noticeMonth = document.getElementById('noticeMonth').checked;
@@ -844,8 +849,8 @@
             const workedMonths = parseInt(document.getElementById('workedMonths').value) || 0;
             const arbitraryDismissal = document.getElementById('arbitraryDismissal').checked;
             
-            // حساب إجمالي مدة الخدمة بالأشهر
-            const totalServiceMonths = (serviceYears * 12) + serviceMonths;
+            // حساب إجمالي مدة الخدمة بالأشهر مع الأيام
+            const totalServiceMonths = (serviceYears * 12) + serviceMonths + (serviceDays / 30);
             
             // حساب الأجر اليومي والشهري (باستخدام 30 يومًا)
             const dailyWage = wageType === 'daily' ? lastWage : lastWage / 30;
@@ -872,15 +877,15 @@
             if (arbitraryDismissal && contractType === 'indefinite' && terminationType === 'indefinite') {
                 // حساب بدل الفصل التعسفي: نصف شهر عن كل سنة خدمة بما لا يقل عن شهرين
                 const monthlyCompensation = monthlyWage / 2;
-                arbitraryDismissalCompensation = (monthlyCompensation * serviceYears) + (monthlyCompensation * serviceMonths / 12);
+                arbitraryDismissalCompensation = (monthlyCompensation * serviceYears) + (monthlyCompensation * serviceMonths / 12) + (monthlyCompensation * serviceDays / 365);
                 
                 // الحد الأدنى شهرين
                 const minimumCompensation = monthlyWage * 2;
                 if (arbitraryDismissalCompensation < minimumCompensation) {
                     arbitraryDismissalCompensation = minimumCompensation;
-                    arbitraryDismissalExplanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceYears} سنة + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceMonths} شهر ÷ 12 = ${(monthlyCompensation * serviceYears + monthlyCompensation * serviceMonths / 12).toFixed(2)} دينار، ولكن بما لا يقل عن أجر شهرين (${minimumCompensation.toFixed(2)} دينار)`;
+                    arbitraryDismissalExplanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceYears} سنة + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceMonths} شهر ÷ 12 + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceDays} يوم ÷ 365 = ${(monthlyCompensation * serviceYears + monthlyCompensation * serviceMonths / 12 + monthlyCompensation * serviceDays / 365).toFixed(2)} دينار، ولكن بما لا يقل عن أجر شهرين (${minimumCompensation.toFixed(2)} دينار)`;
                 } else {
-                    arbitraryDismissalExplanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceYears} سنة + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceMonths} شهر ÷ 12 = ${arbitraryDismissalCompensation.toFixed(2)} دينار`;
+                    arbitraryDismissalExplanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceYears} سنة + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceMonths} شهر ÷ 12 + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceDays} يوم ÷ 365 = ${arbitraryDismissalCompensation.toFixed(2)} دينار`;
                 }
             }
             
@@ -889,7 +894,7 @@
                 // حساب المكافأة بناءً على إجمالي مدة الخدمة بالأشهر
                 const monthlyCompensation = monthlyWage / 12;
                 endOfServiceCompensation = monthlyCompensation * totalServiceMonths;
-                explanation = `تعويض نهاية الخدمة (غير مشترك بالضمان): (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths} شهر = ${endOfServiceCompensation.toFixed(2)} دينار`;
+                explanation = `تعويض نهاية الخدمة (غير مشترك بالضمان): (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths.toFixed(2)} شهر = ${endOfServiceCompensation.toFixed(2)} دينار`;
                 socialSecurityNote = "ملاحظة: حسب المادة (73) من قانون العمل الأردني، يحق للعامل غير المشترك بالضمان الاجتماعي الحصول على تعويض نهاية الخدمة بواقع أجر شهر عن كل سنة عمل";
                 
             } else {
@@ -898,7 +903,7 @@
                     // إنهاء برضا الطرفين - نصف شهر عن كل سنة
                     const monthlyCompensation = monthlyWage / 12;
                     endOfServiceCompensation = monthlyCompensation * totalServiceMonths / 2;
-                    explanation = `تعويض نهاية الخدمة (رضا الطرفين): (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths} شهر ÷ 2 = ${endOfServiceCompensation.toFixed(2)} دينار`;
+                    explanation = `تعويض نهاية الخدمة (رضا الطرفين): (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths.toFixed(2)} شهر ÷ 2 = ${endOfServiceCompensation.toFixed(2)} دينار`;
                     
                 } else if (terminationType === 'indefinite') {
                     // فصل تعسفي لعقد غير محدد المدة
@@ -910,9 +915,9 @@
                     const minimumCompensation = monthlyWage * 2;
                     if (endOfServiceCompensation < minimumCompensation) {
                         endOfServiceCompensation = minimumCompensation;
-                        explanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths} شهر ÷ 2 = ${(monthlyCompensation * totalServiceMonths / 2).toFixed(2)} دينار، ولكن بما لا يقل عن أجر شهرين (${minimumCompensation.toFixed(2)} دينار)`;
+                        explanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths.toFixed(2)} شهر ÷ 2 = ${(monthlyCompensation * totalServiceMonths / 2).toFixed(2)} دينار، ولكن بما لا يقل عن أجر شهرين (${minimumCompensation.toFixed(2)} دينار)`;
                     } else {
-                        explanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths} شهر ÷ 2 = ${endOfServiceCompensation.toFixed(2)} دينار`;
+                        explanation = `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths.toFixed(2)} شهر ÷ 2 = ${endOfServiceCompensation.toFixed(2)} دينار`;
                     }
                     
                 } else if (terminationType === 'definite') {
@@ -954,7 +959,7 @@
             const fridayPay = fridayDays * dailyWage * 1.5;
             
             // حساب الإجازات السنوية المستحقة
-            const annualLeaveResult = calculateAnnualLeave(serviceYears, serviceMonths, dailyWage);
+            const annualLeaveResult = calculateAnnualLeave(serviceYears, serviceMonths, serviceDays, dailyWage);
             
             // إجمالي المستحقات
             const totalRights = unpaidSalaries + vacationPay + endOfServiceCompensation + noticeAllowance + overtimePay + holidayPay + fridayPay + arbitraryDismissalCompensation + annualLeaveResult.totalLeavePay;
@@ -988,18 +993,21 @@
                 arbitraryDismissal,
                 annualLeaveResult,
                 socialSecurityNote,
-                noticeNote
+                noticeNote,
+                serviceYears,
+                serviceMonths,
+                serviceDays
             });
         }
         
-        function calculateAnnualLeave(serviceYears, serviceMonths, dailyWage) {
+        function calculateAnnualLeave(serviceYears, serviceMonths, serviceDays, dailyWage) {
             let totalLeaveDays = 0;
             let totalLeavePay = 0;
             let explanation = "";
             let note = "";
             
-            // حساب إجمالي مدة الخدمة بالأشهر
-            const totalServiceMonths = (serviceYears * 12) + serviceMonths;
+            // حساب إجمالي مدة الخدمة بالأشهر مع الأيام
+            const totalServiceMonths = (serviceYears * 12) + serviceMonths + (serviceDays / 30);
             
             // إذا كانت مدة الخدمة أقل من 5 سنوات (60 شهر)
             if (totalServiceMonths < 60) {
@@ -1009,7 +1017,7 @@
                 totalLeaveDays = (14 / 12) * lastTwoYearsMonths;
                 totalLeavePay = totalLeaveDays * dailyWage;
                 
-                explanation = `عدد أيام الإجازة السنوية المستحقة: (14 يوم ÷ 12 شهر) × ${lastTwoYearsMonths} شهر (آخر سنتين) = ${totalLeaveDays.toFixed(2)} يوم`;
+                explanation = `عدد أيام الإجازة السنوية المستحقة: (14 يوم ÷ 12 شهر) × ${lastTwoYearsMonths.toFixed(2)} شهر (آخر سنتين) = ${totalLeaveDays.toFixed(2)} يوم`;
                 note = "ملاحظة: يتم احتساب الإجازات السنوية عن آخر سنتين فقط من مدة الخدمة";
             } 
             // إذا كانت مدة الخدمة 5 سنوات أو أكثر
@@ -1020,7 +1028,7 @@
                 totalLeaveDays = (21 / 12) * lastTwoYearsMonths;
                 totalLeavePay = totalLeaveDays * dailyWage;
                 
-                explanation = `عدد أيام الإجازة السنوية المستحقة: (21 يوم ÷ 12 شهر) × ${lastTwoYearsMonths} شهر (آخر سنتين) = ${totalLeaveDays.toFixed(2)} يوم`;
+                explanation = `عدد أيام الإجازة السنوية المستحقة: (21 يوم ÷ 12 شهر) × ${lastTwoYearsMonths.toFixed(2)} شهر (آخر سنتين) = ${totalLeaveDays.toFixed(2)} يوم`;
                 note = "ملاحظة: يتم احتساب الإجازات السنوية عن آخر سنتين فقط من مدة الخدمة";
             }
             
@@ -1184,7 +1192,7 @@
                 <ul>
                     <li>${results.explanation}</li>
                     ${arbitraryDismissalText}
-                    <li>إجمالي مدة الخدمة: ${results.totalServiceMonths} شهر (${document.getElementById('serviceYears').value || 0} سنة و ${document.getElementById('serviceMonths').value || 0} شهر)</li>
+                    <li>إجمالي مدة الخدمة: ${results.totalServiceMonths.toFixed(2)} شهر (${results.serviceYears} سنة و ${results.serviceMonths} شهر و ${results.serviceDays} يوم)</li>
                     ${contractDetails}
                     <li>الرواتب المستحقة: ${document.getElementById('unpaidMonths').value || 0} أشهر × الراتب الشهري</li>
                     ${unpaidDaysText}
