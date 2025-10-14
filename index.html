@@ -369,6 +369,39 @@
             line-height: 1.5;
             font-weight: bold;
         }
+
+        /* الملاحظات القانونية الجديدة */
+        .legal-notes {
+            background-color: #f8f9fa;
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-size: 10px;
+            line-height: 1.4;
+            color: #555;
+        }
+        
+        .legal-notes h3 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 5px;
+        }
+        
+        .legal-notes ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .legal-notes li {
+            margin-bottom: 6px;
+            padding-right: 5px;
+            border-right: 2px solid var(--primary-color);
+        }
         
         @media (max-width: 768px) {
             .container {
@@ -601,13 +634,24 @@
                 <!-- سيتم ملء النتائج هنا بواسطة JavaScript -->
             </div>
             
-            <div class="explanation" id="explanationSection">
-                <!-- سيتم ملء الشرح هنا بواسطة JavaScript -->
+            <!-- الملاحظات القانونية الجديدة -->
+            <div class="legal-notes" id="legalNotes">
+                <h3>ملاحظات قانونية</h3>
+                <ul>
+                    <li>م46: الأجر يُدفع خلال 7 أيام من استحقاقه، ولا يجوز حسمه إلا وفق القانون.</li>
+                    <li>م61: للعامل إجازة سنوية 14 يومًا، وتصبح 21 يومًا بعد 5 سنوات خدمة متصلة لدى صاحب العمل.</li>
+                    <li>م32: يستحق العامل الذي لا يخضع لأحكام الضمان الاجتماعي مكافأة نهاية خدمة تساوي شهر عن كل سنة خدمة.</li>
+                    <li>م23: بدل الإشعار يساوي راتب شهر واحد ويحتسب بناءً على آخر أجر تقاضاه العامل.</li>
+                    <li>م59: أجر العمل الإضافي يساوي 125% من أجر العامل المعتاد، و150% عند العمل بالعطل الرسمية أو الأعياد الدينية.</li>
+                    <li>م25: في حالة الفصل التعسفي لعقود العمل غير محددة المدة فإن العامل يستحق بدل إشعار بالإضافة إلى أجر نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين.</li>
+                    <li>م26: في حالة الفصل التعسفي لعقود العمل محددة المدة فإن العامل يستحق أجر باقي المدة العقدية.</li>
+                    <li>يتم احتساب الحقوق العمالية عن آخر سنتين من تاريخ انتهاء العمل لدى صاحب العمل باستثناء (مكافأة نهاية الخدمة) فإنها تحتسب عن طيلة مدة الخدمة.</li>
+                </ul>
             </div>
             
             <!-- التنبيه المطلوب -->
             <div class="legal-notice">
-                تنبيه: هذه الحاسبة هي أداة إسترشادية فقط، وهي غير ملزمة لأي جهة. يوصى دائماً بإستشارة جهة مختصة للحصول على نتائج دقيقة.
+                تنبيه: هذه الحاسبة هي أداة إرشادية فقط، وهي غير ملزمة لأي جهة. يوصى دائماً باستشارة جهة مختصة للحصول على نتائج دقيقة.
             </div>
             
             <div class="action-buttons">
@@ -903,209 +947,143 @@
                 const monthlyCompensation = monthlyWage / 12;
                 endOfServiceCompensation = monthlyCompensation * totalServiceMonths;
                 explanation = `تعويض نهاية الخدمة (غير مشترك بالضمان): (${monthlyWage.toFixed(2)} ÷ 12) × ${totalServiceMonths.toFixed(2)} شهر = ${endOfServiceCompensation.toFixed(2)} دينار`;
-                socialSecurityNote = "ملاحظة: حسب المادة (73) من قانون العمل الأردني، يحق للعامل غير المشترك بالضمان الاجتماعي الحصول على تعويض نهاية الخدمة بواقع أجر شهر عن كل سنة عمل";
             }
             
-            // حساب بدل شهر الإشعار (راتب شهر كامل)
-            let noticeAllowance = 0;
-            let noticeNote = "";
-            if (contractType === 'indefinite' && noticeMonth) {
-                noticeAllowance = monthlyWage;
-                noticeNote = "ملاحظة: بدل شهر الإشعار يساوي راتب شهر كامل";
-            } else if (contractType === 'definite' && terminationType === 'definite') {
-                // لا يستحق بدل شهر الإشعار في حالة الفصل التعسفي للعقد محدد المدة
-                noticeAllowance = 0;
-            } else if (noticeMonth) {
-                noticeAllowance = monthlyWage;
-                noticeNote = "ملاحظة: بدل شهر الإشعار يساوي راتب شهر كامل";
+            // حساب بدل شهر الإشعار
+            let noticePay = 0;
+            let noticeExplanation = "";
+            
+            if (noticeMonth && contractType === 'indefinite') {
+                noticePay = monthlyWage;
+                noticeExplanation = `بدل شهر الإشعار: ${monthlyWage.toFixed(2)} دينار`;
+            } else if (contractType === 'definite') {
+                // التعديل: حساب بدل باقي المدة العقدية للعقد المحدد المدة
+                const remainingMonths = contractDuration - workedMonths;
+                const remainingDays = 30 - workedDays;
+                
+                if (remainingMonths > 0 || remainingDays > 0) {
+                    noticePay = (remainingMonths * monthlyWage) + (remainingDays * dailyWage);
+                    noticeExplanation = `بدل باقي المدة العقدية: ${remainingMonths} شهر و ${remainingDays} يوم = ${noticePay.toFixed(2)} دينار`;
+                }
             }
             
-            // حساب العمل الإضافي (125% من الأجر الساعي)
+            // حساب العمل الإضافي
             let overtimePay = 0;
+            let overtimeExplanation = "";
+            
             if (overtimeHours > 0 && overtimeDays > 0) {
-                // 125% من الأجر الساعي لجميع ساعات العمل الإضافي
-                const totalOvertimeHours = overtimeHours * overtimeDays;
-                overtimePay = totalOvertimeHours * hourlyWage * 1.25;
+                // أجر العمل الإضافي 125% من الأجر المعتاد
+                const overtimeHourlyRate = hourlyWage * 1.25;
+                overtimePay = overtimeHourlyRate * overtimeHours * overtimeDays;
+                overtimeExplanation = `العمل الإضافي: ${overtimeHours} ساعة × ${overtimeDays} يوم × ${overtimeHourlyRate.toFixed(2)} دينار/ساعة = ${overtimePay.toFixed(2)} دينار`;
             }
             
             // حساب العمل في العطل والأعياد
-            // معدل العمل في العطل: 150%
-            const holidayPay = holidayDays * dailyWage * 1.5;
+            let holidayPay = 0;
+            let holidayExplanation = "";
+            
+            if (holidayDays > 0) {
+                // أجر العمل في العطل الرسمية 150% من الأجر المعتاد
+                const holidayDailyRate = dailyWage * 1.5;
+                holidayPay = holidayDailyRate * holidayDays;
+                holidayExplanation = `العمل في العطل الرسمية: ${holidayDays} يوم × ${holidayDailyRate.toFixed(2)} دينار/يوم = ${holidayPay.toFixed(2)} دينار`;
+            }
             
             // حساب العمل في أيام الجمعة
-            // معدل العمل في الجمعة: 150%
-            const fridayPay = fridayDays * dailyWage * 1.5;
+            let fridayPay = 0;
+            let fridayExplanation = "";
             
-            // إجمالي المستحقات
-            const totalRights = unpaidSalaries + vacationPay + endOfServiceCompensation + noticeAllowance + overtimePay + holidayPay + fridayPay + arbitraryDismissalCompensation;
+            if (fridayDays > 0) {
+                // أجر العمل في أيام الجمعة 150% من الأجر المعتاد
+                const fridayDailyRate = dailyWage * 1.5;
+                fridayPay = fridayDailyRate * fridayDays;
+                fridayExplanation = `العمل في أيام الجمعة: ${fridayDays} يوم × ${fridayDailyRate.toFixed(2)} دينار/يوم = ${fridayPay.toFixed(2)} دينار`;
+            }
+            
+            // حساب الإجمالي النهائي
+            const totalCompensation = unpaidSalaries + vacationPay + endOfServiceCompensation + 
+                                    noticePay + overtimePay + holidayPay + fridayPay + 
+                                    arbitraryDismissalCompensation;
             
             // عرض النتائج
-            displayResults(
-                unpaidSalaries, 
-                vacationPay, 
-                endOfServiceCompensation, 
-                noticeAllowance, 
-                overtimePay, 
-                holidayPay, 
-                fridayPay, 
-                arbitraryDismissalCompensation,
-                totalRights,
-                explanation,
-                noticeNote,
-                socialSecurityNote,
-                arbitraryDismissalExplanation,
-                vacationDays
-            );
+            const resultContent = document.getElementById('resultContent');
+            resultContent.innerHTML = `
+                <div class="result-item">
+                    <span>الرواتب المستحقة:</span>
+                    <span>${unpaidSalaries.toFixed(2)} دينار</span>
+                </div>
+                <div class="result-item">
+                    <span>بدل الإجازات المستحقة:</span>
+                    <span>${vacationPay.toFixed(2)} دينار</span>
+                </div>
+                <div class="result-item">
+                    <span>بدل نهاية الخدمة:</span>
+                    <span>${endOfServiceCompensation.toFixed(2)} دينار</span>
+                </div>
+                ${noticePay > 0 ? `<div class="result-item">
+                    <span>بدل الإشعار/باقي المدة:</span>
+                    <span>${noticePay.toFixed(2)} دينار</span>
+                </div>` : ''}
+                ${overtimePay > 0 ? `<div class="result-item">
+                    <span>العمل الإضافي:</span>
+                    <span>${overtimePay.toFixed(2)} دينار</span>
+                </div>` : ''}
+                ${holidayPay > 0 ? `<div class="result-item">
+                    <span>العمل في العطل الرسمية:</span>
+                    <span>${holidayPay.toFixed(2)} دينار</span>
+                </div>` : ''}
+                ${fridayPay > 0 ? `<div class="result-item">
+                    <span>العمل في أيام الجمعة:</span>
+                    <span>${fridayPay.toFixed(2)} دينار</span>
+                </div>` : ''}
+                ${arbitraryDismissalCompensation > 0 ? `<div class="result-item">
+                    <span>بدل الفصل التعسفي:</span>
+                    <span>${arbitraryDismissalCompensation.toFixed(2)} دينار</span>
+                </div>` : ''}
+                <div class="result-item">
+                    <span>الإجمالي:</span>
+                    <span>${totalCompensation.toFixed(2)} دينار</span>
+                </div>
+            `;
             
             // إظهار قسم النتائج
             document.getElementById('resultSection').style.display = 'block';
+            
+            // إظهار الملاحظات القانونية
+            document.getElementById('legalNotes').style.display = 'block';
         }
         
-        // التعديل: دالة جديدة لحساب بدل الفصل التعسفي حسب القواعد الصحيحة
+        // التعديل: دالة جديدة لحساب بدل الفصل التعسفي
         function calculateArbitraryDismissalCompensation(monthlyWage, serviceYears, serviceMonths, serviceDays) {
-            // حساب بدل الفصل التعسفي: نصف شهر عن كل سنة خدمة بما لا يقل عن شهرين
+            // حساب إجمالي مدة الخدمة بالأشهر
+            const totalServiceMonths = (serviceYears * 12) + serviceMonths + (serviceDays / 30);
             
-            // حساب التعويض عن السنوات
-            const yearsCompensation = (monthlyWage / 2) * serviceYears;
+            // بدل الفصل التعسفي: نصف شهر عن كل سنة خدمة
+            let compensation = (monthlyWage / 2) * (totalServiceMonths / 12);
             
-            // حساب التعويض عن الأشهر
-            const monthsCompensation = (monthlyWage / 2) * (serviceMonths / 12);
-            
-            // حساب التعويض عن الأيام
-            const daysCompensation = (monthlyWage / 2) * (serviceDays / 365);
-            
-            // إجمالي التعويض
-            let totalCompensation = yearsCompensation + monthsCompensation + daysCompensation;
-            
-            // الحد الأدنى للتعويض هو أجر شهرين
+            // الحد الأدنى: أجر شهرين
             const minimumCompensation = monthlyWage * 2;
             
-            // إذا كان التعويض أقل من الحد الأدنى، نستخدم الحد الأدنى
-            if (totalCompensation < minimumCompensation) {
-                totalCompensation = minimumCompensation;
+            // إذا كان التعويض المحسوب أقل من الحد الأدنى، نستخدم الحد الأدنى
+            if (compensation < minimumCompensation) {
+                compensation = minimumCompensation;
             }
             
-            return totalCompensation;
+            return compensation;
         }
         
         // التعديل: دالة جديدة لشرح حساب بدل الفصل التعسفي
         function getArbitraryDismissalExplanation(monthlyWage, serviceYears, serviceMonths, serviceDays, compensation) {
-            let explanation = "بدل الفصل التعسفي: ";
-            
-            // حساب التعويض عن السنوات
-            const yearsCompensation = (monthlyWage / 2) * serviceYears;
-            
-            // حساب التعويض عن الأشهر
-            const monthsCompensation = (monthlyWage / 2) * (serviceMonths / 12);
-            
-            // حساب التعويض عن الأيام
-            const daysCompensation = (monthlyWage / 2) * (serviceDays / 365);
-            
-            // إجمالي التعويض
-            let totalCompensation = yearsCompensation + monthsCompensation + daysCompensation;
-            
-            // الحد الأدنى للتعويض هو أجر شهرين
+            const totalServiceMonths = (serviceYears * 12) + serviceMonths + (serviceDays / 30);
+            const monthlyRate = monthlyWage / 2;
+            const calculatedCompensation = monthlyRate * (totalServiceMonths / 12);
             const minimumCompensation = monthlyWage * 2;
             
-            explanation += `(نصف شهر عن كل سنة خدمة) = (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceYears} سنة`;
-            
-            if (serviceMonths > 0) {
-                explanation += ` + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceMonths} شهر ÷ 12`;
+            if (calculatedCompensation >= minimumCompensation) {
+                return `بدل الفصل التعسفي: (${monthlyWage.toFixed(2)} ÷ 2) × ${(totalServiceMonths / 12).toFixed(2)} سنة = ${compensation.toFixed(2)} دينار`;
+            } else {
+                return `بدل الفصل التعسفي: الحد الأدنى (أجر شهرين) = ${compensation.toFixed(2)} دينار`;
             }
-            
-            if (serviceDays > 0) {
-                explanation += ` + (${monthlyWage.toFixed(2)} ÷ 2) × ${serviceDays} يوم ÷ 365`;
-            }
-            
-            explanation += ` = ${totalCompensation.toFixed(2)} دينار`;
-            
-            // إذا كان التعويض أقل من الحد الأدنى، نستخدم الحد الأدنى
-            if (totalCompensation < minimumCompensation) {
-                explanation += ` (الحد الأدنى هو أجر شهرين = ${minimumCompensation.toFixed(2)} دينار)`;
-            }
-            
-            return explanation;
-        }
-        
-        // دالة لعرض النتائج
-        function displayResults(
-            unpaidSalaries, 
-            vacationPay, 
-            endOfServiceCompensation, 
-            noticeAllowance, 
-            overtimePay, 
-            holidayPay, 
-            fridayPay, 
-            arbitraryDismissalCompensation,
-            totalRights,
-            explanation,
-            noticeNote,
-            socialSecurityNote,
-            arbitraryDismissalExplanation,
-            vacationDays
-        ) {
-            const resultContent = document.getElementById('resultContent');
-            let html = '';
-            
-            html += '<div class="result-item">';
-            html += '<span>الرواتب المستحقة:</span>';
-            html += `<span>${unpaidSalaries.toFixed(2)} دينار</span>`;
-            html += '</div>';
-            
-            html += '<div class="result-item">';
-            html += '<span>بدل الإجازات المستحقة:</span>';
-            html += `<span>${vacationPay.toFixed(2)} دينار</span>`;
-            html += '</div>';
-            
-            html += '<div class="result-item">';
-            html += '<span>بدل نهاية الخدمة:</span>';
-            html += `<span>${endOfServiceCompensation.toFixed(2)} دينار</span>`;
-            html += '</div>';
-            
-            if (noticeAllowance > 0) {
-                html += '<div class="result-item">';
-                html += '<span>بدل شهر الإشعار:</span>';
-                html += `<span>${noticeAllowance.toFixed(2)} دينار</span>`;
-                html += '</div>';
-            }
-            
-            if (overtimePay > 0) {
-                html += '<div class="result-item">';
-                html += '<span>بدل العمل الإضافي:</span>';
-                html += `<span>${overtimePay.toFixed(2)} دينار</span>`;
-                html += '</div>';
-            }
-            
-            if (holidayPay > 0) {
-                html += '<div class="result-item">';
-                html += '<span>بدل العمل في العطل الرسمية:</span>';
-                html += `<span>${holidayPay.toFixed(2)} دينار</span>`;
-                html += '</div>';
-            }
-            
-            if (fridayPay > 0) {
-                html += '<div class="result-item">';
-                html += '<span>بدل العمل في أيام الجمعة:</span>';
-                html += `<span>${fridayPay.toFixed(2)} دينار</span>`;
-                html += '</div>';
-            }
-            
-            if (arbitraryDismissalCompensation > 0) {
-                html += '<div class="result-item">';
-                html += '<span>بدل الفصل التعسفي:</span>';
-                html += `<span>${arbitraryDismissalCompensation.toFixed(2)} دينار</span>`;
-                html += '</div>';
-            }
-            
-            html += '<div class="result-item">';
-            html += '<span>الإجمالي:</span>';
-            html += `<span>${totalRights.toFixed(2)} دينار</span>`;
-            html += '</div>';
-            
-            resultContent.innerHTML = html;
-            
-            // إخفاء قسم شرح الحسابات كما هو مطلوب
-            document.getElementById('explanationSection').style.display = 'none';
         }
     </script>
 </body>
