@@ -19,8 +19,43 @@
         #particles-js{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;background:linear-gradient(45deg,#0d1b5e,#1a237e,#283593,#303f9f);background-size:400% 400%;animation:gradientBG 15s ease infinite;}
         @keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
         .container{max-width:1200px;margin:0 auto;padding:15px;position:relative;z-index:1}
+
+        /* ===== التعديل الرئيسي: شريط علوي موحَّد ===== */
+        .top-bar {
+            display:flex;
+            align-items:center;
+            gap:12px;
+            margin-bottom:8px;
+            padding:6px 4px;
+        }
+        .creator-info{
+            font-size:12px; /* نفس الحجم لكن أقل بروزًا */
+            color:var(--gold-light);
+            opacity:0.85;
+            white-space:nowrap;
+            margin-right:auto; /* في وضع RTL هذا يجعل النص في الجهة اليسرى البصرية كما أردت أن يكون منسقًا مع السطر العلوي */
+        }
+        .language-switcher{
+            display:flex;
+            gap:8px;
+        }
+        .lang-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid var(--gold-light);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .lang-btn:hover, .lang-btn.active {
+            background: var(--gold-light);
+            color: var(--primary-color);
+        }
+        /* ===== نهاية التعديل الرئيسي ===== */
+
         header{background:linear-gradient(135deg,var(--primary-color),#1a237e);color:white;padding:15px;border-radius:8px 8px 0 0;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.1);margin-bottom:15px;border-bottom:3px solid var(--accent-color)}
-        .creator-info{position:absolute;left:15px;top:10px;font-size:10px;opacity:0.7;color:var(--gold-light)}
         h1{margin-bottom:5px;font-size:22px;color:white}
         .header-subtitle{font-size:14px;margin-bottom:5px;color:var(--gold-light)}
         .header-instruction{font-size:12px;opacity:0.9;color:var(--gold-light)}
@@ -61,19 +96,44 @@
         .legal-notes h3{color:var(--primary-color);margin-bottom:8px;font-size:12px;text-align:center;border-bottom:1px solid var(--accent-color);padding-bottom:5px}
         .legal-notes ul{list-style:none;padding:0;margin:0}
         .legal-notes li{margin-bottom:6px;padding-right:5px;border-right:2px solid var(--primary-color)}
+        
         @media (max-width:768px){
             .container{padding:10px}
             .form-grid{grid-template-columns:1fr}
             .form-section{padding:12px}
-            .creator-info{position:static;margin-bottom:8px;text-align:center}
             .service-duration-group{flex-direction:column}
             .action-buttons{flex-direction:column}
             .compact-row,.compact-row-3{grid-template-columns:1fr}
+            .language-switcher {
+                justify-content: center;
+            }
+            .creator-info{text-align:center;margin-right:0;}
         }
         @media print{
             #particles-js,button,.legal-notice,.footer{display:none!important}
             .form-section,.result-section{box-shadow:none;border:1px solid #ddd}
             body{background-color:white}
+        }
+        
+        /* English Language Styles */
+        body.english {
+            direction: ltr;
+            font-family: Arial, sans-serif;
+        }
+        body.english .form-section {
+            border-right: none;
+            border-left: 3px solid var(--accent-color);
+        }
+        body.english .contract-details,
+        body.english .service-note,
+        body.english .result-note,
+        body.english .legal-notes li {
+            border-right: none;
+            border-left: 4px solid var(--primary-color);
+        }
+        body.english .checkbox-group input {
+            margin-left: 0;
+            margin-right: 8px;
         }
     </style>
 </head>
@@ -81,56 +141,63 @@
     <div id="particles-js"></div>
 
     <div class="container">
-        <div class="creator-info">أنشئت بواسطة: المحامي محمد الشوحه</div>
+        <!-- TOP BAR: creator info + language buttons (هذا هو التعديل الفعلي في التنسيق) -->
+        <div class="top-bar">
+            <div class="creator-info" data-translate="creatorInfo">أنشئت بواسطة: المحامي محمد الشوحه</div>
+            <div class="language-switcher" aria-label="language switcher">
+                <button class="lang-btn active" data-lang="ar">العربية</button>
+                <button class="lang-btn" data-lang="en">English</button>
+            </div>
+        </div>
 
         <header>
-            <h1>حاسبة الحقوق العمالية</h1>
-            <p class="header-subtitle">بناءً على قانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته</p>
-            <p class="header-instruction">أدخل معلوماتك لحساب مستحقاتك</p>
+            <h1 data-translate="pageTitle">حاسبة الحقوق العمالية</h1>
+            <p class="header-subtitle" data-translate="pageSubtitle">بناءً على قانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته</p>
+            <p class="header-instruction" data-translate="pageInstruction">أدخل معلوماتك لحساب مستحقاتك</p>
         </header>
 
         <form id="rightsCalculator">
             <div class="form-grid">
                 <div class="form-section">
-                    <h2>معلومات الأجر الأساسي</h2>
+                    <h2 data-translate="basicWageInfo">معلومات الأجر الأساسي</h2>
                     <div class="input-group">
-                        <label for="wageType">نوع الأجر</label>
+                        <label for="wageType" data-translate="wageType">نوع الأجر</label>
                         <select id="wageType" tabindex="1">
-                            <option value="">-- اختر نوع الأجر --</option>
-                            <option value="daily">أجر يومي</option>
-                            <option value="monthly">أجر شهري</option>
+                            <option value="">-- <span data-translate="chooseWageType">اختر نوع الأجر</span> --</option>
+                            <option value="daily" data-translate="dailyWage">أجر يومي</option>
+                            <option value="monthly" data-translate="monthlyWage">أجر شهري</option>
                         </select>
                     </div>
                     <div class="input-group">
-                        <label for="lastWage">الراتب الأساسي الأخير (دينار)</label>
+                        <label for="lastWage" data-translate="lastBasicSalary">الراتب الأساسي الأخير (دينار)</label>
                         <input type="number" id="lastWage" min="0" step="0.01" required tabindex="2">
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h2>الرواتب المستحقة</h2>
+                    <h2 data-translate="dueSalaries">الرواتب المستحقة</h2>
                     <div class="input-group">
-                        <label for="contractType">نوع العقد</label>
+                        <label for="contractType" data-translate="contractType">نوع العقد</label>
                         <select id="contractType" tabindex="3">
-                            <option value="">-- اختر نوع العقد --</option>
-                            <option value="indefinite">عقد غير محدد المدة</option>
-                            <option value="definite">عقد محدد المدة</option>
+                            <option value="">-- <span data-translate="chooseContractType">اختر نوع العقد</span> --</option>
+                            <option value="indefinite" data-translate="indefiniteContract">عقد غير محدد المدة</option>
+                            <option value="definite" data-translate="definiteContract">عقد محدد المدة</option>
                         </select>
                     </div>
 
                     <div class="contract-details" id="contractDetails">
-                        <h3>تفاصيل العقد المحدد المدة</h3>
+                        <h3 data-translate="definiteContractDetails">تفاصيل العقد المحدد المدة</h3>
                         <div class="compact-row-3">
                             <div class="input-group">
-                                <label for="contractDuration">مدة العقد (أشهر)</label>
+                                <label for="contractDuration" data-translate="contractDuration">مدة العقد (أشهر)</label>
                                 <input type="number" id="contractDuration" min="1" step="1" tabindex="4">
                             </div>
                             <div class="input-group">
-                                <label for="workedMonths">الأشهر التي عملتها</label>
+                                <label for="workedMonths" data-translate="workedMonths">الأشهر التي عملتها</label>
                                 <input type="number" id="workedMonths" min="0" step="1" tabindex="5">
                             </div>
                             <div class="input-group">
-                                <label for="workedDays">الأيام التي عملتها</label>
+                                <label for="workedDays" data-translate="workedDays">الأيام التي عملتها</label>
                                 <input type="number" id="workedDays" min="0" max="30" step="1" tabindex="6">
                             </div>
                         </div>
@@ -138,96 +205,96 @@
 
                     <div class="compact-row">
                         <div class="input-group">
-                            <label for="unpaidMonths">أشهر مستحقة</label>
+                            <label for="unpaidMonths" data-translate="unpaidMonths">أشهر مستحقة</label>
                             <input type="number" id="unpaidMonths" min="0" step="1" tabindex="7">
                         </div>
                         <div class="input-group">
-                            <label for="unpaidDays">أيام مستحقة</label>
+                            <label for="unpaidDays" data-translate="unpaidDays">أيام مستحقة</label>
                             <input type="number" id="unpaidDays" min="0" step="1" tabindex="8">
                         </div>
                     </div>
 
                     <div class="input-group">
-                        <label for="vacationDays">أيام إجازات مستحقة</label>
+                        <label for="vacationDays" data-translate="vacationDays">أيام إجازات مستحقة</label>
                         <input type="number" id="vacationDays" min="0" step="1" tabindex="9">
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h2>مدة الخدمة</h2>
+                    <h2 data-translate="serviceDuration">مدة الخدمة</h2>
                     <div class="service-duration-group">
                         <div class="input-group">
-                            <label for="serviceYears">السنوات</label>
+                            <label for="serviceYears" data-translate="years">السنوات</label>
                             <input type="number" id="serviceYears" min="0" step="1" tabindex="10">
                         </div>
                         <div class="input-group">
-                            <label for="serviceMonths">الأشهر</label>
+                            <label for="serviceMonths" data-translate="months">الأشهر</label>
                             <input type="number" id="serviceMonths" min="0" max="11" step="1" tabindex="11">
                         </div>
                         <div class="input-group">
-                            <label for="serviceDays">الأيام</label>
+                            <label for="serviceDays" data-translate="days">الأيام</label>
                             <input type="number" id="serviceDays" min="0" max="30" step="1" tabindex="12">
                         </div>
                     </div>
 
                     <div class="service-note" id="serviceNote">
-                        <strong>ملاحظة:</strong> يتم استخدام مدة الخدمة لاحتساب بدل نهاية الخدمة في حال عدم اشتراك العامل بالضمان الاجتماعي
+                        <strong data-translate="note">ملاحظة:</strong> <span data-translate="serviceNoteText">يتم استخدام مدة الخدمة لاحتساب بدل نهاية الخدمة في حال عدم اشتراك العامل بالضمان الاجتماعي</span>
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h2>تفاصيل إنهاء الخدمة</h2>
+                    <h2 data-translate="terminationDetails">تفاصيل إنهاء الخدمة</h2>
                     <div class="checkbox-group" id="noticeMonthGroup">
                         <input type="checkbox" id="noticeMonth" tabindex="13">
-                        <label for="noticeMonth">يستحق بدل شهر الإشعار</label>
+                        <label for="noticeMonth" data-translate="deservesNoticeMonth">يستحق بدل شهر الإشعار</label>
                     </div>
 
                     <div class="input-group">
-                        <label for="socialSecurity">الضمان الاجتماعي</label>
+                        <label for="socialSecurity" data-translate="socialSecurity">الضمان الاجتماعي</label>
                         <select id="socialSecurity" tabindex="14">
-                            <option value="yes">نعم - مشترك</option>
-                            <option value="no">لا - غير مشترك</option>
+                            <option value="yes" data-translate="yesSubscribed">نعم - مشترك</option>
+                            <option value="no" data-translate="notSubscribed">لا - غير مشترك</option>
                         </select>
                     </div>
 
                     <div class="input-group">
-                        <label for="terminationType">سبب إنهاء الخدمة</label>
+                        <label for="terminationType" data-translate="terminationReason">سبب إنهاء الخدمة</label>
                         <select id="terminationType" tabindex="15">
-                            <option value="mutual">إنهاء برضا الطرفين</option>
-                            <option value="indefinite">فصل تعسفي (عقد غير محدد)</option>
-                            <option value="definite">فصل تعسفي (عقد محدد)</option>
+                            <option value="mutual" data-translate="mutualTermination">إنهاء برضا الطرفين</option>
+                            <option value="indefinite" data-translate="arbitraryIndefinite">فصل تعسفي (عقد غير محدد)</option>
+                            <option value="definite" data-translate="arbitraryDefinite">فصل تعسفي (عقد محدد)</option>
                         </select>
                     </div>
 
                     <div class="checkbox-group" id="arbitraryDismissalGroup" style="display:none">
                         <input type="checkbox" id="arbitraryDismissal" tabindex="16">
-                        <label for="arbitraryDismissal">يستحق بدل فصل تعسفي</label>
+                        <label for="arbitraryDismissal" data-translate="deservesArbitraryDismissal">يستحق بدل فصل تعسفي</label>
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h2>العمل الإضافي</h2>
+                    <h2 data-translate="overtimeWork">العمل الإضافي</h2>
                     <div class="compact-row">
                         <div class="input-group">
-                            <label for="overtimeHours">ساعات إضافية/يوم</label>
+                            <label for="overtimeHours" data-translate="overtimeHours">ساعات إضافية/يوم</label>
                             <input type="number" id="overtimeHours" min="0" step="0.5" tabindex="17">
                         </div>
                         <div class="input-group">
-                            <label for="overtimeDays">أيام عمل إضافي</label>
+                            <label for="overtimeDays" data-translate="overtimeDays">أيام عمل إضافي</label>
                             <input type="number" id="overtimeDays" min="0" step="1" tabindex="18">
                         </div>
                     </div>
                 </div>
 
                 <div class="form-section">
-                    <h2>العمل في العطل والأعياد</h2>
+                    <h2 data-translate="holidayWork">العمل في العطل والأعياد</h2>
                     <div class="compact-row">
                         <div class="input-group">
-                            <label for="holidayDays">أيام العطل الرسمية</label>
+                            <label for="holidayDays" data-translate="holidayDays">أيام العطل الرسمية</label>
                             <input type="number" id="holidayDays" min="0" step="1" tabindex="19">
                         </div>
                         <div class="input-group">
-                            <label for="fridayDays">أيام الجمعة</label>
+                            <label for="fridayDays" data-translate="fridayDays">أيام الجمعة</label>
                             <input type="number" id="fridayDays" min="0" step="1" tabindex="20">
                         </div>
                     </div>
@@ -235,48 +302,232 @@
             </div>
 
             <div class="action-buttons">
-                <button type="submit" tabindex="21">احسب المستحقات</button>
-                <button type="button" class="reset-btn" id="resetBtn" tabindex="22">تفريغ الحقول</button>
+                <button type="submit" tabindex="21" data-translate="calculateRights">احسب المستحقات</button>
+                <button type="button" class="reset-btn" id="resetBtn" tabindex="22" data-translate="resetFields">تفريغ الحقول</button>
             </div>
         </form>
 
         <div class="result-section" id="resultSection">
-            <h2>نتائج حساب المستحقات</h2>
+            <h2 data-translate="calculationResults">نتائج حساب المستحقات</h2>
             <div id="resultContent"></div>
 
             <div class="legal-notes" id="legalNotes">
-                <h3>ملاحظات قانونية</h3>
+                <h3 data-translate="legalNotes">ملاحظات قانونية</h3>
                 <ul>
-                    <li>م46: الأجر يُدفع خلال 7 أيام من استحقاقه، ولا يجوز حسمه إلا وفق القانون.</li>
-                    <li>م61: للعامل إجازة سنوية 14 يومًا، وتصبح 21 يومًا بعد 5 سنوات خدمة متصلة لدى صاحب العمل.</li>
-                    <li>م32: يستحق العامل الذي لا يخضع لأحكام الضمان الاجتماعي مكافأة نهاية خدمة تساوي شهر عن كل سنة خدمة.</li>
-                    <li>م23: بدل الإشعار يساوي راتب شهر واحد ويحتسب بناءً على آخر أجر تقاضاه العامل.</li>
-                    <li>م59: أجر العمل الإضافي يساوي 125% من أجر العامل المعتاد، و150% عند العمل بالعطل الرسمية أو الأعياد الدينية.</li>
-                    <li>م25: في حالة الفصل التعسفي لعقود العمل غير محددة المدة فإن العامل يستحق بدل إشعار بالإضافة إلى أجر نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين.</li>
-                    <li>م26: في حالة الفصل التعسفي لعقود العمل محددة المدة فإن العامل يستحق أجر باقي المدة العقدية.</li>
-                    <li>يتم احتساب الحقوق العمالية عن آخر سنتين من تاريخ انتهاء العمل لدى صاحب العمل باستثناء مكافأة نهاية الخدمة فإنها تحتسب عن طيلة مدة الخدمة.</li>
+                    <li data-translate="legalNote1">م46: الأجر يُدفع خلال 7 أيام من استحقاقه، ولا يجوز حسمه إلا وفق القانون.</li>
+                    <li data-translate="legalNote2">م61: للعامل إجازة سنوية 14 يومًا، وتصبح 21 يومًا بعد 5 سنوات خدمة متصلة لدى صاحب العمل.</li>
+                    <li data-translate="legalNote3">م32: يستحق العامل الذي لا يخضع لأحكام الضمان الاجتماعي مكافأة نهاية خدمة تساوي شهر عن كل سنة خدمة.</li>
+                    <li data-translate="legalNote4">م23: بدل الإشعار يساوي راتب شهر واحد ويحتسب بناءً على آخر أجر تقاضاه العامل.</li>
+                    <li data-translate="legalNote5">م59: أجر العمل الإضافي يساوي 125% من أجر العامل المعتاد، و150% عند العمل بالعطل الرسمية أو الأعياد الدينية.</li>
+                    <li data-translate="legalNote6">م25: في حالة الفصل التعسفي لعقود العمل غير محددة المدة فإن العامل يستحق بدل إشعار بالإضافة إلى أجر نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين.</li>
+                    <li data-translate="legalNote7">م26: في حالة الفصل التعسفي لعقود العمل محددة المدة فإن العامل يستحق أجر باقي المدة العقدية.</li>
+                    <li data-translate="legalNote8">يتم احتساب الحقوق العمالية عن آخر سنتين من تاريخ انتهاء العمل لدى صاحب العمل باستثناء مكافأة نهاية الخدمة فإنها تحتسب عن طيلة مدة الخدمة.</li>
                 </ul>
             </div>
 
-            <div class="legal-notice">تنبيه: هذه الحاسبة هي أداة إرشادية فقط، وهي غير ملزمة لأي جهة. يوصى دائماً باستشارة جهة مختصة للحصول على نتائج دقيقة.</div>
+            <div class="legal-notice" data-translate="legalNotice">تنبيه: هذه الحاسبة هي أداة إرشادية فقط، وهي غير ملزمة لأي جهة. يوصى دائماً باستشارة جهة مختصة للحصول على نتائج دقيقة.</div>
 
             <div class="action-buttons">
-                <button type="button" class="print-btn" id="printBtn">طباعة النتائج</button>
+                <button type="button" class="print-btn" id="printBtn" data-translate="printResults">طباعة النتائج</button>
             </div>
         </div>
 
         <div class="footer">
-            <p>تم إنشاء هذه الصفحة بواسطة المحامي محمد الشوحه</p>
-            <p class="law-reference">تم إنشاء هذه الحاسبة وفقاً لقانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته</p>
-            <p class="copyright">جميع الحقوق محفوظة © 2023 - هذه الصفحة محمية بموجب قوانين حقوق النشر والملكية الفكرية</p>
+            <p data-translate="createdBy">تم إنشاء هذه الصفحة بواسطة المحامي محمد الشوحه</p>
+            <p class="law-reference" data-translate="lawReference">تم إنشاء هذه الحاسبة وفقاً لقانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته</p>
+            <p class="copyright" data-translate="copyright">جميع الحقوق محفوظة © 2023 - هذه الصفحة محمية بموجب قوانين حقوق النشر والملكية الفكرية</p>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
-        // particles.js initialisation
+        // Language management
+        const translations = {
+            ar: {
+                creatorInfo: "أنشئت بواسطة: المحامي محمد الشوحه",
+                pageTitle: "حاسبة الحقوق العمالية",
+                pageSubtitle: "بناءً على قانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته",
+                pageInstruction: "أدخل معلوماتك لحساب مستحقاتك",
+                basicWageInfo: "معلومات الأجر الأساسي",
+                wageType: "نوع الأجر",
+                chooseWageType: "اختر نوع الأجر",
+                dailyWage: "أجر يومي",
+                monthlyWage: "أجر شهري",
+                lastBasicSalary: "الراتب الأساسي الأخير (دينار)",
+                dueSalaries: "الرواتب المستحقة",
+                contractType: "نوع العقد",
+                chooseContractType: "اختر نوع العقد",
+                indefiniteContract: "عقد غير محدد المدة",
+                definiteContract: "عقد محدد المدة",
+                definiteContractDetails: "تفاصيل العقد المحدد المدة",
+                contractDuration: "مدة العقد (أشهر)",
+                workedMonths: "الأشهر التي عملتها",
+                workedDays: "الأيام التي عملتها",
+                unpaidMonths: "أشهر مستحقة",
+                unpaidDays: "أيام مستحقة",
+                vacationDays: "أيام إجازات مستحقة",
+                serviceDuration: "مدة الخدمة",
+                years: "السنوات",
+                months: "الأشهر",
+                days: "الأيام",
+                note: "ملاحظة:",
+                serviceNoteText: "يتم استخدام مدة الخدمة لاحتساب بدل نهاية الخدمة في حال عدم اشتراك العامل بالضمان الاجتماعي",
+                terminationDetails: "تفاصيل إنهاء الخدمة",
+                deservesNoticeMonth: "يستحق بدل شهر الإشعار",
+                socialSecurity: "الضمان الاجتماعي",
+                yesSubscribed: "نعم - مشترك",
+                notSubscribed: "لا - غير مشترك",
+                terminationReason: "سبب إنهاء الخدمة",
+                mutualTermination: "إنهاء برضا الطرفين",
+                arbitraryIndefinite: "فصل تعسفي (عقد غير محدد)",
+                arbitraryDefinite: "فصل تعسفي (عقد محدد)",
+                deservesArbitraryDismissal: "يستحق بدل فصل تعسفي",
+                overtimeWork: "العمل الإضافي",
+                overtimeHours: "ساعات إضافية/يوم",
+                overtimeDays: "أيام عمل إضافي",
+                holidayWork: "العمل في العطل والأعياد",
+                holidayDays: "أيام العطل الرسمية",
+                fridayDays: "أيام الجمعة",
+                calculateRights: "احسب المستحقات",
+                resetFields: "تفريغ الحقول",
+                calculationResults: "نتائج حساب المستحقات",
+                legalNotes: "ملاحظات قانونية",
+                legalNote1: "م46: الأجر يُدفع خلال 7 أيام من استحقاقه، ولا يجوز حسمه إلا وفق القانون.",
+                legalNote2: "م61: للعامل إجازة سنوية 14 يومًا، وتصبح 21 يومًا بعد 5 سنوات خدمة متصلة لدى صاحب العمل.",
+                legalNote3: "م32: يستحق العامل الذي لا يخضع لأحكام الضمان الاجتماعي مكافأة نهاية خدمة تساوي شهر عن كل سنة خدمة.",
+                legalNote4: "م23: بدل الإشعار يساوي راتب شهر واحد ويحتسب بناءً على آخر أجر تقاضاه العامل.",
+                legalNote5: "م59: أجر العمل الإضافي يساوي 125% من أجر العامل المعتاد، و150% عند العمل بالعطل الرسمية أو الأعياد الدينية.",
+                legalNote6: "م25: في حالة الفصل التعسفي لعقود العمل غير محددة المدة فإن العامل يستحق بدل إشعار بالإضافة إلى أجر نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين.",
+                legalNote7: "م26: في حالة الفصل التعسفي لعقود العمل محددة المدة فإن العامل يستحق أجر باقي المدة العقدية.",
+                legalNote8: "يتم احتساب الحقوق العمالية عن آخر سنتين من تاريخ انتهاء العمل لدى صاحب العمل باستثناء مكافأة نهاية الخدمة فإنها تحتسب عن طيلة مدة الخدمة.",
+                legalNotice: "تنبيه: هذه الحاسبة هي أداة إرشادية فقط، وهي غير ملزمة لأي جهة. يوصى دائماً باستشارة جهة مختصة للحصول على نتائج دقيقة.",
+                printResults: "طباعة النتائج",
+                createdBy: "تم إنشاء هذه الصفحة بواسطة المحامي محمد الشوحه",
+                lawReference: "تم إنشاء هذه الحاسبة وفقاً لقانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته",
+                copyright: "جميع الحقوق محفوظة © 2023 - هذه الصفحة محمية بموجب قوانين حقوق النشر والملكية الفكرية",
+                // Result translations
+                unpaidSalaries: "الرواتب المستحقة",
+                vacationPay: "بدل الإجازات المستحقة",
+                endOfService: "بدل نهاية الخدمة",
+                noticeCompensation: "بدل شهر الإشعار",
+                overtimePay: "بدل العمل الإضافي",
+                holidayPay: "بدل العطل الرسمية",
+                fridayPay: "بدل أيام الجمعة",
+                arbitraryDismissalComp: "بدل الفصل التعسفي",
+                total: "الإجمالي",
+                dinar: "دينار",
+                noEndOfService: "لا يستحق العامل بدل نهاية الخدمة لأنه مشترك بالضمان الاجتماعي.",
+                endOfServiceNote: "يتم احتساب بدل نهاية الخدمة لأن العامل غير مشترك بالضمان الاجتماعي.",
+                noNoticeCompensation: "لا يستحق العامل بدل شهر الإشعار في حالة العقد محدد المدة.",
+                noticeCompensationYes: "يستحق العامل بدل شهر الإشعار.",
+                noticeCompensationNo: "لا يستحق العامل بدل شهر الإشعار.",
+                arbitraryDismissalExplanation1: "بدل الفصل التعسفي: نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين",
+                arbitraryDismissalExplanation2: "دينار حسب المادة 25 من قانون العمل.",
+                endOfServiceExplanation: "بدل نهاية الخدمة: شهر عن كل سنة خدمة"
+            },
+            en: {
+                creatorInfo: "Created by: Lawyer Mohammed Al-Shouha",
+                pageTitle: "Labor Rights Calculator",
+                pageSubtitle: "Based on Jordanian Labor Law No. 8 of 1996 and its amendments",
+                pageInstruction: "Enter your information to calculate your entitlements",
+                basicWageInfo: "Basic Wage Information",
+                wageType: "Wage Type",
+                chooseWageType: "Choose Wage Type",
+                dailyWage: "Daily Wage",
+                monthlyWage: "Monthly Wage",
+                lastBasicSalary: "Last Basic Salary (JD)",
+                dueSalaries: "Due Salaries",
+                contractType: "Contract Type",
+                chooseContractType: "Choose Contract Type",
+                indefiniteContract: "Indefinite Term Contract",
+                definiteContract: "Definite Term Contract",
+                definiteContractDetails: "Definite Term Contract Details",
+                contractDuration: "Contract Duration (Months)",
+                workedMonths: "Months Worked",
+                workedDays: "Days Worked",
+                unpaidMonths: "Unpaid Months",
+                unpaidDays: "Unpaid Days",
+                vacationDays: "Due Vacation Days",
+                serviceDuration: "Service Duration",
+                years: "Years",
+                months: "Months",
+                days: "Days",
+                note: "Note:",
+                serviceNoteText: "Service duration is used to calculate end-of-service compensation if the worker is not subscribed to social security",
+                terminationDetails: "Service Termination Details",
+                deservesNoticeMonth: "Deserves Notice Month Compensation",
+                socialSecurity: "Social Security",
+                yesSubscribed: "Yes - Subscribed",
+                notSubscribed: "No - Not Subscribed",
+                terminationReason: "Termination Reason",
+                mutualTermination: "Termination by Mutual Consent",
+                arbitraryIndefinite: "Arbitrary Dismissal (Indefinite Contract)",
+                arbitraryDefinite: "Arbitrary Dismissal (Definite Contract)",
+                deservesArbitraryDismissal: "Deserves Arbitrary Dismissal Compensation",
+                overtimeWork: "Overtime Work",
+                overtimeHours: "Overtime Hours/Day",
+                overtimeDays: "Overtime Days",
+                holidayWork: "Work on Holidays and Occasions",
+                holidayDays: "Official Holiday Days",
+                fridayDays: "Friday Days",
+                calculateRights: "Calculate Rights",
+                resetFields: "Reset Fields",
+                calculationResults: "Calculation Results",
+                legalNotes: "Legal Notes",
+                legalNote1: "Article 46: Wages must be paid within 7 days of becoming due, and may not be deducted except in accordance with the law.",
+                legalNote2: "Article 61: The worker is entitled to 14 days of annual leave, which becomes 21 days after 5 consecutive years of service with the employer.",
+                legalNote3: "Article 32: A worker not subject to social security provisions is entitled to an end-of-service reward equal to one month's wage for each year of service.",
+                legalNote4: "Article 23: Notice compensation equals one month's salary and is calculated based on the last wage received by the worker.",
+                legalNote5: "Article 59: Overtime pay equals 125% of the worker's regular wage, and 150% when working on official holidays or religious occasions.",
+                legalNote6: "Article 25: In case of arbitrary dismissal for indefinite-term employment contracts, the worker is entitled to notice compensation plus half a month's wage for each year of service, not less than two months' wages.",
+                legalNote7: "Article 26: In case of arbitrary dismissal for definite-term employment contracts, the worker is entitled to the wages for the remaining contract period.",
+                legalNote8: "Labor rights are calculated for the last two years from the date of termination of employment with the employer, except for the end-of-service reward, which is calculated for the entire service period.",
+                legalNotice: "Notice: This calculator is for guidance only and is not binding on any party. It is always recommended to consult a specialized authority for accurate results.",
+                printResults: "Print Results",
+                createdBy: "Created by: Lawyer Mohammed Al-Shouha",
+                lawReference: "This calculator was created according to Jordanian Labor Law No. 8 of 1996 and its amendments",
+                copyright: "All rights reserved © 2023 - This page is protected by copyright and intellectual property laws",
+                // Result translations
+                unpaidSalaries: "Unpaid Salaries",
+                vacationPay: "Vacation Pay",
+                endOfService: "End of Service Compensation",
+                noticeCompensation: "Notice Compensation",
+                overtimePay: "Overtime Pay",
+                holidayPay: "Holiday Pay",
+                fridayPay: "Friday Pay",
+                arbitraryDismissalComp: "Arbitrary Dismissal Compensation",
+                total: "Total",
+                dinar: "JD",
+                noEndOfService: "The worker is not entitled to end-of-service compensation because they are subscribed to social security.",
+                endOfServiceNote: "End-of-service compensation is calculated because the worker is not subscribed to social security.",
+                noNoticeCompensation: "The worker is not entitled to notice compensation in the case of a definite-term contract.",
+                noticeCompensationYes: "The worker deserves notice compensation.",
+                noticeCompensationNo: "The worker does not deserve notice compensation.",
+                arbitraryDismissalExplanation1: "Arbitrary dismissal compensation: Half a month for each year of service, not less than two months' wages",
+                arbitraryDismissalExplanation2: "JD according to Article 25 of the Labor Law.",
+                endOfServiceExplanation: "End of service compensation: One month for each year of service"
+            }
+        };
+
+        let currentLanguage = 'ar';
+
+        // Language switcher functionality
         document.addEventListener('DOMContentLoaded', function() {
+            const langButtons = document.querySelectorAll('.lang-btn');
+            
+            langButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const lang = this.getAttribute('data-lang');
+                    switchLanguage(lang);
+                    
+                    // Update active button
+                    langButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+            
+            // Initialize particles
             particlesJS('particles-js', {
                 particles: {
                     number: { value: 200, density: { enable: true, value_area: 800 } },
@@ -295,6 +546,73 @@
                 retina_detect: true
             });
         });
+
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update HTML direction and class
+            document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+            document.documentElement.lang = lang;
+            document.body.className = lang === 'ar' ? '' : 'english';
+            
+            // Update all translatable elements
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (translations[lang][key]) {
+                    if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
+                        // For input placeholders
+                        if (element.hasAttribute('placeholder')) {
+                            element.setAttribute('placeholder', translations[lang][key]);
+                        }
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+            
+            // Update option values in selects
+            updateSelectOptions();
+            
+            // Recalculate if results are shown
+            if (document.getElementById('resultSection').style.display === 'block') {
+                calculateRights();
+            }
+        }
+
+        function updateSelectOptions() {
+            // Update wage type options
+            const wageTypeSelect = document.getElementById('wageType');
+            if (wageTypeSelect) {
+                const options = wageTypeSelect.querySelectorAll('option');
+                options[1].textContent = translations[currentLanguage]['dailyWage'];
+                options[2].textContent = translations[currentLanguage]['monthlyWage'];
+            }
+            
+            // Update contract type options
+            const contractTypeSelect = document.getElementById('contractType');
+            if (contractTypeSelect) {
+                const options = contractTypeSelect.querySelectorAll('option');
+                options[1].textContent = translations[currentLanguage]['indefiniteContract'];
+                options[2].textContent = translations[currentLanguage]['definiteContract'];
+            }
+            
+            // Update social security options
+            const socialSecuritySelect = document.getElementById('socialSecurity');
+            if (socialSecuritySelect) {
+                const options = socialSecuritySelect.querySelectorAll('option');
+                options[0].textContent = translations[currentLanguage]['yesSubscribed'];
+                options[1].textContent = translations[currentLanguage]['notSubscribed'];
+            }
+            
+            // Update termination type options
+            const terminationTypeSelect = document.getElementById('terminationType');
+            if (terminationTypeSelect) {
+                const options = terminationTypeSelect.querySelectorAll('option');
+                options[0].textContent = translations[currentLanguage]['mutualTermination'];
+                options[1].textContent = translations[currentLanguage]['arbitraryIndefinite'];
+                options[2].textContent = translations[currentLanguage]['arbitraryDefinite'];
+            }
+        }
 
         // Elements
         const form = document.getElementById('rightsCalculator');
@@ -402,12 +720,12 @@
 
             // Validation
             if (!wageType) {
-                alert("يرجى اختيار نوع الأجر");
+                alert(currentLanguage === 'ar' ? "يرجى اختيار نوع الأجر" : "Please select wage type");
                 document.getElementById('wageType').focus();
                 return;
             }
             if (!contractType) {
-                alert("يرجى اختيار نوع العقد");
+                alert(currentLanguage === 'ar' ? "يرجى اختيار نوع العقد" : "Please select contract type");
                 contractTypeEl.focus();
                 return;
             }
@@ -433,15 +751,15 @@
                 arbitraryDismissalExplanation = getArbitraryDismissalExplanation(monthlyWage, serviceYears, serviceMonths, serviceDays, arbitraryDismissalCompensation);
             }
 
-            // Social security handling: KEEP explanation, REMOVE the socialSecurityNote when 'yes'
+            // Social security handling
             if (socialSecurity === 'yes') {
                 endOfServiceCompensation = 0;
-                explanation = "لا يستحق العامل بدل نهاية الخدمة لأنه مشترك بالضمان الاجتماعي.";
-                socialSecurityNote = ""; // <-- هنا قمنا بإفراغ السطر حسب طلبك
+                explanation = translations[currentLanguage]['noEndOfService'];
+                socialSecurityNote = "";
             } else {
                 endOfServiceCompensation = calculateEndOfServiceCompensation(monthlyWage, serviceYears, serviceMonths, serviceDays);
                 explanation = getEndOfServiceExplanation(monthlyWage, serviceYears, serviceMonths, serviceDays, endOfServiceCompensation);
-                socialSecurityNote = "ملاحظة: يتم احتساب بدل نهاية الخدمة لأن العامل غير مشترك بالضمان الاجتماعي.";
+                socialSecurityNote = translations[currentLanguage]['endOfServiceNote'];
             }
 
             // Notice compensation
@@ -450,10 +768,10 @@
 
             if (contractType === 'definite') {
                 noticeCompensation = 0;
-                noticeExplanation = "لا يستحق العامل بدل شهر الإشعار في حالة العقد محدد المدة.";
+                noticeExplanation = translations[currentLanguage]['noNoticeCompensation'];
             } else {
                 noticeCompensation = noticeMonth ? monthlyWage : 0;
-                noticeExplanation = noticeMonth ? "يستحق العامل بدل شهر الإشعار." : "لا يستحق العامل بدل شهر الإشعار.";
+                noticeExplanation = noticeMonth ? translations[currentLanguage]['noticeCompensationYes'] : translations[currentLanguage]['noticeCompensationNo'];
             }
 
             // Overtime and holidays
@@ -467,18 +785,18 @@
 
             // Render results
             let html = `
-                <div class="result-item"><span>الرواتب المستحقة:</span><span>${unpaidSalaries.toFixed(2)} دينار</span></div>
-                <div class="result-item"><span>بدل الإجازات المستحقة:</span><span>${vacationPay.toFixed(2)} دينار</span></div>
-                <div class="result-item"><span>بدل نهاية الخدمة:</span><span>${endOfServiceCompensation.toFixed(2)} دينار</span></div>
-                <div class="result-item"><span>بدل شهر الإشعار:</span><span>${noticeCompensation.toFixed(2)} دينار</span></div>
-                <div class="result-item"><span>بدل العمل الإضافي:</span><span>${overtimePay.toFixed(2)} دينار</span></div>
-                <div class="result-item"><span>بدل العطل الرسمية:</span><span>${holidayPay.toFixed(2)} دينار</span></div>
-                <div class="result-item"><span>بدل أيام الجمعة:</span><span>${fridayPay.toFixed(2)} دينار</span></div>
+                <div class="result-item"><span>${translations[currentLanguage]['unpaidSalaries']}:</span><span>${unpaidSalaries.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
+                <div class="result-item"><span>${translations[currentLanguage]['vacationPay']}:</span><span>${vacationPay.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
+                <div class="result-item"><span>${translations[currentLanguage]['endOfService']}:</span><span>${endOfServiceCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
+                <div class="result-item"><span>${translations[currentLanguage]['noticeCompensation']}:</span><span>${noticeCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
+                <div class="result-item"><span>${translations[currentLanguage]['overtimePay']}:</span><span>${overtimePay.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
+                <div class="result-item"><span>${translations[currentLanguage]['holidayPay']}:</span><span>${holidayPay.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
+                <div class="result-item"><span>${translations[currentLanguage]['fridayPay']}:</span><span>${fridayPay.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
             `;
             if (arbitraryDismissalCompensation > 0) {
-                html += `<div class="result-item"><span>بدل الفصل التعسفي:</span><span>${arbitraryDismissalCompensation.toFixed(2)} دينار</span></div>`;
+                html += `<div class="result-item"><span>${translations[currentLanguage]['arbitraryDismissalComp']}:</span><span>${arbitraryDismissalCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
             }
-            html += `<div class="result-item"><span>الإجمالي:</span><span>${totalCompensation.toFixed(2)} دينار</span></div>`;
+            html += `<div class="result-item"><span>${translations[currentLanguage]['total']}:</span><span>${totalCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
             html += `<div class="result-note">${explanation}</div>`;
             html += `<div class="result-note">${noticeExplanation}</div>`;
             if (arbitraryDismissalExplanation) html += `<div class="result-note">${arbitraryDismissalExplanation}</div>`;
@@ -502,9 +820,9 @@
             const totalMonths = years + (months / 12) + (days / 360);
             const baseCompensation = (totalMonths / 2) * monthlyWage;
             if (baseCompensation < monthlyWage * 2) {
-                return `بدل الفصل التعسفي: نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين (${(monthlyWage * 2).toFixed(2)} دينار) حسب المادة 25 من قانون العمل.`;
+                return `${translations[currentLanguage]['arbitraryDismissalExplanation1']} (${(monthlyWage * 2).toFixed(2)} ${translations[currentLanguage]['arbitraryDismissalExplanation2']}`;
             } else {
-                return `بدل الفصل التعسفي: نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين (${baseCompensation.toFixed(2)} دينار) حسب المادة 25 من قانون العمل.`;
+                return `${translations[currentLanguage]['arbitraryDismissalExplanation1']} (${baseCompensation.toFixed(2)} ${translations[currentLanguage]['arbitraryDismissalExplanation2']}`;
             }
         }
 
@@ -514,7 +832,7 @@
         }
 
         function getEndOfServiceExplanation(monthlyWage, years, months, days, compensation) {
-            return `بدل نهاية الخدمة: شهر عن كل سنة خدمة (${years} سنوات و ${months} أشهر و ${days} أيام) = ${compensation.toFixed(2)} دينار.`;
+            return `${translations[currentLanguage]['endOfServiceExplanation']} (${years} ${translations[currentLanguage]['years']} ${months} ${translations[currentLanguage]['months']} ${days} ${translations[currentLanguage]['days']}) = ${compensation.toFixed(2)} ${translations[currentLanguage]['dinar']}.`;
         }
     </script>
 </body>
