@@ -11,7 +11,9 @@
             --accent-color:#d4af37;
             --text-color:#333;
             --border-color:#ddd;
-            --gold-light:#f0e6d2;
+            --gold-light:#d4af37;
+            --gold-very-light: rgba(212,175,55,0.95);
+            --gold-watermark: rgba(212,175,55,0.12);
             --blue-light:#e8f4fd;
         }
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
@@ -20,7 +22,7 @@
         @keyframes gradientBG{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
         .container{max-width:1200px;margin:0 auto;padding:15px;position:relative;z-index:1}
 
-        /* ===== التعديل الرئيسي: شريط علوي موحَّد ===== */
+        /* TOP BAR */
         .top-bar {
             display:flex;
             align-items:center;
@@ -29,131 +31,189 @@
             padding:6px 4px;
         }
         .creator-info{
-            font-size:12px; /* نفس الحجم لكن أقل بروزًا */
-            color:var(--gold-light);
-            opacity:0.85;
+            font-size:12px;
+            color:var(--gold-very-light);
+            opacity:0.95;
             white-space:nowrap;
-            margin-right:auto; /* في وضع RTL هذا يجعل النص في الجهة اليسرى البصرية كما أردت أن يكون منسقًا مع السطر العلوي */
+            margin-right:auto;
+            text-align:center;
+            width:100%;
         }
-        .language-switcher{
-            display:flex;
-            gap:8px;
-        }
-        .lang-btn {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border: 1px solid var(--gold-light);
-            border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .lang-btn:hover, .lang-btn.active {
-            background: var(--gold-light);
-            color: var(--primary-color);
-        }
-        /* ===== نهاية التعديل الرئيسي ===== */
 
-        header{background:linear-gradient(135deg,var(--primary-color),#1a237e);color:white;padding:15px;border-radius:8px 8px 0 0;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.1);margin-bottom:15px;border-bottom:3px solid var(--accent-color)}
-        h1{margin-bottom:5px;font-size:22px;color:white}
-        .header-subtitle{font-size:14px;margin-bottom:5px;color:var(--gold-light)}
+        header{background:linear-gradient(135deg,var(--primary-color),#1a237e);color:white;padding:18px;border-radius:8px 8px 0 0;text-align:center;box-shadow:0 4px 12px rgba(0,0,0,0.12);margin-bottom:15px;border-bottom:3px solid var(--accent-color);position:relative;overflow:visible}
+        h1{margin-bottom:6px;font-size:22px;color:white}
+        .header-subtitle{font-size:14px;margin-bottom:6px;color:var(--gold-light)}
         .header-instruction{font-size:12px;opacity:0.9;color:var(--gold-light)}
-        .form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px;margin-bottom:15px}
-        .form-section{background-color:white;padding:15px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);border-right:3px solid var(--accent-color)}
-        h2{color:var(--primary-color);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--accent-color);font-size:16px}
-        .input-group{margin-bottom:12px}
-        label{display:block;margin-bottom:4px;font-weight:bold;font-size:13px;color:var(--primary-color)}
-        input,select{width:100%;padding:8px;border:1px solid var(--border-color);border-radius:4px;font-size:14px;transition:border-color .3s}
-        input:focus,select:focus{border-color:var(--accent-color);outline:none;box-shadow:0 0 0 2px rgba(212,175,55,0.2)}
-        .compact-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-        .compact-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
-        .service-duration-group{display:flex;gap:10px}
-        .service-duration-group .input-group{flex:1}
-        .checkbox-group{display:flex;align-items:center;margin-bottom:8px}
-        .checkbox-group input{width:auto;margin-left:8px}
-        .checkbox-group.disabled{opacity:0.6;pointer-events:none}
-        .contract-details{display:none;background-color:var(--blue-light);padding:12px;border-radius:4px;margin-top:8px;border-right:4px solid var(--primary-color);font-size:13px}
-        .service-note{background-color:#fff8e1;color:#b8860b;padding:10px;border-radius:4px;margin-top:10px;border-right:4px solid var(--accent-color);font-size:12px;display:none}
-        button{background:linear-gradient(135deg,var(--primary-color),#1a237e);color:white;border:none;padding:10px 15px;font-size:16px;border-radius:4px;cursor:pointer;width:100%;transition:all .3s;margin-bottom:8px;font-weight:bold}
-        button:hover{background:linear-gradient(135deg,#1a237e,var(--primary-color));transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.2)}
-        .reset-btn{background:linear-gradient(135deg,#6c757d,#5a6268)}
-        .reset-btn:hover{background:linear-gradient(135deg,#5a6268,#6c757d)}
-        .result-section{background-color:white;padding:15px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);margin-top:15px;display:none;border-right:3px solid var(--accent-color)}
-        .result-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-color);font-size:14px}
-        .result-item:last-child{border-bottom:none;font-weight:bold;font-size:16px;color:var(--primary-color);background-color:var(--gold-light);padding:10px;border-radius:4px;margin-top:5px}
-        .annual-leave-details{background-color:var(--blue-light);padding:12px;border-radius:4px;margin-top:8px;border-right:4px solid var(--primary-color);font-size:13px}
-        .footer{text-align:center;margin-top:20px;padding:15px;background:linear-gradient(135deg,var(--primary-color),#1a237e);color:white;border-radius:8px;font-size:13px;border-top:3px solid var(--accent-color)}
-        .copyright{font-size:11px;margin-top:8px;opacity:0.8;color:var(--gold-light)}
-        .law-reference{font-size:12px;margin-top:4px;color:var(--gold-light)}
-        .action-buttons{display:flex;gap:8px;margin-top:15px}
-        .action-buttons button{flex:1;font-size:14px}
-        .print-btn{background:linear-gradient(135deg,var(--accent-color),#b8941f);color:#333;font-weight:bold}
-        .print-btn:hover{background:linear-gradient(135deg,#b8941f,var(--accent-color))}
-        .result-note{background-color:var(--blue-light);padding:8px;border-radius:4px;margin-top:4px;border-right:4px solid var(--primary-color);font-size:11px;color:#555}
-        .legal-notice{background-color:#ffebee;border:2px solid #f44336;color:#c62828;padding:10px;border-radius:4px;margin-top:15px;text-align:center;font-size:11px;line-height:1.5;font-weight:bold}
-        .legal-notes{background-color:var(--secondary-color);border:1px solid #ddd;padding:12px;border-radius:4px;margin-top:15px;font-size:10px;line-height:1.4;color:#555}
-        .legal-notes h3{color:var(--primary-color);margin-bottom:8px;font-size:12px;text-align:center;border-bottom:1px solid var(--accent-color);padding-bottom:5px}
-        .legal-notes ul{list-style:none;padding:0;margin:0}
-        .legal-notes li{margin-bottom:6px;padding-right:5px;border-right:2px solid var(--primary-color)}
-        
-        @media (max-width:768px){
-            .container{padding:10px}
-            .form-grid{grid-template-columns:1fr}
-            .form-section{padding:12px}
-            .service-duration-group{flex-direction:column}
-            .action-buttons{flex-direction:column}
-            .compact-row,.compact-row-3{grid-template-columns:1fr}
-            .language-switcher {
-                justify-content: center;
-            }
-            .creator-info{text-align:center;margin-right:0;}
-        }
-        @media print{
-            #particles-js,button,.legal-notice,.footer{display:none!important}
-            .form-section,.result-section{box-shadow:none;border:1px solid #ddd}
-            body{background-color:white}
-        }
-        
-        /* English Language Styles */
-        body.english {
-            direction: ltr;
-            font-family: Arial, sans-serif;
-        }
-        body.english .form-section {
-            border-right: none;
-            border-left: 3px solid var(--accent-color);
-        }
-        body.english .contract-details,
-        body.english .service-note,
-        body.english .result-note,
-        body.english .legal-notes li {
-            border-right: none;
-            border-left: 4px solid var(--primary-color);
-        }
-        body.english .checkbox-group input {
-            margin-left: 0;
-            margin-right: 8px;
-        }
+
+/* WATERMARK (small, thin, centered under title) */
+.header-watermark{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    bottom:10px; /* just under title area */
+    font-size:11px;
+    color:var(--gold-watermark);
+    font-weight:300;
+    pointer-events:none;
+    user-select:none;
+    letter-spacing:0.2px;
+}
+
+/* LANG CIRCLE BUTTON (inside header, top-right) */
+.lang-circle {
+    position:absolute;
+    top:10px;
+    right:12px;
+    width:40px;
+    height:40px;
+    border-radius:50%;
+    background:var(--gold-very-light);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--primary-color);
+    cursor:pointer;
+    box-shadow:0 2px 6px rgba(0,0,0,0.18);
+    z-index:5;
+    font-weight:700;
+    font-size:18px;
+    line-height:1;
+}
+
+/* Language menu that stays visible until user toggles again */
+.lang-menu {
+    position:absolute;
+    top:56px;
+    right:12px;
+    min-width:110px;
+    background:white;
+    border-radius:6px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.12);
+    overflow:hidden;
+    z-index:6;
+    display:none; /* toggled via JS */
+    direction: ltr; /* keep menu items LTR so text appears normal */
+}
+
+.lang-menu button {
+    display:block;
+    width:100%;
+    padding:10px 12px;
+    border:none;
+    background:transparent;
+    text-align:left;
+    font-size:14px;
+    cursor:pointer;
+    color:var(--primary-color);
+}
+
+.lang-menu button:hover { background: #f6f6f6; }
+
+/* ===== باقي التنسيق ===== */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px;margin-bottom:15px}
+.form-section{background-color:white;padding:15px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);border-right:3px solid var(--accent-color)}
+h2{color:var(--primary-color);margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid var(--accent-color);font-size:16px}
+.input-group{margin-bottom:12px}
+label{display:block;margin-bottom:4px;font-weight:bold;font-size:13px;color:var(--primary-color)}
+input,select{width:100%;padding:8px;border:1px solid var(--border-color);border-radius:4px;font-size:14px;transition:border-color .3s}
+input:focus,select:focus{border-color:var(--accent-color);outline:none;box-shadow:0 0 0 2px rgba(212,175,55,0.12)}
+.compact-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.compact-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.service-duration-group{display:flex;gap:10px}
+.service-duration-group .input-group{flex:1}
+.checkbox-group{display:flex;align-items:center;margin-bottom:8px}
+.checkbox-group input{width:auto;margin-left:8px}
+.checkbox-group.disabled{opacity:0.6;pointer-events:none}
+.contract-details{display:none;background-color:var(--blue-light);padding:12px;border-radius:4px;margin-top:8px;border-right:4px solid var(--primary-color);font-size:13px}
+.service-note{background-color:#fff8e1;color:#b8860b;padding:10px;border-radius:4px;margin-top:10px;border-right:4px solid var(--accent-color);font-size:12px;display:none}
+button{background:linear-gradient(135deg,var(--primary-color),#1a237e);color:white;border:none;padding:10px 15px;font-size:16px;border-radius:4px;cursor:pointer;width:100%;transition:all .3s;margin-bottom:8px;font-weight:bold}
+button:hover{background:linear-gradient(135deg,#1a237e,var(--primary-color));transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.2)}
+.reset-btn{background:linear-gradient(135deg,#6c757d,#5a6268)}
+.reset-btn:hover{background:linear-gradient(135deg,#5a6268,#6c757d)}
+.result-section{background-color:white;padding:15px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);margin-top:15px;display:none;border-right:3px solid var(--accent-color)}
+.result-item{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-color);font-size:14px}
+.result-item:last-child{border-bottom:none;font-weight:bold;font-size:16px;color:var(--primary-color);background-color:var(--gold-light);padding:10px;border-radius:4px;margin-top:5px}
+.annual-leave-details{background-color:var(--blue-light);padding:12px;border-radius:4px;margin-top:8px;border-right:4px solid var(--primary-color);font-size:13px}
+.footer{text-align:center;margin-top:20px;padding:15px;background:linear-gradient(135deg,var(--primary-color),#1a237e);color:white;border-radius:8px;font-size:13px;border-top:3px solid var(--accent-color)}
+.copyright{font-size:11px;margin-top:8px;opacity:0.8;color:var(--gold-light)}
+.law-reference{font-size:12px;margin-top:4px;color:var(--gold-light)}
+.action-buttons{display:flex;gap:8px;margin-top:15px}
+.action-buttons button{flex:1;font-size:14px}
+.print-btn{background:linear-gradient(135deg,var(--accent-color),#b8941f);color:#333;font-weight:bold}
+.print-btn:hover{background:linear-gradient(135deg,#b8941f,var(--accent-color))}
+.result-note{background-color:var(--blue-light);padding:8px;border-radius:4px;margin-top:4px;border-right:4px solid var(--primary-color);font-size:11px;color:#555}
+.legal-notice{background-color:#ffebee;border:2px solid #f44336;color:#c62828;padding:10px;border-radius:4px;margin-top:15px;text-align:center;font-size:11px;line-height:1.5;font-weight:bold}
+.legal-notes{background-color:var(--secondary-color);border:1px solid #ddd;padding:12px;border-radius:4px;margin-top:15px;font-size:10px;line-height:1.4;color:#555}
+.legal-notes h3{color:var(--primary-color);margin-bottom:8px;font-size:12px;text-align:center;border-bottom:1px solid var(--accent-color);padding-bottom:5px}
+.legal-notes ul{list-style:none;padding:0;margin:0}
+.legal-notes li{margin-bottom:6px;padding-right:5px;border-right:2px solid var(--primary-color)}
+
+@media (max-width:768px){
+    .container{padding:10px}
+    .form-grid{grid-template-columns:1fr}
+    .form-section{padding:12px}
+    .service-duration-group{flex-direction:column}
+    .action-buttons{flex-direction:column}
+    .compact-row,.compact-row-3{grid-template-columns:1fr}
+    .lang-circle{top:8px;right:10px;width:36px;height:36px;font-size:16px}
+    .lang-menu{top:50px;right:10px;min-width:100px}
+    .creator-info{text-align:center;margin-right:0;}
+    .header-watermark{font-size:10px; bottom:8px;}
+}
+
+@media print{
+    #particles-js,button,.legal-notice,.footer{display:none!important}
+    .form-section,.result-section{box-shadow:none;border:1px solid #ddd}
+    body{background-color:white}
+}
+
+/* English Language Styles */
+body.english {
+    direction: ltr;
+    font-family: Arial, sans-serif;
+}
+body.english .form-section {
+    border-right: none;
+    border-left: 3px solid var(--accent-color);
+}
+body.english .contract-details,
+body.english .service-note,
+body.english .result-note,
+body.english .legal-notes li {
+    border-right: none;
+    border-left: 4px solid var(--primary-color);
+}
+body.english .checkbox-group input {
+    margin-left: 0;
+    margin-right: 8px;
+}
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
 
     <div class="container">
-        <!-- TOP BAR: creator info + language buttons (هذا هو التعديل الفعلي في التنسيق) -->
+        <!-- TOP BAR: creator info (language single button moved into header) -->
         <div class="top-bar">
             <div class="creator-info" data-translate="creatorInfo">أنشئت بواسطة: المحامي محمد الشوحه</div>
-            <div class="language-switcher" aria-label="language switcher">
-                <button class="lang-btn active" data-lang="ar">العربية</button>
-                <button class="lang-btn" data-lang="en">English</button>
-            </div>
         </div>
 
         <header>
             <h1 data-translate="pageTitle">حاسبة الحقوق العمالية</h1>
             <p class="header-subtitle" data-translate="pageSubtitle">بناءً على قانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته</p>
             <p class="header-instruction" data-translate="pageInstruction">أدخل معلوماتك لحساب مستحقاتك</p>
+
+            <!-- language circle button -->
+            <div class="lang-circle" id="langToggle" aria-label="language toggle">🌐</div>
+
+            <!-- language menu (stays visible until toggled) -->
+            <div class="lang-menu" id="langMenu" role="menu" aria-hidden="true">
+                <button data-lang="ar">العربية</button>
+                <button data-lang="en">English</button>
+            </div>
+
+            <!-- watermark text under the title -->
+            <div class="header-watermark" aria-hidden="true">أنشئت بواسطة: المحامي محمد الشوحه</div>
         </header>
 
         <form id="rightsCalculator">
@@ -342,7 +402,7 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
-        // Language management
+        // Language management (translations kept intact)
         const translations = {
             ar: {
                 creatorInfo: "أنشئت بواسطة: المحامي محمد الشوحه",
@@ -406,7 +466,6 @@
                 createdBy: "تم إنشاء هذه الصفحة بواسطة المحامي محمد الشوحه",
                 lawReference: "تم إنشاء هذه الحاسبة وفقاً لقانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته",
                 copyright: "جميع الحقوق محفوظة © 2023 - هذه الصفحة محمية بموجب قوانين حقوق النشر والملكية الفكرية",
-                // Result translations
                 unpaidSalaries: "الرواتب المستحقة",
                 vacationPay: "بدل الإجازات المستحقة",
                 endOfService: "بدل نهاية الخدمة",
@@ -488,7 +547,6 @@
                 createdBy: "Created by: Lawyer Mohammed Al-Shouha",
                 lawReference: "This calculator was created according to Jordanian Labor Law No. 8 of 1996 and its amendments",
                 copyright: "All rights reserved © 2023 - This page is protected by copyright and intellectual property laws",
-                // Result translations
                 unpaidSalaries: "Unpaid Salaries",
                 vacationPay: "Vacation Pay",
                 endOfService: "End of Service Compensation",
@@ -512,55 +570,71 @@
 
         let currentLanguage = 'ar';
 
-        // Language switcher functionality
         document.addEventListener('DOMContentLoaded', function() {
-            const langButtons = document.querySelectorAll('.lang-btn');
-            
-            langButtons.forEach(button => {
-                button.addEventListener('click', function() {
+            // wire up language menu (header)
+            const langToggle = document.getElementById('langToggle');
+            const langMenu = document.getElementById('langMenu');
+            const menuButtons = langMenu.querySelectorAll('button');
+
+            langToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                // toggle visibility (user requested: stays until toggled again)
+                if (langMenu.style.display === 'block') {
+                    langMenu.style.display = 'none';
+                    langMenu.setAttribute('aria-hidden','true');
+                } else {
+                    langMenu.style.display = 'block';
+                    langMenu.setAttribute('aria-hidden','false');
+                }
+            });
+
+            // clicking a language sets language but does NOT auto-close the menu (as requested)
+            menuButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
                     const lang = this.getAttribute('data-lang');
                     switchLanguage(lang);
-                    
-                    // Update active button
-                    langButtons.forEach(btn => btn.classList.remove('active'));
-                    this.classList.add('active');
+                    // update any existing visual active states (none shown) — keep menu visible per request
                 });
             });
-            
-            // Initialize particles
-            particlesJS('particles-js', {
-                particles: {
-                    number: { value: 200, density: { enable: true, value_area: 800 } },
-                    color: { value: "#d4af37" },
-                    shape: { type: "circle", stroke: { width: 0, color: "#000000" }, polygon: { nb_sides: 5 } },
-                    opacity: { value: 0.8, random: true },
-                    size: { value: 2.5, random: true },
-                    line_linked: { enable: true, distance: 120, color: "#d4af37", opacity: 0.4, width: 1 },
-                    move: { enable: true, speed: 3, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
-                },
-                interactivity: {
-                    detect_on: "canvas",
-                    events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
-                    modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 8 }, remove: { particles_nb: 2 } }
-                },
-                retina_detect: true
-            });
+
+            // Initialize particles (same as before)
+            if (window.particlesJS) {
+                particlesJS('particles-js', {
+                    particles: {
+                        number: { value: 200, density: { enable: true, value_area: 800 } },
+                        color: { value: "#d4af37" },
+                        shape: { type: "circle", stroke: { width: 0, color: "#000000" }, polygon: { nb_sides: 5 } },
+                        opacity: { value: 0.8, random: true },
+                        size: { value: 2.5, random: true },
+                        line_linked: { enable: true, distance: 120, color: "#d4af37", opacity: 0.4, width: 1 },
+                        move: { enable: true, speed: 3, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+                    },
+                    interactivity: {
+                        detect_on: "canvas",
+                        events: { onhover: { enable: true, mode: "repulse" }, onclick: { enable: true, mode: "push" }, resize: true },
+                        modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, bubble: { distance: 400, size: 40, duration: 2, opacity: 8, speed: 3 }, repulse: { distance: 100, duration: 0.4 }, push: { particles_nb: 8 }, remove: { particles_nb: 2 } }
+                    },
+                    retina_detect: true
+                });
+            }
+
+            // Initialize other UI wiring from original file
+            initFormBehavior();
+            // Set default language to Arabic on load
+            switchLanguage('ar');
         });
 
+        // switchLanguage function (keeps original behavior)
         function switchLanguage(lang) {
             currentLanguage = lang;
-            
-            // Update HTML direction and class
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
             document.documentElement.lang = lang;
             document.body.className = lang === 'ar' ? '' : 'english';
-            
-            // Update all translatable elements
+
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
                 if (translations[lang][key]) {
                     if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
-                        // For input placeholders
                         if (element.hasAttribute('placeholder')) {
                             element.setAttribute('placeholder', translations[lang][key]);
                         }
@@ -569,42 +643,32 @@
                     }
                 }
             });
-            
-            // Update option values in selects
+
             updateSelectOptions();
-            
-            // Recalculate if results are shown
             if (document.getElementById('resultSection').style.display === 'block') {
                 calculateRights();
             }
         }
 
         function updateSelectOptions() {
-            // Update wage type options
             const wageTypeSelect = document.getElementById('wageType');
             if (wageTypeSelect) {
                 const options = wageTypeSelect.querySelectorAll('option');
                 options[1].textContent = translations[currentLanguage]['dailyWage'];
                 options[2].textContent = translations[currentLanguage]['monthlyWage'];
             }
-            
-            // Update contract type options
             const contractTypeSelect = document.getElementById('contractType');
             if (contractTypeSelect) {
                 const options = contractTypeSelect.querySelectorAll('option');
                 options[1].textContent = translations[currentLanguage]['indefiniteContract'];
                 options[2].textContent = translations[currentLanguage]['definiteContract'];
             }
-            
-            // Update social security options
             const socialSecuritySelect = document.getElementById('socialSecurity');
             if (socialSecuritySelect) {
                 const options = socialSecuritySelect.querySelectorAll('option');
                 options[0].textContent = translations[currentLanguage]['yesSubscribed'];
                 options[1].textContent = translations[currentLanguage]['notSubscribed'];
             }
-            
-            // Update termination type options
             const terminationTypeSelect = document.getElementById('terminationType');
             if (terminationTypeSelect) {
                 const options = terminationTypeSelect.querySelectorAll('option');
@@ -614,100 +678,96 @@
             }
         }
 
-        // Elements
-        const form = document.getElementById('rightsCalculator');
-        const contractTypeEl = document.getElementById('contractType');
-        const contractDetailsEl = document.getElementById('contractDetails');
-        const serviceNoteEl = document.getElementById('serviceNote');
-        const noticeMonthGroup = document.getElementById('noticeMonthGroup');
-        const noticeMonthEl = document.getElementById('noticeMonth');
-        const terminationTypeEl = document.getElementById('terminationType');
-        const arbitraryDismissalGroup = document.getElementById('arbitraryDismissalGroup');
-        const arbitraryDismissalEl = document.getElementById('arbitraryDismissal');
-        const resultSection = document.getElementById('resultSection');
-        const resultContent = document.getElementById('resultContent');
-        const resetBtn = document.getElementById('resetBtn');
+        /* ---------- Existing form & calculation logic (kept intact) ---------- */
+        function initFormBehavior() {
+            const form = document.getElementById('rightsCalculator');
+            const contractTypeEl = document.getElementById('contractType');
+            const contractDetailsEl = document.getElementById('contractDetails');
+            const serviceNoteEl = document.getElementById('serviceNote');
+            const noticeMonthGroup = document.getElementById('noticeMonthGroup');
+            const noticeMonthEl = document.getElementById('noticeMonth');
+            const terminationTypeEl = document.getElementById('terminationType');
+            const arbitraryDismissalGroup = document.getElementById('arbitraryDismissalGroup');
+            const arbitraryDismissalEl = document.getElementById('arbitraryDismissal');
+            const resultSection = document.getElementById('resultSection');
+            const resultContent = document.getElementById('resultContent');
+            const resetBtn = document.getElementById('resetBtn');
 
-        // Print button
-        document.getElementById('printBtn').addEventListener('click', function() {
-            window.print();
-        });
+            document.getElementById('printBtn').addEventListener('click', function() {
+                window.print();
+            });
 
-        // Contract type change
-        contractTypeEl.addEventListener('change', function() {
-            if (this.value === 'definite') {
-                contractDetailsEl.style.display = 'block';
-                serviceNoteEl.style.display = 'block';
-                noticeMonthGroup.classList.add('disabled');
-                noticeMonthEl.checked = false;
-                noticeMonthEl.disabled = true;
-                terminationTypeEl.value = 'definite';
-                arbitraryDismissalGroup.style.display = 'none';
-                arbitraryDismissalEl.checked = false;
-            } else {
+            contractTypeEl.addEventListener('change', function() {
+                if (this.value === 'definite') {
+                    contractDetailsEl.style.display = 'block';
+                    serviceNoteEl.style.display = 'block';
+                    noticeMonthGroup.classList.add('disabled');
+                    noticeMonthEl.checked = false;
+                    noticeMonthEl.disabled = true;
+                    terminationTypeEl.value = 'definite';
+                    arbitraryDismissalGroup.style.display = 'none';
+                    arbitraryDismissalEl.checked = false;
+                } else {
+                    contractDetailsEl.style.display = 'none';
+                    serviceNoteEl.style.display = 'none';
+                    noticeMonthGroup.classList.remove('disabled');
+                    noticeMonthEl.disabled = false;
+                    terminationTypeEl.value = 'indefinite';
+                    updateArbitraryDismissalGroup();
+                }
+            });
+
+            terminationTypeEl.addEventListener('change', updateArbitraryDismissalGroup);
+
+            function updateArbitraryDismissalGroup() {
+                const contractType = contractTypeEl.value;
+                const terminationType = terminationTypeEl.value;
+                if (contractType === 'indefinite' && terminationType === 'indefinite') {
+                    arbitraryDismissalGroup.style.display = 'flex';
+                } else {
+                    arbitraryDismissalGroup.style.display = 'none';
+                    arbitraryDismissalEl.checked = false;
+                }
+            }
+
+            const focusable = Array.from(document.querySelectorAll('input, select'));
+            focusable.forEach((field, idx) => field.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const next = focusable[idx + 1];
+                    if (next) next.focus();
+                }
+            }));
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                calculateRights();
+            });
+
+            resetBtn.addEventListener('click', function() {
+                form.reset();
+                resultSection.style.display = 'none';
                 contractDetailsEl.style.display = 'none';
                 serviceNoteEl.style.display = 'none';
-                noticeMonthGroup.classList.remove('disabled');
-                noticeMonthEl.disabled = false;
-                terminationTypeEl.value = 'indefinite';
-                updateArbitraryDismissalGroup();
-            }
-        });
-
-        terminationTypeEl.addEventListener('change', updateArbitraryDismissalGroup);
-
-        function updateArbitraryDismissalGroup() {
-            const contractType = contractTypeEl.value;
-            const terminationType = terminationTypeEl.value;
-            if (contractType === 'indefinite' && terminationType === 'indefinite') {
-                arbitraryDismissalGroup.style.display = 'flex';
-            } else {
                 arbitraryDismissalGroup.style.display = 'none';
                 arbitraryDismissalEl.checked = false;
-            }
+                noticeMonthGroup.classList.remove('disabled');
+                noticeMonthEl.disabled = false;
+            });
         }
 
-        // Enter navigation
-        const focusable = Array.from(document.querySelectorAll('input, select'));
-        focusable.forEach((field, idx) => field.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const next = focusable[idx + 1];
-                if (next) next.focus();
-            }
-        }));
-
-        // Submit
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            calculateRights();
-        });
-
-        // Reset
-        resetBtn.addEventListener('click', function() {
-            form.reset();
-            resultSection.style.display = 'none';
-            contractDetailsEl.style.display = 'none';
-            serviceNoteEl.style.display = 'none';
-            arbitraryDismissalGroup.style.display = 'none';
-            arbitraryDismissalEl.checked = false;
-            noticeMonthGroup.classList.remove('disabled');
-            noticeMonthEl.disabled = false;
-        });
-
-        // Main calculation
         function calculateRights() {
             const wageType = document.getElementById('wageType').value;
             const lastWage = parseFloat(document.getElementById('lastWage').value) || 0;
-            const contractType = contractTypeEl.value;
+            const contractType = document.getElementById('contractType').value;
             const unpaidMonths = parseInt(document.getElementById('unpaidMonths').value) || 0;
             const unpaidDays = parseInt(document.getElementById('unpaidDays').value) || 0;
             const vacationDays = parseInt(document.getElementById('vacationDays').value) || 0;
             const serviceYears = parseInt(document.getElementById('serviceYears').value) || 0;
             const serviceMonths = parseInt(document.getElementById('serviceMonths').value) || 0;
             const serviceDays = parseInt(document.getElementById('serviceDays').value) || 0;
-            const noticeMonth = noticeMonthEl.checked;
-            const terminationType = terminationTypeEl.value;
+            const noticeMonth = document.getElementById('noticeMonth').checked;
+            const terminationType = document.getElementById('terminationType').value;
             const socialSecurity = document.getElementById('socialSecurity').value;
             const overtimeHours = parseFloat(document.getElementById('overtimeHours').value) || 0;
             const overtimeDays = parseInt(document.getElementById('overtimeDays').value) || 0;
@@ -716,9 +776,8 @@
             const contractDuration = parseInt(document.getElementById('contractDuration').value) || 0;
             const workedMonths = parseInt(document.getElementById('workedMonths').value) || 0;
             const workedDays = parseInt(document.getElementById('workedDays').value) || 0;
-            const arbitraryDismissal = arbitraryDismissalEl.checked;
+            const arbitraryDismissal = document.getElementById('arbitraryDismissal').checked;
 
-            // Validation
             if (!wageType) {
                 alert(currentLanguage === 'ar' ? "يرجى اختيار نوع الأجر" : "Please select wage type");
                 document.getElementById('wageType').focus();
@@ -726,11 +785,10 @@
             }
             if (!contractType) {
                 alert(currentLanguage === 'ar' ? "يرجى اختيار نوع العقد" : "Please select contract type");
-                contractTypeEl.focus();
+                document.getElementById('contractType').focus();
                 return;
             }
 
-            // Calculations
             const totalServiceMonths = (serviceYears * 12) + serviceMonths + (serviceDays / 30);
             const dailyWage = wageType === 'daily' ? lastWage : lastWage / 30;
             const monthlyWage = wageType === 'monthly' ? lastWage : lastWage * 30;
@@ -745,13 +803,11 @@
             let arbitraryDismissalCompensation = 0;
             let arbitraryDismissalExplanation = "";
 
-            // Arbitrary dismissal compensation (if applicable)
             if (arbitraryDismissal && contractType === 'indefinite' && terminationType === 'indefinite') {
                 arbitraryDismissalCompensation = calculateArbitraryDismissalCompensation(monthlyWage, serviceYears, serviceMonths, serviceDays);
                 arbitraryDismissalExplanation = getArbitraryDismissalExplanation(monthlyWage, serviceYears, serviceMonths, serviceDays, arbitraryDismissalCompensation);
             }
 
-            // Social security handling
             if (socialSecurity === 'yes') {
                 endOfServiceCompensation = 0;
                 explanation = translations[currentLanguage]['noEndOfService'];
@@ -762,7 +818,6 @@
                 socialSecurityNote = translations[currentLanguage]['endOfServiceNote'];
             }
 
-            // Notice compensation
             let noticeCompensation = 0;
             let noticeExplanation = "";
 
@@ -774,16 +829,13 @@
                 noticeExplanation = noticeMonth ? translations[currentLanguage]['noticeCompensationYes'] : translations[currentLanguage]['noticeCompensationNo'];
             }
 
-            // Overtime and holidays
             const overtimePay = (overtimeHours * hourlyWage * 1.25) * overtimeDays;
             const holidayPay = holidayDays * dailyWage * 1.5;
             const fridayPay = fridayDays * dailyWage * 1.5;
 
-            // Total
             const totalCompensation = unpaidSalaries + vacationPay + endOfServiceCompensation +
                 noticeCompensation + overtimePay + holidayPay + fridayPay + arbitraryDismissalCompensation;
 
-            // Render results
             let html = `
                 <div class="result-item"><span>${translations[currentLanguage]['unpaidSalaries']}:</span><span>${unpaidSalaries.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
                 <div class="result-item"><span>${translations[currentLanguage]['vacationPay']}:</span><span>${vacationPay.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
@@ -802,13 +854,11 @@
             if (arbitraryDismissalExplanation) html += `<div class="result-note">${arbitraryDismissalExplanation}</div>`;
             if (socialSecurityNote) html += `<div class="result-note">${socialSecurityNote}</div>`;
 
-            resultContent.innerHTML = html;
-            resultSection.style.display = 'block';
-            // Scroll to results
-            window.scrollTo({ top: resultSection.offsetTop - 10, behavior: 'smooth' });
+            document.getElementById('resultContent').innerHTML = html;
+            document.getElementById('resultSection').style.display = 'block';
+            window.scrollTo({ top: document.getElementById('resultSection').offsetTop - 10, behavior: 'smooth' });
         }
 
-        // Helper functions
         function calculateArbitraryDismissalCompensation(monthlyWage, years, months, days) {
             const totalMonths = years + (months / 12) + (days / 360);
             let compensation = (totalMonths / 2) * monthlyWage;
