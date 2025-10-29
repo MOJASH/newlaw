@@ -67,17 +67,18 @@
     width:40px;
     height:40px;
     border-radius:50%;
-    background:var(--gold-very-light);
+    background:var(--primary-color); /* تغيير الخلفية من الذهبي إلى الأزرق */
     display:flex;
     align-items:center;
     justify-content:center;
-    color:var(--primary-color);
+    color:white; /* تغيير لون النص إلى الأبيض */
     cursor:pointer;
     box-shadow:0 2px 6px rgba(0,0,0,0.18);
     z-index:5;
     font-weight:700;
     font-size:18px;
     line-height:1;
+    border: 1px solid rgba(255,255,255,0.2); /* إضافة حدود خفيفة */
 }
 
 /* Language menu that stays visible until user toggles again */
@@ -593,7 +594,9 @@ body.english .checkbox-group input {
                 btn.addEventListener('click', function(e) {
                     const lang = this.getAttribute('data-lang');
                     switchLanguage(lang);
-                    // update any existing visual active states (none shown) — keep menu visible per request
+                    // إغلاق القائمة المنسدلة تلقائياً بعد اختيار اللغة
+                    langMenu.style.display = 'none';
+                    langMenu.setAttribute('aria-hidden','true');
                 });
             });
 
