@@ -194,12 +194,18 @@ body.english .checkbox-group input {
     background-color: #f9f9f9;
     color: #666;
 }
+
+/* تنسيق للكلمة المميزة باللون الأحمر */
+.red-text {
+    color: red;
+}
 </style>
 </head>
 <body>
     <div id="particles-js"></div>
 
     <div class="container">
+        <!-- TOP BAR: creator info (language single button moved into header) -->
         <div class="top-bar">
             <div class="creator-info" data-translate="creatorInfo">أنشئت بواسطة: المحامي محمد الشوحه</div>
         </div>
@@ -209,20 +215,23 @@ body.english .checkbox-group input {
             <p class="header-subtitle" data-translate="pageSubtitle">بناءً على قانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته</p>
             <p class="header-instruction" data-translate="pageInstruction">أدخل معلوماتك لحساب مستحقاتك</p>
 
+            <!-- language circle button -->
             <div class="lang-circle" id="langToggle" aria-label="language toggle">🌐</div>
 
+            <!-- language menu (stays visible until toggled) -->
             <div class="lang-menu" id="langMenu" role="menu" aria-hidden="true">
                 <button data-lang="ar">العربية</button>
                 <button data-lang="en">English</button>
             </div>
 
+            <!-- watermark text under the title -->
             <div class="header-watermark" aria-hidden="true">أنشئت بواسطة: المحامي محمد الشوحه</div>
         </header>
 
         <form id="rightsCalculator">
             <div class="form-grid">
                 <div class="form-section">
-                    <h2 data-translate="basicWageInfo">معلومات الأجر الأساسي</h2>
+                    <h2 data-translate="wageInfo">معلومات الأجر</h2>
                     <div class="input-group">
                         <label for="wageType" data-translate="wageType">نوع الأجر</label>
                         <select id="wageType" tabindex="1">
@@ -232,7 +241,7 @@ body.english .checkbox-group input {
                         </select>
                     </div>
                     <div class="input-group">
-                        <label for="lastWage" data-translate="lastBasicSalary">الراتب الأساسي الأخير (دينار)</label>
+                        <label for="lastWage" data-translate="lastSalary">الراتب الأخير (دينار)</label>
                         <input type="number" id="lastWage" min="0" step="0.01" required tabindex="2">
                     </div>
                 </div>
@@ -277,6 +286,7 @@ body.english .checkbox-group input {
                         </div>
                     </div>
                     
+                    <!-- الحقل الجديد للمدفوعات غير المستلمة خارج مدة العقد -->
                     <div class="input-group" id="extraUnpaidMonthsGroup" style="display: none;">
                         <label for="extraUnpaidMonths" data-translate="extraUnpaidMonths">أشهر إضافية مستحقة</label>
                         <input type="number" id="extraUnpaidMonths" min="0" step="1" tabindex="9">
@@ -300,6 +310,7 @@ body.english .checkbox-group input {
                         </div>
                     </div>
 
+                    <!-- الحقول الجديدة المضافة -->
                     <div class="checkbox-group" id="extraVacationGroup">
                         <input type="checkbox" id="extraVacationAgreed" tabindex="13">
                         <label for="extraVacationAgreed" data-translate="extraVacationAgreed">هل يوجد إجازات إضافية متفق عليها؟</label>
@@ -359,11 +370,11 @@ body.english .checkbox-group input {
                     <h2 data-translate="overtimeWork">العمل الإضافي</h2>
                     <div class="compact-row">
                         <div class="input-group">
-                            <label for="overtimeHours" data-translate="overtimeHours">ساعات إضافية/يوم</label>
+                            <label for="overtimeHours" data-translate="overtimeHours">عدد ساعات العمل الإضافي في اليوم الواحد</label>
                             <input type="number" id="overtimeHours" min="0" step="0.5" tabindex="21">
                         </div>
                         <div class="input-group">
-                            <label for="overtimeDays" data-translate="overtimeDays">أيام عمل إضافي</label>
+                            <label for="overtimeDays" data-translate="overtimeDaysLabel">عدد <span class="red-text">أيام</span> العمل الإضافي خلال مدة الخدمة</label>
                             <input type="number" id="overtimeDays" min="0" step="1" tabindex="22">
                         </div>
                     </div>
@@ -404,7 +415,7 @@ body.english .checkbox-group input {
                     <li data-translate="legalNote5">م59: أجر العمل الإضافي يساوي 125% من أجر العامل المعتاد، و150% عند العمل بالعطل الرسمية أو الأعياد الدينية.</li>
                     <li data-translate="legalNote6">م25: في حالة الفصل التعسفي لعقود العمل غير محددة المدة فإن العامل يستحق بدل إشعار بالإضافة إلى أجر نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين.</li>
                     <li data-translate="legalNote7">م26: في حالة الفصل التعسفي لعقود العمل محددة المدة فإن العامل يستحق أجر باقي المدة العقدية.</li>
-                    <li data-translate_key="legalNote8">يتم احتساب الحقوق العمالية عن آخر سنتين من تاريخ انتهاء العمل لدى صاحب العمل باستثناء مكافأة نهاية الخدمة فإنها تحتسب عن طيلة مدة الخدمة.</li>
+                    <li data-translate="legalNote8">يتم احتساب الحقوق العمالية عن آخر سنتين من تاريخ انتهاء العمل لدى صاحب العمل باستثناء مكافأة نهاية الخدمة فإنها تحتسب عن طيلة مدة الخدمة.</li>
                 </ul>
             </div>
 
@@ -432,12 +443,12 @@ body.english .checkbox-group input {
                 pageTitle: "حاسبة الحقوق العمالية",
                 pageSubtitle: "بناءً على قانون العمل الأردني رقم 8 لسنة 1996 وتعديلاته",
                 pageInstruction: "أدخل معلوماتك لحساب مستحقاتك",
-                basicWageInfo: "معلومات الأجر الأساسي",
+                wageInfo: "معلومات الأجر",
                 wageType: "نوع الأجر",
                 chooseWageType: "اختر نوع الأجر",
                 dailyWage: "أجر يومي",
                 monthlyWage: "أجر شهري",
-                lastBasicSalary: "الراتب الأساسي الأخير (دينار)",
+                lastSalary: "الراتب الأخير (دينار)",
                 dueSalaries: "الرواتب المستحقة",
                 contractType: "نوع العقد",
                 chooseContractType: "اختر نوع العقد",
@@ -468,8 +479,8 @@ body.english .checkbox-group input {
                 arbitraryDefinite: "فصل تعسفي (عقد محدد)",
                 deservesArbitraryDismissal: "يستحق بدل فصل تعسفي",
                 overtimeWork: "العمل الإضافي",
-                overtimeHours: "ساعات إضافية/يوم",
-                overtimeDays: "أيام عمل إضافي",
+                overtimeHours: "عدد ساعات العمل الإضافي في اليوم الواحد",
+                overtimeDaysLabel: "عدد <span class='red-text'>أيام</span> العمل الإضافي خلال مدة الخدمة",
                 holidayWork: "العمل في العطل والأعياد",
                 holidayDays: "أيام العطل الرسمية",
                 fridayDays: "أيام الجمعة",
@@ -519,12 +530,12 @@ body.english .checkbox-group input {
                 pageTitle: "Labor Rights Calculator",
                 pageSubtitle: "Based on Jordanian Labor Law No. 8 of 1996 and its amendments",
                 pageInstruction: "Enter your information to calculate your entitlements",
-                basicWageInfo: "Basic Wage Information",
+                wageInfo: "Wage Information",
                 wageType: "Wage Type",
                 chooseWageType: "Choose Wage Type",
                 dailyWage: "Daily Wage",
                 monthlyWage: "Monthly Wage",
-                lastBasicSalary: "Last Basic Salary (JD)",
+                lastSalary: "Last Salary (JD)",
                 dueSalaries: "Due Salaries",
                 contractType: "Contract Type",
                 chooseContractType: "Choose Contract Type",
@@ -555,8 +566,8 @@ body.english .checkbox-group input {
                 arbitraryDefinite: "Arbitrary Dismissal (Definite Contract)",
                 deservesArbitraryDismissal: "Deserves Arbitrary Dismissal Compensation",
                 overtimeWork: "Overtime Work",
-                overtimeHours: "Overtime Hours/Day",
-                overtimeDays: "Overtime Days",
+                overtimeHours: "Number of Overtime Hours per Day",
+                overtimeDaysLabel: "Number of Overtime Days During Service Period",
                 holidayWork: "Work on Holidays and Occasions",
                 holidayDays: "Official Holiday Days",
                 fridayDays: "Friday Days",
@@ -659,6 +670,9 @@ body.english .checkbox-group input {
             initFormBehavior();
             // Set default language to Arabic on load
             switchLanguage('ar');
+            
+            // Setup Enter key navigation for all fields
+            setupEnterNavigation();
         });
 
         // switchLanguage function (keeps original behavior)
@@ -676,7 +690,12 @@ body.english .checkbox-group input {
                             element.setAttribute('placeholder', translations[lang][key]);
                         }
                     } else {
-                        element.textContent = translations[lang][key];
+                        // Special handling for overtimeDaysLabel to use innerHTML
+                        if (key === 'overtimeDaysLabel') {
+                            element.innerHTML = translations[lang][key];
+                        } else {
+                            element.textContent = translations[lang][key];
+                        }
                     }
                 }
             });
@@ -684,6 +703,68 @@ body.english .checkbox-group input {
             updateSelectOptions();
             if (document.getElementById('resultSection').style.display === 'block') {
                 calculateRights();
+            }
+            
+            // إعادة إعداد التنقل بالزر Enter بعد تغيير اللغة
+            setTimeout(setupEnterNavigation, 100);
+        }
+
+        // إعداد التنقل بين الحقول باستخدام مفتاح Enter
+        function setupEnterNavigation() {
+            // الحصول على جميع حقول الإدخال والاختيار
+            const allFields = Array.from(document.querySelectorAll('input, select, button[type="button"]'));
+            
+            // تصفية الحقول لتشمل فقط تلك المرئية وغير المعطلة
+            const focusableFields = allFields.filter(field => {
+                return field.offsetWidth > 0 && 
+                       field.offsetHeight > 0 && 
+                       !field.disabled && 
+                       field.type !== 'hidden' &&
+                       field.style.display !== 'none';
+            });
+            
+            // إضافة مستمع حدث لكل حقل
+            focusableFields.forEach((field, index) => {
+                // إزالة أي مستمعات سابقة لمنع التكرار
+                field.removeEventListener('keydown', handleEnterKey);
+                // إضافة مستمع الحدث الجديد
+                field.addEventListener('keydown', handleEnterKey);
+                
+                // تخزين الفهرس في الحقل للاستخدام لاحقاً
+                field.dataset.fieldIndex = index;
+            });
+            
+            // دالة معالجة ضغط مفتاح Enter
+            function handleEnterKey(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    
+                    // الحصول على الحقل الحالي
+                    const currentField = e.target;
+                    
+                    // الحصول على جميع الحقول مرة أخرى (قد تتغير حالة الحقول)
+                    const currentFocusableFields = Array.from(document.querySelectorAll('input, select, button[type="button"]')).filter(field => {
+                        return field.offsetWidth > 0 && 
+                               field.offsetHeight > 0 && 
+                               !field.disabled && 
+                               field.type !== 'hidden' &&
+                               field.style.display !== 'none';
+                    });
+                    
+                    // العثور على الفهرس الحالي
+                    const currentIndex = currentFocusableFields.indexOf(currentField);
+                    
+                    // إذا لم نجد الحقل الحالي في القائمة، نخرج من الدالة
+                    if (currentIndex === -1) return;
+                    
+                    // إذا كان الحقل الحالي هو الأخير، ننتقل إلى الأول
+                    if (currentIndex === currentFocusableFields.length - 1) {
+                        currentFocusableFields[0].focus();
+                    } else {
+                        // الانتقال إلى الحقل التالي
+                        currentFocusableFields[currentIndex + 1].focus();
+                    }
+                }
             }
         }
 
@@ -765,6 +846,9 @@ body.english .checkbox-group input {
                     // إعادة حساب الإجازات تلقائياً
                     calculateTotalVacation();
                 }
+                
+                // إعادة إعداد التنقل بالزر Enter بعد تغيير حالة الحقول
+                setTimeout(setupEnterNavigation, 100);
             });
 
             // إضافة مستمعين للحقول التي يجب أن تحفز إعادة الحساب
@@ -815,6 +899,9 @@ body.english .checkbox-group input {
                     
                     updateArbitraryDismissalGroup();
                 }
+                
+                // إعادة إعداد التنقل بالزر Enter بعد تغيير حالة الحقول
+                setTimeout(setupEnterNavigation, 100);
             });
 
             terminationTypeEl.addEventListener('change', updateArbitraryDismissalGroup);
@@ -830,37 +917,10 @@ body.english .checkbox-group input {
                     arbitraryDismissalGroup.style.display = 'none';
                     arbitraryDismissalEl.checked = false;
                 }
+                
+                // إعادة إعداد التنقل بالزر Enter بعد تغيير حالة الحقول
+                setTimeout(setupEnterNavigation, 100);
             }
-
-            // **** هذا هو السطر الذي تم تعديله ****
-            const focusable = Array.from(document.querySelectorAll('input, select, button'));
-            
-            // **** تم تعديل هذا الجزء بالكامل ****
-            // يضيف منطقاً لتخطي العناصر المخفية أو المعطلة
-            focusable.forEach((field, idx) => field.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-
-                    // ابدأ البحث من العنصر التالي
-                    let nextIdx = idx + 1;
-                    let next = focusable[nextIdx];
-                    
-                    // استمر في البحث حتى تجد عنصراً ظاهراً أو تصل إلى نهاية القائمة
-                    while (next) {
-                        // (offsetParent !== null) هو فحص جيد لمعرفة ما إذا كان العنصر (أو آباؤه) ليس مخفياً
-                        // ونتأكد أيضاً أنه غير معطل
-                        if (next.offsetParent !== null && !next.disabled) {
-                            next.focus();
-                            break; // تم العثور على عنصر، أوقف البحث
-                        }
-                        
-                        // إذا كان العنصر مخفياً أو معطلاً، جرب العنصر التالي
-                        nextIdx++;
-                        next = focusable[nextIdx];
-                    }
-                }
-            }));
-            // **** نهاية الجزء المعدل ****
 
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -891,6 +951,9 @@ body.english .checkbox-group input {
                 
                 // إعادة حساب الإجازات بعد إعادة التعيين
                 calculateTotalVacation();
+                
+                // إعادة إعداد التنقل بالزر Enter بعد إعادة التعيين
+                setTimeout(setupEnterNavigation, 100);
             });
         }
 
