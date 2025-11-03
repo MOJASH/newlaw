@@ -127,7 +127,7 @@ input:focus,select:focus{border-color:var(--accent-color);outline:none;box-shado
 .checkbox-group.disabled{opacity:0.6;pointer-events:none}
 .contract-details{display:none;background-color:var(--blue-light);padding:12px;border-radius:4px;margin-top:8px;border-right:4px solid var(--primary-color);font-size:13px}
 .service-note{background-color:#fff8e1;color:#b8860b;padding:10px;border-radius:4px;margin-top:10px;border-right:4px solid var(--accent-color);font-size:12px;display:none}
-button{background:linear-gradient(135deg,var(--primary-color),#1a237e);color:white;border:none;padding:10px 15px;font-size:16px;border-radius:4px;cursor:pointer;width:100%;transition:all .3s;margin-bottom:8px;font-weight:bold}
+button{background:linear-gradient(135deg,var(--primary-color),#1a237e);Color:white;border:none;padding:10px 15px;font-size:16px;border-radius:4px;cursor:pointer;width:100%;transition:all .3s;margin-bottom:8px;font-weight:bold}
 button:hover{background:linear-gradient(135deg,#1a237e,var(--primary-color));transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.2)}
 .reset-btn{background:linear-gradient(135deg,#6c757d,#5a6268)}
 .reset-btn:hover{background:linear-gradient(135deg,#5a6268,#6c757d)}
@@ -199,7 +199,25 @@ body.english .checkbox-group input {
 .red-text {
     color: red;
 }
-</style>
+
+/* تنسيق لحقول العمل الإضافي */
+.overtime-fields {
+    display: none;
+}
+
+/* تنسيق للحقول المعطلة */
+input:disabled {
+    background-color: #f5f5f5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* تنسيق خاص لخانة الاختيار في قسم العمل الإضافي */
+.overtime-checkbox-group {
+    margin-top: 8px;
+    margin-bottom: 12px;
+}
+    </style>
 </head>
 <body>
     <div id="particles-js"></div>
@@ -285,7 +303,7 @@ body.english .checkbox-group input {
                             <input type="number" id="unpaidDays" min="0" step="1" tabindex="8">
                         </div>
                     </div>
-                    
+
                     <!-- الحقل الجديد للمدفوعات غير المستلمة خارج مدة العقد -->
                     <div class="input-group" id="extraUnpaidMonthsGroup" style="display: none;">
                         <label for="extraUnpaidMonths" data-translate="extraUnpaidMonths">أشهر إضافية مستحقة</label>
@@ -323,7 +341,7 @@ body.english .checkbox-group input {
 
                     <div class="input-group">
                         <label for="takenVacationDays" data-translate="takenVacationDays">الإجازات التي حصل عليها العامل</label>
-                        <input type="number" id="takenVacationDays" min="0" step="1" tabindex="15">
+                        <input type="number" id="takenVacationDays" min="0" step="1" tabindex="15" required>
                     </div>
 
                     <div class="input-group">
@@ -366,21 +384,48 @@ body.english .checkbox-group input {
                     </div>
                 </div>
 
+                <!-- قسم العمل الإضافي المحدث -->
                 <div class="form-section">
                     <h2 data-translate="overtimeWork">العمل الإضافي</h2>
-                    <div class="compact-row-3">
+
+                    <div class="compact-row">
                         <div class="input-group">
-                            <label for="overtimeHours" data-translate="overtimeHours">عدد ساعات العمل الإضافي في اليوم</label>
-                            <input type="number" id="overtimeHours" min="0" step="0.5" tabindex="21">
+                            <label for="overtimeHoursPerDay" data-translate="overtimeHoursPerDay">عدد ساعات العمل الإضافي في اليوم</label>
+                            <input type="number" id="overtimeHoursPerDay" min="0" step="0.5" tabindex="21">
                         </div>
                         <div class="input-group">
-                            <label for="overtimeDays" data-translate="overtimeDaysLabel">عدد <span class="red-text">أيام</span> العمل الإضافي في الشهر الواحد</label>
-                            <input type="number" id="overtimeDays" min="0" step="1" tabindex="22">
+                            <label for="overtimeDaysPerMonth" data-translate="overtimeDaysPerMonth">عدد أيام العمل الإضافي في الشهر</label>
+                            <input type="number" id="overtimeDaysPerMonth" min="0" step="1" tabindex="22">
                         </div>
+                    </div>
+
+                    <div class="compact-row">
+                        <div class="input-group">
+                            <label for="overtimeHoursPerMonth" data-translate="overtimeHoursPerMonth">عدد ساعات العمل الإضافي في الشهر</label>
+                            <input type="number" id="overtimeHoursPerMonth" min="0" step="0.5" tabindex="23" disabled>
+                        </div>
+
+                        <!-- تم نقل خانة الاختيار لتكون بعد حقل عدد ساعات العمل الإضافي في الشهر وقبل حقل عدد الأشهر -->
+                        <div class="input-group" style="display:flex;align-items:center;">
+                            <div>
+                                <div class="checkbox-group overtime-checkbox-group" style="margin:0;">
+                                    <input type="checkbox" id="manualOvertimeInput" tabindex="24">
+                                    <label for="manualOvertimeInput" data-translate="manualOvertimeInput" style="margin-right:6px;">أريد إدخال عدد الساعات الشهرية يدويًا</label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="input-group">
                             <label for="overtimeMonths" data-translate="overtimeMonths">عدد الأشهر التي استمر فيها العمل الإضافي</label>
-                            <input type="number" id="overtimeMonths" min="0" step="1" tabindex="23">
+                            <!-- أزلت الـ required كما طُلِب -->
+                            <input type="number" id="overtimeMonths" min="1" step="1" tabindex="25">
                         </div>
+                    </div>
+
+                    <!-- الحقل الجديد: إجمالي ساعات العمل الإضافي الكلية -->
+                    <div class="input-group">
+                        <label for="totalOvertimeHours" data-translate="totalOvertimeHours">إجمالي ساعات العمل الإضافي الكلية</label>
+                        <input type="number" id="totalOvertimeHours" readonly tabindex="26">
                     </div>
                 </div>
 
@@ -389,19 +434,19 @@ body.english .checkbox-group input {
                     <div class="compact-row">
                         <div class="input-group">
                             <label for="holidayDays" data-translate="holidayDays">أيام العطل الرسمية</label>
-                            <input type="number" id="holidayDays" min="0" step="1" tabindex="24">
+                            <input type="number" id="holidayDays" min="0" step="1" tabindex="27">
                         </div>
                         <div class="input-group">
                             <label for="fridayDays" data-translate="fridayDays">أيام الجمعة</label>
-                            <input type="number" id="fridayDays" min="0" step="1" tabindex="25">
+                            <input type="number" id="fridayDays" min="0" step="1" tabindex="28">
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="action-buttons">
-                <button type="submit" tabindex="26" data-translate="calculateRights">احسب المستحقات</button>
-                <button type="button" class="reset-btn" id="resetBtn" tabindex="27" data-translate="resetFields">تفريغ الحقول</button>
+                <button type="submit" tabindex="29" data-translate="calculateRights">احسب المستحقات</button>
+                <button type="button" class="reset-btn" id="resetBtn" tabindex="30" data-translate="resetFields">تفريغ الحقول</button>
             </div>
         </form>
 
@@ -440,7 +485,7 @@ body.english .checkbox-group input {
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
-        // Language management (translations kept intact)
+        // Translations (Arabic and full English included)
         const translations = {
             ar: {
                 creatorInfo: "أنشئت بواسطة: المحامي محمد الشوحه",
@@ -483,8 +528,9 @@ body.english .checkbox-group input {
                 arbitraryDefinite: "فصل تعسفي (عقد محدد)",
                 deservesArbitraryDismissal: "يستحق بدل فصل تعسفي",
                 overtimeWork: "العمل الإضافي",
-                overtimeHours: "عدد ساعات العمل الإضافي في اليوم",
-                overtimeDaysLabel: "عدد <span class='red-text'>أيام</span> العمل الإضافي في الشهر الواحد",
+                overtimeHoursPerDay: "عدد ساعات العمل الإضافي في اليوم",
+                overtimeDaysPerMonth: "عدد أيام العمل الإضافي في الشهر",
+                overtimeHoursPerMonth: "عدد ساعات العمل الإضافي في الشهر",
                 overtimeMonths: "عدد الأشهر التي استمر فيها العمل الإضافي",
                 holidayWork: "العمل في العطل والأعياد",
                 holidayDays: "أيام العطل الرسمية",
@@ -524,113 +570,114 @@ body.english .checkbox-group input {
                 arbitraryDismissalExplanation1: "بدل الفصل التعسفي: نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين",
                 arbitraryDismissalExplanation2: "دينار حسب المادة 25 من قانون العمل.",
                 endOfServiceExplanation: "بدل نهاية الخدمة: شهر عن كل سنة خدمة",
-                // إضافة الترجمات الجديدة
                 totalVacationLastTwoYears: "مجموع الإجازات عن آخر سنتين",
                 takenVacationDays: "الإجازات التي حصل عليها العامل",
                 vacationCalculationNote: "يتم حساب الإجازات عن آخر سنتين فقط من الخدمة.",
-                extraVacationAgreed: "هل يوجد إجازات إضافية متفق عليها?"
+                extraVacationAgreed: "هل يوجد إجازات إضافية متفق عليها؟",
+                manualOvertimeInput: "أريد إدخال عدد الساعات الشهرية يدويًا",
+                totalOvertimeHours: "إجمالي ساعات العمل الإضافي الكلية"
             },
             en: {
                 creatorInfo: "Created by: Lawyer Mohammed Al-Shouha",
                 pageTitle: "Labor Rights Calculator",
                 pageSubtitle: "Based on Jordanian Labor Law No. 8 of 1996 and its amendments",
                 pageInstruction: "Enter your information to calculate your entitlements",
-                wageInfo: "Wage Information",
-                wageType: "Wage Type",
-                chooseWageType: "Choose Wage Type",
-                dailyWage: "Daily Wage",
-                monthlyWage: "Monthly Wage",
-                lastSalary: "Last Salary (JD)",
-                dueSalaries: "Due Salaries",
-                contractType: "Contract Type",
-                chooseContractType: "Choose Contract Type",
-                indefiniteContract: "Indefinite Term Contract",
-                definiteContract: "Definite Term Contract",
-                definiteContractDetails: "Definite Term Contract Details",
-                contractDuration: "Contract Duration (Months)",
-                workedMonths: "Months Worked",
-                workedDays: "Days Worked",
-                unpaidMonths: "Unpaid Months",
-                unpaidDays: "Unpaid Days",
-                extraUnpaidMonths: "Extra Unpaid Months",
-                vacationDays: "Due Vacation Days",
-                serviceDuration: "Service Duration",
+                wageInfo: "Wage information",
+                wageType: "Wage type",
+                chooseWageType: "Choose wage type",
+                dailyWage: "Daily wage",
+                monthlyWage: "Monthly wage",
+                lastSalary: "Last wage (JOD)",
+                dueSalaries: "Due salaries",
+                contractType: "Contract type",
+                chooseContractType: "Choose contract type",
+                indefiniteContract: "Indefinite contract",
+                definiteContract: "Definite contract",
+                definiteContractDetails: "Definite contract details",
+                contractDuration: "Contract duration (months)",
+                workedMonths: "Months worked",
+                workedDays: "Days worked",
+                unpaidMonths: "Unpaid months",
+                unpaidDays: "Unpaid days",
+                extraUnpaidMonths: "Extra unpaid months",
+                vacationDays: "Due vacation days",
+                serviceDuration: "Service duration",
                 years: "Years",
                 months: "Months",
                 days: "Days",
                 note: "Note:",
-                serviceNoteText: "Service duration is used to calculate end-of-service compensation if the worker is not subscribed to social security",
-                terminationDetails: "Service Termination Details",
-                deservesNoticeMonth: "Deserves Notice Month Compensation",
-                socialSecurity: "Social Security",
+                serviceNoteText: "Service duration is used to calculate end-of-service pay if the worker is not covered by social security",
+                terminationDetails: "Termination details",
+                deservesNoticeMonth: "Entitled to one month's notice pay",
+                socialSecurity: "Social security",
                 yesSubscribed: "Yes - Subscribed",
-                notSubscribed: "No - Not Subscribed",
-                terminationReason: "Termination Reason",
-                mutualTermination: "Termination by Mutual Consent",
-                arbitraryIndefinite: "Arbitrary Dismissal (Indefinite Contract)",
-                arbitraryDefinite: "Arbitrary Dismissal (Definite Contract)",
-                deservesArbitraryDismissal: "Deserves Arbitrary Dismissal Compensation",
-                overtimeWork: "Overtime Work",
-                overtimeHours: "Number of Overtime Hours per Day",
-                overtimeDaysLabel: "Number of Overtime Days per Month",
-                overtimeMonths: "Number of Months with Overtime Work",
-                holidayWork: "Work on Holidays and Occasions",
-                holidayDays: "Official Holiday Days",
-                fridayDays: "Friday Days",
-                calculateRights: "Calculate Rights",
-                resetFields: "Reset Fields",
-                calculationResults: "Calculation Results",
-                legalNotes: "Legal Notes",
-                legalNote1: "Article 46: Wages must be paid within 7 days of becoming due, and may not be deducted except in accordance with the law.",
-                legalNote2: "Article 61: The worker is entitled to 14 days of annual leave, which becomes 21 days after 5 consecutive years of service with the employer.",
-                legalNote3: "Article 32: A worker not subject to social security provisions is entitled to an end-of-service reward equal to one month's wage for each year of service.",
-                legalNote4: "Article 23: Notice compensation equals one month's salary and is calculated based on the last wage received by the worker.",
-                legalNote5: "Article 59: Overtime pay equals 125% of the worker's regular wage, and 150% when working on official holidays or religious occasions.",
-                legalNote6: "Article 25: In case of arbitrary dismissal for indefinite-term employment contracts, the worker is entitled to notice compensation plus half a month's wage for each year of service, not less than two months' wages.",
-                legalNote7: "Article 26: In case of arbitrary dismissal for definite-term employment contracts, the worker is entitled to the wages for the remaining contract period.",
-                legalNote8: "Labor rights are calculated for the last two years from the date of termination of employment with the employer, except for the end-of-service reward, which is calculated for the entire service period.",
-                legalNotice: "Notice: This calculator is for guidance only and is not binding on any party. It is always recommended to consult a specialized authority for accurate results.",
-                printResults: "Print Results",
-                createdBy: "Created by: Lawyer Mohammed Al-Shouha",
-                lawReference: "This calculator was created according to Jordanian Labor Law No. 8 of 1996 and its amendments",
+                notSubscribed: "No - Not subscribed",
+                terminationReason: "Reason for termination",
+                mutualTermination: "Mutual termination",
+                arbitraryIndefinite: "Arbitrary dismissal (indefinite)",
+                arbitraryDefinite: "Arbitrary dismissal (definite)",
+                deservesArbitraryDismissal: "Entitled to arbitrary dismissal compensation",
+                overtimeWork: "Overtime work",
+                overtimeHoursPerDay: "Overtime hours per day",
+                overtimeDaysPerMonth: "Overtime days per month",
+                overtimeHoursPerMonth: "Overtime hours per month",
+                overtimeMonths: "Number of months overtime continued",
+                holidayWork: "Work on holidays and public days",
+                holidayDays: "Public holidays days",
+                fridayDays: "Fridays worked",
+                calculateRights: "Calculate entitlements",
+                resetFields: "Reset fields",
+                calculationResults: "Calculation results",
+                legalNotes: "Legal notes",
+                legalNote1: "Art.46: Wages are to be paid within 7 days of entitlement; deductions only as permitted by law.",
+                legalNote2: "Art.61: Annual leave is 14 days, increasing to 21 days after 5 continuous years for the same employer.",
+                legalNote3: "Art.32: A worker not covered by social security is entitled to end-of-service pay equal to one month per year of service.",
+                legalNote4: "Art.23: Notice pay equals one month's wage and is based on the worker's last wage.",
+                legalNote5: "Art.59: Overtime pay equals 125% of normal wage, and 150% for work on official holidays or religious festivals.",
+                legalNote6: "Art.25: In arbitrary dismissal for indefinite contracts, the worker is entitled to notice pay plus half a month's wage per year of service, not less than two months' wage.",
+                legalNote7: "Art.26: In arbitrary dismissal for definite contracts, the worker is entitled to the wage for the remainder of the contract.",
+                legalNote8: "Rights are calculated over the last two years from termination date, except end-of-service pay which is calculated over the entire service.",
+                legalNotice: "Note: This calculator is for guidance only and is not legally binding. Consult a specialist for exact results.",
+                printResults: "Print results",
+                createdBy: "This page was created by Lawyer Mohammed Al-Shouha",
+                lawReference: "This calculator is based on Jordanian Labor Law No. 8 of 1996 and its amendments",
                 copyright: "All rights reserved © 2023 - This page is protected by copyright and intellectual property laws",
-                unpaidSalaries: "Unpaid Salaries",
-                vacationPay: "Vacation Pay",
-                endOfService: "End of Service Compensation",
-                noticeCompensation: "Notice Compensation",
-                overtimePay: "Overtime Pay",
-                holidayPay: "Holiday Pay",
-                fridayPay: "Friday Pay",
-                arbitraryDismissalComp: "Arbitrary Dismissal Compensation",
+                unpaidSalaries: "Unpaid salaries",
+                vacationPay: "Vacation compensation",
+                endOfService: "End of service compensation",
+                noticeCompensation: "Notice compensation",
+                overtimePay: "Overtime compensation",
+                holidayPay: "Holiday compensation",
+                fridayPay: "Friday compensation",
+                arbitraryDismissalComp: "Arbitrary dismissal compensation",
                 total: "Total",
-                dinar: "JD",
-                noEndOfService: "The worker is not entitled to end-of-service compensation because they are subscribed to social security.",
+                dinar: "JOD",
+                noEndOfService: "No end-of-service compensation because the worker is subscribed to social security.",
                 endOfServiceNote: "End-of-service compensation is calculated because the worker is not subscribed to social security.",
-                noNoticeCompensation: "The worker is not entitled to notice compensation in the case of a definite-term contract.",
-                noticeCompensationYes: "The worker deserves notice compensation.",
-                noticeCompensationNo: "The worker does not deserve notice compensation.",
-                arbitraryDismissalExplanation1: "Arbitrary dismissal compensation: Half a month for each year of service, not less than two months' wages",
-                arbitraryDismissalExplanation2: "JD according to Article 25 of the Labor Law.",
-                endOfServiceExplanation: "End of service compensation: One month for each year of service",
-                // إضافة الترجمات الجديدة
-                totalVacationLastTwoYears: "Total Vacation for Last Two Years",
-                takenVacationDays: "Vacation Days Taken by Worker",
-                vacationCalculationNote: "Vacation is calculated for the last two years of service only.",
-                extraVacationAgreed: "Are there additional agreed-upon vacations?"
+                noNoticeCompensation: "No notice compensation for definite-term contracts.",
+                noticeCompensationYes: "Worker is entitled to one month's notice compensation.",
+                noticeCompensationNo: "Worker is not entitled to one month's notice compensation.",
+                arbitraryDismissalExplanation1: "Arbitrary dismissal compensation: half a month's wage per year of service, not less than two months' wage",
+                arbitraryDismissalExplanation2: "JOD according to Article 25 of the Labor Law.",
+                endOfServiceExplanation: "End-of-service compensation: one month per year of service",
+                totalVacationLastTwoYears: "Total vacation over the last two years",
+                takenVacationDays: "Vacation days taken by the worker",
+                vacationCalculationNote: "Vacation is calculated for the last two years only.",
+                extraVacationAgreed: "Is there additional agreed vacation?",
+                manualOvertimeInput: "I want to enter monthly overtime hours manually",
+                totalOvertimeHours: "Total overtime hours"
             }
         };
 
         let currentLanguage = 'ar';
 
         document.addEventListener('DOMContentLoaded', function() {
-            // wire up language menu (header)
             const langToggle = document.getElementById('langToggle');
             const langMenu = document.getElementById('langMenu');
             const menuButtons = langMenu.querySelectorAll('button');
 
             langToggle.addEventListener('click', function(e) {
                 e.stopPropagation();
-                // toggle visibility (user requested: stays until toggled again)
                 if (langMenu.style.display === 'block') {
                     langMenu.style.display = 'none';
                     langMenu.setAttribute('aria-hidden','true');
@@ -640,18 +687,15 @@ body.english .checkbox-group input {
                 }
             });
 
-            // clicking a language sets language but does NOT auto-close the menu (as requested)
             menuButtons.forEach(btn => {
                 btn.addEventListener('click', function(e) {
                     const lang = this.getAttribute('data-lang');
                     switchLanguage(lang);
-                    // إغلاق القائمة المنسدلة تلقائياً بعد اختيار اللغة
                     langMenu.style.display = 'none';
                     langMenu.setAttribute('aria-hidden','true');
                 });
             });
 
-            // Initialize particles (same as before)
             if (window.particlesJS) {
                 particlesJS('particles-js', {
                     particles: {
@@ -672,16 +716,11 @@ body.english .checkbox-group input {
                 });
             }
 
-            // Initialize other UI wiring from original file
             initFormBehavior();
-            // Set default language to Arabic on load
             switchLanguage('ar');
-            
-            // Setup Enter key navigation for all fields
             setupEnterNavigation();
         });
 
-        // switchLanguage function (keeps original behavior)
         function switchLanguage(lang) {
             currentLanguage = lang;
             document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
@@ -690,18 +729,13 @@ body.english .checkbox-group input {
 
             document.querySelectorAll('[data-translate]').forEach(element => {
                 const key = element.getAttribute('data-translate');
-                if (translations[lang][key]) {
+                if (translations[lang] && translations[lang][key]) {
                     if (element.tagName === 'INPUT' || element.tagName === 'SELECT') {
                         if (element.hasAttribute('placeholder')) {
                             element.setAttribute('placeholder', translations[lang][key]);
                         }
                     } else {
-                        // Special handling for overtimeDaysLabel to use innerHTML
-                        if (key === 'overtimeDaysLabel') {
-                            element.innerHTML = translations[lang][key];
-                        } else {
-                            element.textContent = translations[lang][key];
-                        }
+                        element.textContent = translations[lang][key];
                     }
                 }
             });
@@ -710,64 +744,41 @@ body.english .checkbox-group input {
             if (document.getElementById('resultSection').style.display === 'block') {
                 calculateRights();
             }
-            
-            // إعادة إعداد التنقل بالزر Enter بعد تغيير اللغة
             setTimeout(setupEnterNavigation, 100);
         }
 
-        // إعداد التنقل بين الحقول باستخدام مفتاح Enter
         function setupEnterNavigation() {
-            // الحصول على جميع حقول الإدخال والاختيار
             const allFields = Array.from(document.querySelectorAll('input, select, button[type="button"]'));
-            
-            // تصفية الحقول لتشمل فقط تلك المرئية وغير المعطلة
             const focusableFields = allFields.filter(field => {
-                return field.offsetWidth > 0 && 
-                       field.offsetHeight > 0 && 
-                       !field.disabled && 
+                return field.offsetWidth > 0 &&
+                       field.offsetHeight > 0 &&
+                       !field.disabled &&
                        field.type !== 'hidden' &&
                        field.style.display !== 'none';
             });
-            
-            // إضافة مستمع حدث لكل حقل
+
             focusableFields.forEach((field, index) => {
-                // إزالة أي مستمعات سابقة لمنع التكرار
                 field.removeEventListener('keydown', handleEnterKey);
-                // إضافة مستمع الحدث الجديد
                 field.addEventListener('keydown', handleEnterKey);
-                
-                // تخزين الفهرس في الحقل للاستخدام لاحقاً
                 field.dataset.fieldIndex = index;
             });
-            
-            // دالة معالجة ضغط مفتاح Enter
+
             function handleEnterKey(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    
-                    // الحصول على الحقل الحالي
                     const currentField = e.target;
-                    
-                    // الحصول على جميع الحقول مرة أخرى (قد تتغير حالة الحقول)
                     const currentFocusableFields = Array.from(document.querySelectorAll('input, select, button[type="button"]')).filter(field => {
-                        return field.offsetWidth > 0 && 
-                               field.offsetHeight > 0 && 
-                               !field.disabled && 
+                        return field.offsetWidth > 0 &&
+                               field.offsetHeight > 0 &&
+                               !field.disabled &&
                                field.type !== 'hidden' &&
                                field.style.display !== 'none';
                     });
-                    
-                    // العثور على الفهرس الحالي
                     const currentIndex = currentFocusableFields.indexOf(currentField);
-                    
-                    // إذا لم نجد الحقل الحالي في القائمة، نخرج من الدالة
                     if (currentIndex === -1) return;
-                    
-                    // إذا كان الحقل الحالي هو الأخير، ننتقل إلى الأول
                     if (currentIndex === currentFocusableFields.length - 1) {
                         currentFocusableFields[0].focus();
                     } else {
-                        // الانتقال إلى الحقل التالي
                         currentFocusableFields[currentIndex + 1].focus();
                     }
                 }
@@ -802,7 +813,6 @@ body.english .checkbox-group input {
             }
         }
 
-        /* ---------- Existing form & calculation logic (kept intact) ---------- */
         function initFormBehavior() {
             const form = document.getElementById('rightsCalculator');
             const contractTypeEl = document.getElementById('contractType');
@@ -829,40 +839,60 @@ body.english .checkbox-group input {
             const vacationDaysEl = document.getElementById('vacationDays');
             const extraVacationAgreedEl = document.getElementById('extraVacationAgreed');
 
+            // حقول العمل الإضافي الجديدة
+            const overtimeHoursPerDayEl = document.getElementById('overtimeHoursPerDay');
+            const overtimeDaysPerMonthEl = document.getElementById('overtimeDaysPerMonth');
+            const overtimeHoursPerMonthEl = document.getElementById('overtimeHoursPerMonth');
+            const overtimeMonthsEl = document.getElementById('overtimeMonths');
+            const totalOvertimeHoursEl = document.getElementById('totalOvertimeHours');
+
+            // خانة الاختيار الجديدة للإدخال اليدوي
+            const manualOvertimeInputEl = document.getElementById('manualOvertimeInput');
+
             // إضافة المستمعين للحقول الجديدة
             serviceYearsEl.addEventListener('input', calculateTotalVacation);
             serviceMonthsEl.addEventListener('input', calculateTotalVacation);
             serviceDaysEl.addEventListener('input', calculateTotalVacation);
             takenVacationDaysEl.addEventListener('input', calculateDueVacation);
-            
+
             // إضافة مستمع لخانة الاختيار الجديدة
             extraVacationAgreedEl.addEventListener('change', function() {
                 if (this.checked) {
-                    // إفراغ الحقول عند تفعيل خانة الاختيار
                     totalVacationLastTwoYearsEl.value = '';
                     takenVacationDaysEl.value = '';
                     vacationDaysEl.value = '';
-                    
-                    // جعل حقل مجموع الإجازات قابلاً للكتابة
                     totalVacationLastTwoYearsEl.readOnly = false;
                 } else {
-                    // إعادة جعل الحقل للقراءة فقط
                     totalVacationLastTwoYearsEl.readOnly = true;
-                    
-                    // إعادة حساب الإجازات تلقائياً
                     calculateTotalVacation();
                 }
-                
-                // إعادة إعداد التنقل بالزر Enter بعد تغيير حالة الحقول
                 setTimeout(setupEnterNavigation, 100);
             });
 
-            // إضافة مستمعين للحقول التي يجب أن تحفز إعادة الحساب
             totalVacationLastTwoYearsEl.addEventListener('input', calculateDueVacation);
 
-            // إضافة المستمعين لحقول العقد المحدد المدة
             ['contractDuration','workedMonths','workedDays'].forEach(id => {
                 document.getElementById(id).addEventListener('input', updateUnpaidFieldsForDefiniteContract);
+            });
+
+            // إضافات العمل الإضافي
+            overtimeHoursPerDayEl.addEventListener('input', calculateOvertimeHours);
+            overtimeDaysPerMonthEl.addEventListener('input', calculateOvertimeHours);
+            overtimeMonthsEl.addEventListener('input', calculateOvertimeHours);
+
+            overtimeHoursPerDayEl.addEventListener('input', calculateTotalOvertimeHours);
+            overtimeDaysPerMonthEl.addEventListener('input', calculateTotalOvertimeHours);
+            overtimeMonthsEl.addEventListener('input', calculateTotalOvertimeHours);
+
+            manualOvertimeInputEl.addEventListener('change', function() {
+                if (this.checked) {
+                    overtimeHoursPerMonthEl.disabled = false;
+                    overtimeHoursPerMonthEl.focus();
+                } else {
+                    overtimeHoursPerMonthEl.disabled = true;
+                    calculateOvertimeHours();
+                }
+                setTimeout(setupEnterNavigation, 100);
             });
 
             document.getElementById('printBtn').addEventListener('click', function() {
@@ -880,14 +910,12 @@ body.english .checkbox-group input {
                     arbitraryDismissalGroup.style.display = 'none';
                     arbitraryDismissalEl.checked = false;
                     extraUnpaidMonthsGroup.style.display = 'block';
-                    
-                    // جعل حقلي الأشهر والأيام المستحقة للقراءة فقط وإضافة التنسيق
+
                     unpaidMonthsEl.readOnly = true;
                     unpaidDaysEl.readOnly = true;
                     unpaidMonthsEl.classList.add('calculated-field');
                     unpaidDaysEl.classList.add('calculated-field');
-                    
-                    // تحديث الحقول عند التبديل إلى عقد محدد المدة
+
                     updateUnpaidFieldsForDefiniteContract();
                 } else {
                     contractDetailsEl.style.display = 'none';
@@ -896,17 +924,14 @@ body.english .checkbox-group input {
                     noticeMonthEl.disabled = false;
                     terminationTypeEl.value = 'indefinite';
                     extraUnpaidMonthsGroup.style.display = 'none';
-                    
-                    // جعل حقلي الأشهر والأيام المستحقة قابلة للكتابة وإزالة التنسيق
+
                     unpaidMonthsEl.readOnly = false;
                     unpaidDaysEl.readOnly = false;
                     unpaidMonthsEl.classList.remove('calculated-field');
                     unpaidDaysEl.classList.remove('calculated-field');
-                    
+
                     updateArbitraryDismissalGroup();
                 }
-                
-                // إعادة إعداد التنقل بالزر Enter بعد تغيير حالة الحقول
                 setTimeout(setupEnterNavigation, 100);
             });
 
@@ -915,16 +940,12 @@ body.english .checkbox-group input {
             function updateArbitraryDismissalGroup() {
                 const contractType = contractTypeEl.value;
                 const terminationType = terminationTypeEl.value;
-                
-                // إظهار خانة الاختيار فقط في حالة العقد غير محدد المدة والفصل التعسفي
                 if (contractType === 'indefinite' && terminationType === 'indefinite') {
                     arbitraryDismissalGroup.style.display = 'flex';
                 } else {
                     arbitraryDismissalGroup.style.display = 'none';
                     arbitraryDismissalEl.checked = false;
                 }
-                
-                // إعادة إعداد التنقل بالزر Enter بعد تغيير حالة الحقول
                 setTimeout(setupEnterNavigation, 100);
             }
 
@@ -943,86 +964,76 @@ body.english .checkbox-group input {
                 extraUnpaidMonthsGroup.style.display = 'none';
                 noticeMonthGroup.classList.remove('disabled');
                 noticeMonthEl.disabled = false;
-                // إعادة تعيين الحقول الجديدة
                 totalVacationLastTwoYearsEl.value = '';
                 totalVacationLastTwoYearsEl.readOnly = true;
                 vacationDaysEl.value = '';
                 extraVacationAgreedEl.checked = false;
-                
-                // إعادة تعيين حقلي الأشهر والأيام المستحقة
                 unpaidMonthsEl.readOnly = false;
                 unpaidDaysEl.readOnly = false;
                 unpaidMonthsEl.classList.remove('calculated-field');
                 unpaidDaysEl.classList.remove('calculated-field');
-                
-                // إعادة حساب الإجازات بعد إعادة التعيين
+                manualOvertimeInputEl.checked = false;
+                overtimeHoursPerMonthEl.disabled = true;
+                totalOvertimeHoursEl.value = '';
                 calculateTotalVacation();
-                
-                // إعادة إعداد التنقل بالزر Enter بعد إعادة التعيين
                 setTimeout(setupEnterNavigation, 100);
             });
         }
 
-        // حساب مجموع الإجازات عن آخر سنتين
+        function calculateOvertimeHours() {
+            const overtimeHoursPerDay = parseFloat(document.getElementById('overtimeHoursPerDay').value) || 0;
+            const overtimeDaysPerMonth = parseInt(document.getElementById('overtimeDaysPerMonth').value) || 0;
+            const overtimeHoursPerMonthEl = document.getElementById('overtimeHoursPerMonth');
+            if (overtimeHoursPerMonthEl.disabled) {
+                const calculatedHours = overtimeHoursPerDay * overtimeDaysPerMonth;
+                overtimeHoursPerMonthEl.value = calculatedHours > 0 ? calculatedHours : '';
+            }
+            calculateTotalOvertimeHours();
+        }
+
+        function calculateTotalOvertimeHours() {
+            const overtimeHoursPerDay = parseFloat(document.getElementById('overtimeHoursPerDay').value) || 0;
+            const overtimeDaysPerMonth = parseInt(document.getElementById('overtimeDaysPerMonth').value) || 0;
+            // إذا لم يُدخل المستخدم عدد الأشهر، نفترض 1 (كما طلبت)
+            const overtimeMonths = parseInt(document.getElementById('overtimeMonths').value) || 1;
+            const totalOvertimeHours = overtimeHoursPerDay * overtimeDaysPerMonth * overtimeMonths;
+            document.getElementById('totalOvertimeHours').value = totalOvertimeHours > 0 ? totalOvertimeHours : '';
+        }
+
         function calculateTotalVacation() {
             const extraVacationAgreed = document.getElementById('extraVacationAgreed').checked;
-            
-            // إذا كان المستخدم قد اختار إدخال الإجازات يدوياً، لا نقوم بالحساب التلقائي
             if (extraVacationAgreed) {
                 return;
             }
-            
             const serviceYears = parseInt(document.getElementById('serviceYears').value) || 0;
             const serviceMonths = parseInt(document.getElementById('serviceMonths').value) || 0;
             const serviceDays = parseInt(document.getElementById('serviceDays').value) || 0;
-            
-            // حساب إجمالي مدة الخدمة بالأشهر
             const totalServiceMonths = serviceYears * 12 + serviceMonths + (serviceDays / 30);
-            
-            // حساب الإجازات السنوية المستحقة
-            // إذا كانت مدة الخدمة 5 سنوات أو أكثر: 21 يوم في السنة
-            // إذا كانت مدة الخدمة أقل من 5 سنوات: 14 يوم في السنة
             const annualLeaveDays = totalServiceMonths >= 60 ? 21 : 14;
-            
-            // حساب الإجازات عن آخر سنتين فقط
             const vacationPerMonth = annualLeaveDays / 12;
             const totalVacation = Math.min(totalServiceMonths, 24) * vacationPerMonth;
-            
             document.getElementById('totalVacationLastTwoYears').value = Math.round(totalVacation);
-            
-            // إعادة حساب الإجازات المستحقة بعد تحديث مجموع الإجازات
             calculateDueVacation();
         }
 
-        // حساب الإجازات المستحقة
         function calculateDueVacation() {
             const totalVacation = parseInt(document.getElementById('totalVacationLastTwoYears').value) || 0;
             const takenVacation = parseInt(document.getElementById('takenVacationDays').value) || 0;
-            
             const dueVacation = Math.max(0, totalVacation - takenVacation);
             document.getElementById('vacationDays').value = dueVacation;
         }
 
-        // تحديث الحقول المستحقة للعقود محددة المدة
         function updateUnpaidFieldsForDefiniteContract() {
             const contractType = document.getElementById('contractType').value;
             if (contractType !== 'definite') return;
-            
             const contractDuration = parseInt(document.getElementById('contractDuration').value) || 0;
             const workedMonths = parseInt(document.getElementById('workedMonths').value) || 0;
             const workedDays = parseInt(document.getElementById('workedDays').value) || 0;
-            
-            // حساب الفرق بالأيام
             const totalContractDays = contractDuration * 30;
             const totalWorkedDays = (workedMonths * 30) + workedDays;
             const differenceInDays = totalContractDays - totalWorkedDays;
-            
-            // حساب الأشهر المستحقة (الجزء الصحيح من القسمة)
             const unpaidMonths = Math.floor(differenceInDays / 30);
-            
-            // حساب الأيام المستحقة (الباقي من القسمة)
             const unpaidDays = differenceInDays % 30;
-            
             document.getElementById('unpaidMonths').value = Math.max(0, unpaidMonths);
             document.getElementById('unpaidDays').value = Math.max(0, unpaidDays);
         }
@@ -1041,9 +1052,11 @@ body.english .checkbox-group input {
             const noticeMonth = document.getElementById('noticeMonth').checked;
             const terminationType = document.getElementById('terminationType').value;
             const socialSecurity = document.getElementById('socialSecurity').value;
-            const overtimeHours = parseFloat(document.getElementById('overtimeHours').value) || 0;
-            const overtimeDays = parseInt(document.getElementById('overtimeDays').value) || 0;
-            const overtimeMonths = parseInt(document.getElementById('overtimeMonths').value) || 1; // الحقل الجديد - القيمة الافتراضية 1
+            const overtimeHoursPerDay = parseFloat(document.getElementById('overtimeHoursPerDay').value) || 0;
+            const overtimeDaysPerMonth = parseInt(document.getElementById('overtimeDaysPerMonth').value) || 0;
+            const overtimeHoursPerMonth = parseFloat(document.getElementById('overtimeHoursPerMonth').value) || 0;
+            // If user didn't enter months, assume 1
+            const overtimeMonths = parseInt(document.getElementById('overtimeMonths').value) || 1;
             const holidayDays = parseInt(document.getElementById('holidayDays').value) || 0;
             const fridayDays = parseInt(document.getElementById('fridayDays').value) || 0;
             const contractDuration = parseInt(document.getElementById('contractDuration').value) || 0;
@@ -1051,6 +1064,7 @@ body.english .checkbox-group input {
             const workedDays = parseInt(document.getElementById('workedDays').value) || 0;
             const arbitraryDismissal = document.getElementById('arbitraryDismissal').checked;
             const extraVacationAgreed = document.getElementById('extraVacationAgreed').checked;
+            const manualOvertimeInput = document.getElementById('manualOvertimeInput').checked;
 
             if (!wageType) {
                 alert(currentLanguage === 'ar' ? "يرجى اختيار نوع الأجر" : "Please select wage type");
@@ -1077,13 +1091,10 @@ body.english .checkbox-group input {
             let arbitraryDismissalCompensation = 0;
             let arbitraryDismissalExplanation = "";
 
-            // حساب بدل الفصل التعسفي فقط للعقود غير محددة المدة وعند اختيار الفصل التعسفي وتفعيل خانة الاختيار
             if (arbitraryDismissal && contractType === 'indefinite' && terminationType === 'indefinite') {
                 arbitraryDismissalCompensation = calculateArbitraryDismissalCompensation(monthlyWage, serviceYears, serviceMonths, serviceDays);
                 arbitraryDismissalExplanation = getArbitraryDismissalExplanation(monthlyWage, serviceYears, serviceMonths, serviceDays, arbitraryDismissalCompensation);
             }
-            
-            // لا يتم حساب بدل الفصل التعسفي للعقود محددة المدة حتى لو تم اختيار الفصل التعسفي
 
             if (socialSecurity === 'yes') {
                 endOfServiceCompensation = 0;
@@ -1091,13 +1102,12 @@ body.english .checkbox-group input {
                 socialSecurityNote = "";
             } else {
                 endOfServiceCompensation = calculateEndOfServiceCompensation(monthlyWage, serviceYears, serviceMonths, serviceDays);
-                explanation = getEndOfServiceExplanation(monthlyWage, serviceYears, serviceMonths, serviceDays, endOfServiceCompensation);
+                explanation = translations[currentLanguage]['endOfServiceExplanation'];
                 socialSecurityNote = translations[currentLanguage]['endOfServiceNote'];
             }
 
             let noticeCompensation = 0;
             let noticeExplanation = "";
-
             if (contractType === 'definite') {
                 noticeCompensation = 0;
                 noticeExplanation = translations[currentLanguage]['noNoticeCompensation'];
@@ -1106,8 +1116,14 @@ body.english .checkbox-group input {
                 noticeExplanation = noticeMonth ? translations[currentLanguage]['noticeCompensationYes'] : translations[currentLanguage]['noticeCompensationNo'];
             }
 
-            // المعادلة المعدلة التي تضمّن الحقل الجديد
-            const overtimePay = (overtimeHours * hourlyWage * 1.25) * overtimeDays * overtimeMonths;
+            // حساب الأجور الإضافية
+            let overtimePay = 0;
+            if (overtimeHoursPerMonth > 0) {
+                overtimePay = overtimeHoursPerMonth * overtimeMonths * hourlyWage * 1.25;
+            } else if (overtimeHoursPerDay > 0 && overtimeDaysPerMonth > 0) {
+                overtimePay = overtimeHoursPerDay * overtimeDaysPerMonth * overtimeMonths * hourlyWage * 1.25;
+            }
+
             const holidayPay = holidayDays * dailyWage * 1.5;
             const fridayPay = fridayDays * dailyWage * 1.5;
 
@@ -1123,12 +1139,11 @@ body.english .checkbox-group input {
                 <div class="result-item"><span>${translations[currentLanguage]['holidayPay']}:</span><span>${holidayPay.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
                 <div class="result-item"><span>${translations[currentLanguage]['fridayPay']}:</span><span>${fridayPay.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
             `;
-            
-            // إضافة بدل الفصل التعسفي فقط إذا كان محسوباً
+
             if (arbitraryDismissalCompensation > 0) {
                 html += `<div class="result-item"><span>${translations[currentLanguage]['arbitraryDismissalComp']}:</span><span>${arbitraryDismissalCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
             }
-            
+
             html += `<div class="result-item"><span>${translations[currentLanguage]['total']}:</span><span>${totalCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
             html += `<div class="result-note">${explanation}</div>`;
             html += `<div class="result-note">${noticeExplanation}</div>`;
@@ -1138,6 +1153,9 @@ body.english .checkbox-group input {
             if (extraVacationAgreed) {
                 html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم استخدام قيمة الإجازات الإضافية المتفق عليها يدوياً' : 'Manually entered additional vacation value was used'}</div>`;
             }
+            if (manualOvertimeInput) {
+                html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم استخدام قيمة ساعات العمل الإضافي الشهرية المدخلة يدوياً' : 'Manually entered monthly overtime hours value was used'}</div>`;
+            }
 
             document.getElementById('resultContent').innerHTML = html;
             document.getElementById('resultSection').style.display = 'block';
@@ -1145,29 +1163,26 @@ body.english .checkbox-group input {
         }
 
         function calculateArbitraryDismissalCompensation(monthlyWage, years, months, days) {
-            const totalMonths = years + (months / 12) + (days / 360);
-            let compensation = (totalMonths / 2) * monthlyWage;
+            const totalYears = years + (months / 12) + (days / 360);
+            let compensation = (totalYears * 0.5) * monthlyWage;
             if (compensation < monthlyWage * 2) compensation = monthlyWage * 2;
             return compensation;
         }
 
         function getArbitraryDismissalExplanation(monthlyWage, years, months, days, compensation) {
-            const totalMonths = years + (months / 12) + (days / 360);
-            const baseCompensation = (totalMonths / 2) * monthlyWage;
+            const totalYears = years + (months / 12) + (days / 360);
+            const baseCompensation = (totalYears * 0.5) * monthlyWage;
             if (baseCompensation < monthlyWage * 2) {
-                return `${translations[currentLanguage]['arbitraryDismissalExplanation1']} (${(monthlyWage * 2).toFixed(2)} ${translations[currentLanguage]['arbitraryDismissalExplanation2']}`;
+                return `${translations[currentLanguage]['arbitraryDismissalExplanation1']} (${(monthlyWage * 2).toFixed(2)} ${translations[currentLanguage]['arbitraryDismissalExplanation2']})`;
             } else {
-                return `${translations[currentLanguage]['arbitraryDismissalExplanation1']} (${baseCompensation.toFixed(2)} ${translations[currentLanguage]['arbitraryDismissalExplanation2']}`;
+                return `${translations[currentLanguage]['arbitraryDismissalExplanation1']} (${baseCompensation.toFixed(2)} ${translations[currentLanguage]['arbitraryDismissalExplanation2']})`;
             }
         }
 
         function calculateEndOfServiceCompensation(monthlyWage, years, months, days) {
-            const totalMonths = years + (months / 12) + (days / 360);
-            return totalMonths * monthlyWage;
-        }
-
-        function getEndOfServiceExplanation(monthlyWage, years, months, days, compensation) {
-            return `${translations[currentLanguage]['endOfServiceExplanation']} (${years} ${translations[currentLanguage]['years']} ${months} ${translations[currentLanguage]['months']} ${days} ${translations[currentLanguage]['days']}) = ${compensation.toFixed(2)} ${translations[currentLanguage]['dinar']}.`;
+            // بدل نهاية الخدمة: شهر عن كل سنة خدمة (تبسيط مطابق للترجمة الأصلية)
+            const totalYears = years + (months / 12) + (days / 360);
+            return monthlyWage * totalYears;
         }
     </script>
 </body>
