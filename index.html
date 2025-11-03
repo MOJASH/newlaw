@@ -368,14 +368,18 @@ body.english .checkbox-group input {
 
                 <div class="form-section">
                     <h2 data-translate="overtimeWork">العمل الإضافي</h2>
-                    <div class="compact-row">
+                    <div class="compact-row-3">
                         <div class="input-group">
-                            <label for="overtimeHours" data-translate="overtimeHours">عدد ساعات العمل الإضافي في اليوم الواحد</label>
+                            <label for="overtimeHours" data-translate="overtimeHours">عدد ساعات العمل الإضافي في اليوم</label>
                             <input type="number" id="overtimeHours" min="0" step="0.5" tabindex="21">
                         </div>
                         <div class="input-group">
-                            <label for="overtimeDays" data-translate="overtimeDaysLabel">عدد <span class="red-text">أيام</span> العمل الإضافي خلال مدة الخدمة</label>
+                            <label for="overtimeDays" data-translate="overtimeDaysLabel">عدد <span class="red-text">أيام</span> العمل الإضافي في الشهر الواحد</label>
                             <input type="number" id="overtimeDays" min="0" step="1" tabindex="22">
+                        </div>
+                        <div class="input-group">
+                            <label for="overtimeMonths" data-translate="overtimeMonths">عدد الأشهر التي استمر فيها العمل الإضافي</label>
+                            <input type="number" id="overtimeMonths" min="0" step="1" tabindex="23">
                         </div>
                     </div>
                 </div>
@@ -385,19 +389,19 @@ body.english .checkbox-group input {
                     <div class="compact-row">
                         <div class="input-group">
                             <label for="holidayDays" data-translate="holidayDays">أيام العطل الرسمية</label>
-                            <input type="number" id="holidayDays" min="0" step="1" tabindex="23">
+                            <input type="number" id="holidayDays" min="0" step="1" tabindex="24">
                         </div>
                         <div class="input-group">
                             <label for="fridayDays" data-translate="fridayDays">أيام الجمعة</label>
-                            <input type="number" id="fridayDays" min="0" step="1" tabindex="24">
+                            <input type="number" id="fridayDays" min="0" step="1" tabindex="25">
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="action-buttons">
-                <button type="submit" tabindex="25" data-translate="calculateRights">احسب المستحقات</button>
-                <button type="button" class="reset-btn" id="resetBtn" tabindex="26" data-translate="resetFields">تفريغ الحقول</button>
+                <button type="submit" tabindex="26" data-translate="calculateRights">احسب المستحقات</button>
+                <button type="button" class="reset-btn" id="resetBtn" tabindex="27" data-translate="resetFields">تفريغ الحقول</button>
             </div>
         </form>
 
@@ -479,8 +483,9 @@ body.english .checkbox-group input {
                 arbitraryDefinite: "فصل تعسفي (عقد محدد)",
                 deservesArbitraryDismissal: "يستحق بدل فصل تعسفي",
                 overtimeWork: "العمل الإضافي",
-                overtimeHours: "عدد ساعات العمل الإضافي في اليوم الواحد",
-                overtimeDaysLabel: "عدد <span class='red-text'>أيام</span> العمل الإضافي خلال مدة الخدمة",
+                overtimeHours: "عدد ساعات العمل الإضافي في اليوم",
+                overtimeDaysLabel: "عدد <span class='red-text'>أيام</span> العمل الإضافي في الشهر الواحد",
+                overtimeMonths: "عدد الأشهر التي استمر فيها العمل الإضافي",
                 holidayWork: "العمل في العطل والأعياد",
                 holidayDays: "أيام العطل الرسمية",
                 fridayDays: "أيام الجمعة",
@@ -567,7 +572,8 @@ body.english .checkbox-group input {
                 deservesArbitraryDismissal: "Deserves Arbitrary Dismissal Compensation",
                 overtimeWork: "Overtime Work",
                 overtimeHours: "Number of Overtime Hours per Day",
-                overtimeDaysLabel: "Number of Overtime Days During Service Period",
+                overtimeDaysLabel: "Number of Overtime Days per Month",
+                overtimeMonths: "Number of Months with Overtime Work",
                 holidayWork: "Work on Holidays and Occasions",
                 holidayDays: "Official Holiday Days",
                 fridayDays: "Friday Days",
@@ -1037,6 +1043,7 @@ body.english .checkbox-group input {
             const socialSecurity = document.getElementById('socialSecurity').value;
             const overtimeHours = parseFloat(document.getElementById('overtimeHours').value) || 0;
             const overtimeDays = parseInt(document.getElementById('overtimeDays').value) || 0;
+            const overtimeMonths = parseInt(document.getElementById('overtimeMonths').value) || 1; // الحقل الجديد - القيمة الافتراضية 1
             const holidayDays = parseInt(document.getElementById('holidayDays').value) || 0;
             const fridayDays = parseInt(document.getElementById('fridayDays').value) || 0;
             const contractDuration = parseInt(document.getElementById('contractDuration').value) || 0;
@@ -1099,7 +1106,8 @@ body.english .checkbox-group input {
                 noticeExplanation = noticeMonth ? translations[currentLanguage]['noticeCompensationYes'] : translations[currentLanguage]['noticeCompensationNo'];
             }
 
-            const overtimePay = (overtimeHours * hourlyWage * 1.25) * overtimeDays;
+            // المعادلة المعدلة التي تضمّن الحقل الجديد
+            const overtimePay = (overtimeHours * hourlyWage * 1.25) * overtimeDays * overtimeMonths;
             const holidayPay = holidayDays * dailyWage * 1.5;
             const fridayPay = fridayDays * dailyWage * 1.5;
 
