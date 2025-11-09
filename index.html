@@ -15,6 +15,7 @@
             --gold-very-light: rgba(212,175,55,0.95);
             --gold-watermark: rgba(212,175,55,0.12);
             --blue-light:#e8f4fd;
+            --gold-bg: rgba(212,175,55,0.15); /* لون ذهبي شفاف للخلفيات */
         }
         *{box-sizing:border-box;margin:0;padding:0;font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;}
         body{background-color:#f5f7fa;color:var(--text-color);line-height:1.6;min-height:100vh;overflow-x:hidden;}
@@ -126,7 +127,7 @@ input:focus,select:focus{border-color:var(--accent-color);outline:none;box-shado
 .checkbox-group input{width:auto;margin-left:8px}
 .checkbox-group.disabled{opacity:0.6;pointer-events:none}
 .contract-details{display:none;background-color:var(--blue-light);padding:12px;border-radius:4px;margin-top:8px;border-right:4px solid var(--primary-color);font-size:13px}
-.service-note{background-color:#fff8e1;color:#b8860b;padding:10px;border-radius:4px;margin-top:10px;border-right:4px solid var(--accent-color);font-size:12px;display:none}
+.service-note{background-color:var(--gold-bg);color:#b8860b;padding:10px;border-radius:4px;margin-top:10px;border-right:4px solid var(--accent-color);font-size:12px;display:none}
 button{background:linear-gradient(135deg,var(--primary-color),#1a237e);Color:white;border:none;padding:10px 15px;font-size:16px;border-radius:4px;cursor:pointer;width:100%;transition:all .3s;margin-bottom:8px;font-weight:bold}
 button:hover{background:linear-gradient(135deg,#1a237e,var(--primary-color));transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.2)}
 .reset-btn{background:linear-gradient(135deg,#6c757d,#5a6268)}
@@ -230,7 +231,44 @@ input:disabled {
     margin-top: 8px;
     margin-bottom: 12px;
 }
-    </style>
+    
+/* Manual overtime note styling */
+.manual-note {
+    background-color: var(--blue-light);
+    border-right: 4px solid var(--primary-color);
+    padding: 6px 8px;
+    margin-top: 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    display: none;
+}
+
+/* تنسيق خيارات الرواتب الإضافية */
+.extra-salaries-options {
+    background-color: white; /* تغيير من الأزرق الفاتح إلى الأبيض */
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    border-right: 4px solid var(--primary-color);
+}
+
+/* تنسيق خلفية ملاحظة فرق الأجور */
+.wage-diff-note {
+    background-color: var(--gold-bg) !important;
+    color: #b8860b;
+    border-right: 4px solid var(--accent-color);
+}
+
+/* تنسيق قسم الرصيد الادخاري */
+.savings-balance-group {
+    display: none;
+    background-color: white; /* تغيير من الأزرق الفاتح إلى الأبيض */
+    padding: 12px;
+    border-radius: 4px;
+    margin-top: 8px;
+    border-right: 4px solid var(--primary-color);
+}
+</style>
 </head>
 <body>
     <div id="particles-js"></div>
@@ -273,7 +311,21 @@ input:disabled {
                     </div>
                     <div class="input-group">
                         <label for="lastWage" data-translate="lastSalary">الراتب الأخير (دينار)</label>
-                        <input type="number" id="lastWage" min="0" step="0.01" required tabindex="2">
+                        <input type="number" id="lastWage" min="0" step="any" required tabindex="2">
+                    </div>
+
+                    <!-- NEW: wage difference checkbox and agreed wage field -->
+                    <div class="checkbox-group" style="margin-top:8px;">
+                        <input type="checkbox" id="wageDiffCheckbox" tabindex="3">
+                        <label for="wageDiffCheckbox" data-translate="wageDiffCheckboxLabel">يوجد فرق بين الراتب المستلم والمتفق عليه أو الحد الأدنى للأجور</label>
+                    </div>
+
+                    <div class="input-group" id="agreedWageGroup" style="display:none;">
+                        <label for="agreedWage" data-translate="agreedWageLabel">الراتب المتفق عليه أو الحد الأدنى للأجور (دينار)</label>
+                        <input type="number" id="agreedWage" min="0" step="any" tabindex="4">
+                        <div class="result-note wage-diff-note" id="wageDiffNote" style="margin-top:8px;display:none;">
+                            <span data-translate="wageDiffNote">ستُحتسب المستحقات على الراتب المتفق عليه (أو الحد الأدنى للأجور)، وسيُضاف بند "فرق الأجور المستحقة" عن آخر سنتين من الخدمة.</span>
+                        </div>
                     </div>
                 </div>
 
@@ -281,7 +333,7 @@ input:disabled {
                     <h2 data-translate="dueSalaries">الرواتب المستحقة</h2>
                     <div class="input-group">
                         <label for="contractType" data-translate="contractType">نوع العقد</label>
-                        <select id="contractType" tabindex="3">
+                        <select id="contractType" tabindex="5">
                             <option value="">-- <span data-translate="chooseContractType">اختر نوع العقد</span> --</option>
                             <option value="indefinite" data-translate="indefiniteContract">عقد غير محدد المدة</option>
                             <option value="definite" data-translate="definiteContract">عقد محدد المدة</option>
@@ -293,15 +345,15 @@ input:disabled {
                         <div class="compact-row-3">
                             <div class="input-group">
                                 <label for="contractDuration" data-translate="contractDuration">مدة العقد (أشهر)</label>
-                                <input type="number" id="contractDuration" min="1" step="1" tabindex="4">
+                                <input type="number" id="contractDuration" min="1" step="1" tabindex="6">
                             </div>
                             <div class="input-group">
                                 <label for="workedMonths" data-translate="workedMonths">الأشهر التي عملتها</label>
-                                <input type="number" id="workedMonths" min="0" step="1" tabindex="5">
+                                <input type="number" id="workedMonths" min="0" step="1" tabindex="7">
                             </div>
                             <div class="input-group">
                                 <label for="workedDays" data-translate="workedDays">الأيام التي عملتها</label>
-                                <input type="number" id="workedDays" min="0" max="30" step="1" tabindex="6">
+                                <input type="number" id="workedDays" min="0" max="30" step="1" tabindex="8">
                             </div>
                         </div>
                     </div>
@@ -309,18 +361,60 @@ input:disabled {
                     <div class="compact-row">
                         <div class="input-group">
                             <label for="unpaidMonths" data-translate="unpaidMonths">أشهر مستحقة</label>
-                            <input type="number" id="unpaidMonths" min="0" step="1" tabindex="7">
+                            <input type="number" id="unpaidMonths" min="0" step="1" tabindex="9">
                         </div>
                         <div class="input-group">
                             <label for="unpaidDays" data-translate="unpaidDays">أيام مستحقة</label>
-                            <input type="number" id="unpaidDays" min="0" step="1" tabindex="8">
+                            <input type="number" id="unpaidDays" min="0" step="1" tabindex="10">
                         </div>
                     </div>
 
                     <!-- الحقل الجديد للمدفوعات غير المستلمة خارج مدة العقد -->
                     <div class="input-group" id="extraUnpaidMonthsGroup" style="display: none;">
                         <label for="extraUnpaidMonths" data-translate="extraUnpaidMonths">أشهر إضافية مستحقة</label>
-                        <input type="number" id="extraUnpaidMonths" min="0" step="1" tabindex="9">
+                        <input type="number" id="extraUnpaidMonths" min="0" step="1" tabindex="11">
+                    </div>
+                    
+                    <!-- إضافة خيارات الرواتب الإضافية -->
+                    <div class="checkbox-group" id="extraSalariesGroup">
+                        <input type="checkbox" id="extraSalariesCheckbox" tabindex="33">
+                        <label for="extraSalariesCheckbox" data-translate="extraSalariesCheckboxLabel">هل يوجد راتب ثالث عشر أو رابع عشر أو أكثر؟</label>
+                    </div>
+
+                    <div class="extra-salaries-options" id="extraSalariesOptions" style="display:none;">
+                        <div class="compact-row">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="thirteenthSalary" tabindex="34">
+                                <label for="thirteenthSalary" data-translate="thirteenthSalary">الراتب الثالث عشر</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="fourteenthSalary" tabindex="35">
+                                <label for="fourteenthSalary" data-translate="fourteenthSalary">الراتب الرابع عشر</label>
+                            </div>
+                        </div>
+                        <div class="compact-row">
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="fifteenthSalary" tabindex="36">
+                                <label for="fifteenthSalary" data-translate="fifteenthSalary">الراتب الخامس عشر</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="sixteenthSalary" tabindex="37">
+                                <label for="sixteenthSalary" data-translate="sixteenthSalary">الراتب السادس عشر</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- إضافة خيار الرصيد الادخاري -->
+                    <div class="checkbox-group" style="margin-top: 12px;">
+                        <input type="checkbox" id="savingsBalanceCheckbox" tabindex="38">
+                        <label for="savingsBalanceCheckbox" data-translate="savingsBalanceCheckboxLabel">هل يوجد رصيد ادخاري؟</label>
+                    </div>
+
+                    <div class="savings-balance-group" id="savingsBalanceGroup">
+                        <div class="input-group">
+                            <label for="savingsBalance" data-translate="savingsBalanceLabel">الرصيد الادخاري (دينار)</label>
+                            <input type="number" id="savingsBalance" min="0" step="any" tabindex="39">
+                        </div>
                     </div>
                 </div>
 
@@ -329,37 +423,37 @@ input:disabled {
                     <div class="service-duration-group">
                         <div class="input-group">
                             <label for="serviceYears" data-translate="years">السنوات</label>
-                            <input type="number" id="serviceYears" min="0" step="1" tabindex="10">
+                            <input type="number" id="serviceYears" min="0" step="1" tabindex="12">
                         </div>
                         <div class="input-group">
                             <label for="serviceMonths" data-translate="months">الأشهر</label>
-                            <input type="number" id="serviceMonths" min="0" max="11" step="1" tabindex="11">
+                            <input type="number" id="serviceMonths" min="0" max="11" step="1" tabindex="13">
                         </div>
                         <div class="input-group">
                             <label for="serviceDays" data-translate="days">الأيام</label>
-                            <input type="number" id="serviceDays" min="0" max="30" step="1" tabindex="12">
+                            <input type="number" id="serviceDays" min="0" max="30" step="1" tabindex="14">
                         </div>
                     </div>
 
                     <!-- الحقول الجديدة المضافة -->
                     <div class="checkbox-group" id="extraVacationGroup">
-                        <input type="checkbox" id="extraVacationAgreed" tabindex="13">
+                        <input type="checkbox" id="extraVacationAgreed" tabindex="15">
                         <label for="extraVacationAgreed" data-translate="extraVacationAgreed">هل يوجد إجازات إضافية متفق عليها؟</label>
                     </div>
 
                     <div class="input-group">
                         <label for="totalVacationLastTwoYears" data-translate="totalVacationLastTwoYears">مجموع الإجازات عن آخر سنتين</label>
-                        <input type="number" id="totalVacationLastTwoYears" readonly tabindex="14">
+                        <input type="number" id="totalVacationLastTwoYears" readonly tabindex="16">
                     </div>
 
                     <div class="input-group">
                         <label for="takenVacationDays" data-translate="takenVacationDays">الإجازات التي حصل عليها العامل</label>
-                        <input type="number" id="takenVacationDays" min="0" step="1" tabindex="15" required>
+                        <input type="number" id="takenVacationDays" min="0" step="1" tabindex="17" required>
                     </div>
 
                     <div class="input-group">
                         <label for="vacationDays" data-translate="vacationDays">أيام إجازات مستحقة</label>
-                        <input type="number" id="vacationDays" readonly tabindex="16">
+                        <input type="number" id="vacationDays" readonly tabindex="18">
                     </div>
 
                     <div class="service-note" id="serviceNote">
@@ -370,13 +464,13 @@ input:disabled {
                 <div class="form-section">
                     <h2 data-translate="terminationDetails">تفاصيل إنهاء الخدمة</h2>
                     <div class="checkbox-group" id="noticeMonthGroup">
-                        <input type="checkbox" id="noticeMonth" tabindex="17">
+                        <input type="checkbox" id="noticeMonth" tabindex="19">
                         <label for="noticeMonth" data-translate="deservesNoticeMonth">يستحق بدل شهر الإشعار</label>
                     </div>
 
                     <div class="input-group">
                         <label for="socialSecurity" data-translate="socialSecurity">الضمان الاجتماعي</label>
-                        <select id="socialSecurity" tabindex="18">
+                        <select id="socialSecurity" tabindex="20">
                             <option value="yes" data-translate="yesSubscribed">نعم - مشترك</option>
                             <option value="no" data-translate="notSubscribed">لا - غير مشترك</option>
                         </select>
@@ -384,7 +478,7 @@ input:disabled {
 
                     <div class="input-group">
                         <label for="terminationType" data-translate="terminationReason">سبب إنهاء الخدمة</label>
-                        <select id="terminationType" tabindex="19">
+                        <select id="terminationType" tabindex="21">
                             <option value="mutual" data-translate="mutualTermination">إنهاء برضا الطرفين</option>
                             <option value="indefinite" data-translate="arbitraryIndefinite">فصل تعسفي (عقد غير محدد)</option>
                             <option value="definite" data-translate="arbitraryDefinite">فصل تعسفي (عقد محدد)</option>
@@ -392,74 +486,79 @@ input:disabled {
                     </div>
 
                     <div class="checkbox-group" id="arbitraryDismissalGroup" style="display:none">
-                        <input type="checkbox" id="arbitraryDismissal" tabindex="20">
+                        <input type="checkbox" id="arbitraryDismissal" tabindex="22">
                         <label for="arbitraryDismissal" data-translate="deservesArbitraryDismissal">يستحق بدل فصل تعسفي</label>
                     </div>
                 </div>
 
                 <!-- قسم العمل الإضافي المحدث -->
+                
                 <div class="form-section">
                     <h2 data-translate="overtimeWork">العمل الإضافي</h2>
 
-                    <div class="compact-row">
-                        <div class="input-group">
-                            <label for="overtimeHoursPerDay" data-translate="overtimeHoursPerDay">عدد ساعات العمل الإضافي في اليوم</label>
-                            <input type="number" id="overtimeHoursPerDay" min="0" step="0.5" tabindex="21">
-                        </div>
-                        <div class="input-group">
-                            <label for="overtimeDaysPerMonth" data-translate="overtimeDaysPerMonth">عدد أيام العمل الإضافي في الشهر</label>
-                            <input type="number" id="overtimeDaysPerMonth" min="0" step="1" tabindex="22">
+                    <!-- التشيك بوكس moved to be the first control in the section -->
+                    <div class="checkbox-group overtime-checkbox-group" style="margin-bottom:8px;">
+                        <input type="checkbox" id="manualOvertimeInput" tabindex="26">
+                        <label for="manualOvertimeInput" data-translate="manualOvertimeInput" style="margin-right:6px;">أريد إدخال عدد الساعات الشهرية يدويًا</label>
+                    </div>
+
+                    <div class="manual-note" id="manualNote" style="display:none;">
+                        <span data-translate="manualNoteText">تم تفعيل الإدخال اليدوي، يمكنك إدخال عدد الساعات الشهرية مباشرة.</span>
+                    </div>
+
+                    <div id="autoOvertimeFields">
+                        <div class="compact-row">
+                            <div class="input-group">
+                                <label for="overtimeHoursPerDay" data-translate="overtimeHoursPerDay">عدد ساعات العمل الإضافي في اليوم</label>
+                                <input type="number" id="overtimeHoursPerDay" min="0" step="0.5" tabindex="23">
+                            </div>
+                            <div class="input-group">
+                                <label for="overtimeDaysPerMonth" data-translate="overtimeDaysPerMonth">عدد أيام العمل الإضافي في الشهر</label>
+                                <input type="number" id="overtimeDaysPerMonth" min="0" step="1" tabindex="24">
+                            </div>
                         </div>
                     </div>
 
                     <div class="compact-row">
                         <div class="input-group">
                             <label for="overtimeHoursPerMonth" data-translate="overtimeHoursPerMonth">عدد ساعات العمل الإضافي في الشهر</label>
-                            <input type="number" id="overtimeHoursPerMonth" min="0" step="0.5" tabindex="23" disabled>
+                            <input type="number" id="overtimeHoursPerMonth" min="0" step="any" tabindex="25" disabled>
                         </div>
 
-                        <!-- تم نقل خانة الاختيار لتكون بعد حقل عدد ساعات العمل الإضافي في الشهر وقبل حقل عدد الأشهر -->
                         <div class="input-group" style="display:flex;align-items:center;">
-                            <div>
-                                <div class="checkbox-group overtime-checkbox-group" style="margin:0;">
-                                    <input type="checkbox" id="manualOvertimeInput" tabindex="24">
-                                    <label for="manualOvertimeInput" data-translate="manualOvertimeInput" style="margin-right:6px;">أريد إدخال عدد الساعات الشهرية يدويًا</label>
-                                </div>
-                            </div>
+                            <!-- kept for layout parity but checkbox moved above -->
                         </div>
 
                         <div class="input-group">
                             <label for="overtimeMonths" data-translate="overtimeMonths">عدد الأشهر التي استمر فيها العمل الإضافي</label>
-                            <!-- أزلت الـ required كما طُلِب -->
-                            <input type="number" id="overtimeMonths" min="1" step="1" tabindex="25">
+                            <input type="number" id="overtimeMonths" min="0" step="1" tabindex="27">
                         </div>
                     </div>
 
                     <!-- الحقل الجديد: إجمالي ساعات العمل الإضافي الكلية -->
                     <div class="input-group">
                         <label for="totalOvertimeHours" data-translate="totalOvertimeHours">إجمالي ساعات العمل الإضافي الكلية</label>
-                        <input type="number" id="totalOvertimeHours" readonly tabindex="26">
+                        <input type="number" id="totalOvertimeHours" readonly tabindex="28">
                     </div>
                 </div>
-
                 <div class="form-section">
                     <h2 data-translate="holidayWork">العمل في العطل والأعياد</h2>
                     <div class="compact-row">
                         <div class="input-group">
                             <label for="holidayDays" data-translate="holidayDays">أيام العطل الرسمية</label>
-                            <input type="number" id="holidayDays" min="0" step="1" tabindex="27">
+                            <input type="number" id="holidayDays" min="0" step="1" tabindex="29">
                         </div>
                         <div class="input-group">
                             <label for="fridayDays" data-translate="fridayDays">أيام الجمعة</label>
-                            <input type="number" id="fridayDays" min="0" step="1" tabindex="28">
+                            <input type="number" id="fridayDays" min="0" step="1" tabindex="30">
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="action-buttons">
-                <button type="submit" tabindex="29" data-translate="calculateRights">احسب المستحقات</button>
-                <button type="button" class="reset-btn" id="resetBtn" tabindex="30" data-translate="resetFields">تفريغ الحقول</button>
+                <button type="submit" tabindex="31" data-translate="calculateRights">احسب المستحقات</button>
+                <button type="button" class="reset-btn" id="resetBtn" tabindex="32" data-translate="resetFields">تفريغ الحقول</button>
             </div>
         </form>
 
@@ -472,7 +571,7 @@ input:disabled {
                 <ul>
                     <li data-translate="legalNote1">م46: الأجر يُدفع خلال 7 أيام من استحقاقه، ولا يجور حسمه إلا وفق القانون.</li>
                     <li data-translate="legalNote2">م61: للعامل إجازة سنوية 14 يومًا، وتصبح 21 يومًا بعد 5 سنوات خدمة متصلة لدى صاحب العمل.</li>
-                    <li data-translate="legalNote3">م32: يستحق العامل الذي لا يخضع لأحكام الضمان الاجتماعي مكافأة نهاية خدمة تساوي شهر عن كل سنة خدمة.</li>
+                    <li data-translate="legalNote3">م32: يستحق العامل الذي لا يخضع لأحكام الضمان الاجتماعي مكافأة نهاية الخدمة تساوي شهر عن كل سنة خدمة.</li>
                     <li data-translate="legalNote4">م23: بدل الإشعار يساوي راتب شهر واحد ويحتسب بناءً على آخر أجر تقاضاه العامل.</li>
                     <li data-translate="legalNote5">م59: أجر العمل الإضافي يساوي 125% من أجر العامل المعتاد، و150% عند العمل بالعطل الرسمية أو الأعياد الدينية.</li>
                     <li data-translate="legalNote6">م25: في حالة الفصل التعسفي لعقود العمل غير محددة المدة فإن العامل يستحق بدل إشعار بالإضافة إلى أجر نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين.</li>
@@ -498,7 +597,7 @@ input:disabled {
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 
     <script>
-        // Translations (Arabic and full English included)
+        // Translations (Arabic and full English included) - extended with new keys
         const translations = {
             ar: {
                 creatorInfo: "أنشئت بواسطة: المحامي محمد الشوحه",
@@ -511,6 +610,9 @@ input:disabled {
                 dailyWage: "أجر يومي",
                 monthlyWage: "أجر شهري",
                 lastSalary: "الراتب الأخير (دينار)",
+                wageDiffCheckboxLabel: "يوجد فرق بين الراتب المستلم والمتفق عليه أو الحد الأدنى للأجور",
+                agreedWageLabel: "الراتب المتفق عليه أو الحد الأدنى للأجور (دينار)",
+                wageDiffNote: "ستُحتسب المستحقات على الراتب المتفق عليه (أو الحد الأدنى للأجور)، وسيُضاف بند \"فرق الأجور المستحقة\" عن آخر سنتين من الخدمة.",
                 dueSalaries: "الرواتب المستحقة",
                 contractType: "نوع العقد",
                 chooseContractType: "اختر نوع العقد",
@@ -554,7 +656,7 @@ input:disabled {
                 legalNotes: "ملاحظات قانونية",
                 legalNote1: "م46: الأجر يُدفع خلال 7 أيام من استحقاقه، ولا يجور حسمه إلا وفق القانون.",
                 legalNote2: "م61: للعامل إجازة سنوية 14 يومًا، وتصبح 21 يومًا بعد 5 سنوات خدمة متصلة لدى صاحب العمل.",
-                legalNote3: "م32: يستحق العامل الذي لا يخضع لأحكام الضمان الاجتماعي مكافأة نهاية خدمة تساوي شهر عن كل سنة خدمة.",
+                legalNote3: "م32: يستحق العامل الذي لا يخضع لأحكام الضمان الاجتماعي مكافأة نهاية الخدمة تساوي شهر عن كل سنة خدمة.",
                 legalNote4: "م23: بدل الإشعار يساوي راتب شهر واحد ويحتسب بناءً على آخر أجر تقاضاه العامل.",
                 legalNote5: "م59: أجر العمل الإضافي يساوي 125% من أجر العامل المعتاد، و150% عند العمل بالعطل الرسمية أو الأعياد الدينية.",
                 legalNote6: "م25: في حالة الفصل التعسفي لعقود العمل غير محددة المدة فإن العامل يستحق بدل إشعار بالإضافة إلى أجر نصف شهر عن كل سنة خدمة بما لا يقل عن أجر شهرين.",
@@ -588,7 +690,23 @@ input:disabled {
                 vacationCalculationNote: "يتم حساب الإجازات عن آخر سنتين فقط من الخدمة.",
                 extraVacationAgreed: "هل يوجد إجازات إضافية متفق عليها؟",
                 manualOvertimeInput: "أريد إدخال عدد الساعات الشهرية يدويًا",
-                totalOvertimeHours: "إجمالي ساعات العمل الإضافي الكلية"
+                totalOvertimeHours: "إجمالي ساعات العمل الإضافي الكلية",
+                wageDifferenceLabel: "فرق الأجور المستحقة",
+                wageDifferenceExplanation: "فرق الأجور = (الراتب المتفق عليه (أو الحد الأدنى للأجور) - الراتب المدفوع) × مدة العمل الفعلية (بالأشهر).",
+                wageUsedLabel: "الراتب المعتمد للحساب",
+                mutualTerminationNote: "ملاحظة: في حالة إنهاء العقد برضا الطرفين، لا يستحق العامل رواتب عن المدة المتبقية من العقد المحدد المدة.",
+                wageDifferenceCalculation: "حساب فرق الأجور: (${agreedWage} - ${lastWage}) × ${totalServiceMonthsForDiff} أشهر = ${wageDifferenceTotal} دينار",
+                // إضافة الترجمات الجديدة للرواتب الإضافية
+                extraSalariesCheckboxLabel: "هل يوجد راتب ثالث عشر أو رابع عشر أو أكثر؟",
+                thirteenthSalary: "الراتب الثالث عشر",
+                fourteenthSalary: "الراتب الرابع عشر",
+                fifteenthSalary: "الراتب الخامس عشر",
+                sixteenthSalary: "الراتب السادس عشر",
+                extraSalariesTotal: "مجموع الرواتب الإضافية",
+                // إضافة الترجمات الجديدة للرصيد الادخاري
+                savingsBalanceCheckboxLabel: "هل يوجد رصيد ادخاري؟",
+                savingsBalanceLabel: "الرصيد الادخاري (دينار)",
+                savingsBalance: "الرصيد الادخاري"
             },
             en: {
                 creatorInfo: "Created by: Lawyer Mohammed Al-Shouha",
@@ -601,6 +719,9 @@ input:disabled {
                 dailyWage: "Daily wage",
                 monthlyWage: "Monthly wage",
                 lastSalary: "Last wage (JOD)",
+                wageDiffCheckboxLabel: "There is a difference between paid and agreed wage (or minimum wage)",
+                agreedWageLabel: "Agreed wage in contract (JOD)",
+                wageDiffNote: "Entitlements will be calculated on the agreed wage (or minimum wage); 'Wage difference' will be added for the last two years of service.",
                 dueSalaries: "Due salaries",
                 contractType: "Contract type",
                 chooseContractType: "Choose contract type",
@@ -678,7 +799,23 @@ input:disabled {
                 vacationCalculationNote: "Vacation is calculated for the last two years only.",
                 extraVacationAgreed: "Is there additional agreed vacation?",
                 manualOvertimeInput: "I want to enter monthly overtime hours manually",
-                totalOvertimeHours: "Total overtime hours"
+                totalOvertimeHours: "Total overtime hours",
+                wageDifferenceLabel: "Wage difference (due)",
+                wageDifferenceExplanation: "Wage difference = (agreed wage (or minimum wage) - paid wage) × actual service months.",
+                wageUsedLabel: "Wage used for calculations",
+                mutualTerminationNote: "Note: In case of mutual termination of a definite-term contract, the worker is not entitled to salaries for the remaining contract period.",
+                wageDifferenceCalculation: "Wage difference calculation: (${agreedWage} - ${lastWage}) × ${totalServiceMonthsForDiff} months = ${wageDifferenceTotal} JOD",
+                // إضافة الترجمات الجديدة للرواتب الإضافية
+                extraSalariesCheckboxLabel: "Is there a thirteenth, fourteenth, or more salary?",
+                thirteenthSalary: "Thirteenth Salary",
+                fourteenthSalary: "Fourteenth Salary",
+                fifteenthSalary: "Fifteenth Salary",
+                sixteenthSalary: "Sixteenth Salary",
+                extraSalariesTotal: "Total Extra Salaries",
+                // إضافة الترجمات الجديدة للرصيد الادخاري
+                savingsBalanceCheckboxLabel: "Is there a savings balance?",
+                savingsBalanceLabel: "Savings Balance (JOD)",
+                savingsBalance: "Savings Balance"
             }
         };
 
@@ -862,7 +999,13 @@ input:disabled {
             // خانة الاختيار الجديدة للإدخال اليدوي
             const manualOvertimeInputEl = document.getElementById('manualOvertimeInput');
 
-            // إضافة المستمعين للحقول الجديدة
+            // Wage diff UI elements
+            const wageDiffCheckbox = document.getElementById('wageDiffCheckbox');
+            const agreedWageGroup = document.getElementById('agreedWageGroup');
+            const agreedWageEl = document.getElementById('agreedWage');
+            const wageDiffNoteEl = document.getElementById('wageDiffNote');
+
+            // إضافة مستمعين للحقول الجديدة
             serviceYearsEl.addEventListener('input', calculateTotalVacation);
             serviceMonthsEl.addEventListener('input', calculateTotalVacation);
             serviceDaysEl.addEventListener('input', calculateTotalVacation);
@@ -904,6 +1047,39 @@ input:disabled {
                 } else {
                     overtimeHoursPerMonthEl.disabled = true;
                     calculateOvertimeHours();
+                }
+                setTimeout(setupEnterNavigation, 100);
+            });
+
+            // إضافة مستمع لخانة اختيار الرواتب الإضافية
+            const extraSalariesCheckbox = document.getElementById('extraSalariesCheckbox');
+            const extraSalariesOptions = document.getElementById('extraSalariesOptions');
+            
+            extraSalariesCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    extraSalariesOptions.style.display = 'block';
+                } else {
+                    extraSalariesOptions.style.display = 'none';
+                    // إعادة تعيين جميع خيارات الرواتب الإضافية
+                    document.getElementById('thirteenthSalary').checked = false;
+                    document.getElementById('fourteenthSalary').checked = false;
+                    document.getElementById('fifteenthSalary').checked = false;
+                    document.getElementById('sixteenthSalary').checked = false;
+                }
+                setTimeout(setupEnterNavigation, 100);
+            });
+
+            // إضافة مستمع لخانة اختيار الرصيد الادخاري
+            const savingsBalanceCheckbox = document.getElementById('savingsBalanceCheckbox');
+            const savingsBalanceGroup = document.getElementById('savingsBalanceGroup');
+            
+            savingsBalanceCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    savingsBalanceGroup.style.display = 'block';
+                    document.getElementById('savingsBalance').focus();
+                } else {
+                    savingsBalanceGroup.style.display = 'none';
+                    document.getElementById('savingsBalance').value = '';
                 }
                 setTimeout(setupEnterNavigation, 100);
             });
@@ -962,6 +1138,20 @@ input:disabled {
                 setTimeout(setupEnterNavigation, 100);
             }
 
+            // Wage diff checkbox behavior
+            wageDiffCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    agreedWageGroup.style.display = 'block';
+                    wageDiffNoteEl.style.display = 'block';
+                    agreedWageEl.focus();
+                } else {
+                    agreedWageGroup.style.display = 'none';
+                    wageDiffNoteEl.style.display = 'none';
+                    agreedWageEl.value = '';
+                }
+                setTimeout(setupEnterNavigation, 100);
+            });
+
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
                 calculateRights();
@@ -988,30 +1178,100 @@ input:disabled {
                 manualOvertimeInputEl.checked = false;
                 overtimeHoursPerMonthEl.disabled = true;
                 totalOvertimeHoursEl.value = '';
+                // wage diff reset
+                agreedWageGroup.style.display = 'none';
+                wageDiffNoteEl.style.display = 'none';
+                // إعادة تعيين خيارات الرواتب الإضافية
+                extraSalariesCheckbox.checked = false;
+                extraSalariesOptions.style.display = 'none';
+                document.getElementById('thirteenthSalary').checked = false;
+                document.getElementById('fourteenthSalary').checked = false;
+                document.getElementById('fifteenthSalary').checked = false;
+                document.getElementById('sixteenthSalary').checked = false;
+                // إعادة تعيين خيار الرصيد الادخاري
+                savingsBalanceCheckbox.checked = false;
+                savingsBalanceGroup.style.display = 'none';
                 calculateTotalVacation();
                 setTimeout(setupEnterNavigation, 100);
             });
         }
 
-        function calculateOvertimeHours() {
-            const overtimeHoursPerDay = parseFloat(document.getElementById('overtimeHoursPerDay').value) || 0;
-            const overtimeDaysPerMonth = parseInt(document.getElementById('overtimeDaysPerMonth').value) || 0;
+        
+            // ======= عمل التعديلات الخاصة بالعمل الإضافي (نقل الاختيار إلى الأعلى، إدخال يدوي للأشهر=1 افتراضي) =======
+            const manualOvertimeInputEl = document.getElementById('manualOvertimeInput');
             const overtimeHoursPerMonthEl = document.getElementById('overtimeHoursPerMonth');
-            if (overtimeHoursPerMonthEl.disabled) {
-                const calculatedHours = overtimeHoursPerDay * overtimeDaysPerMonth;
-                overtimeHoursPerMonthEl.value = calculatedHours > 0 ? calculatedHours : '';
-            }
-            calculateTotalOvertimeHours();
-        }
+            const autoOvertimeFieldsEl = document.getElementById('autoOvertimeFields');
+            const manualNoteEl = document.getElementById('manualNote');
 
-        function calculateTotalOvertimeHours() {
-            const overtimeHoursPerDay = parseFloat(document.getElementById('overtimeHoursPerDay').value) || 0;
-            const overtimeDaysPerMonth = parseInt(document.getElementById('overtimeDaysPerMonth').value) || 0;
-            // إذا لم يُدخل المستخدم عدد الأشهر، نفترض 1 (كما طلبت)
-            const overtimeMonths = parseInt(document.getElementById('overtimeMonths').value) || 1;
-            const totalOvertimeHours = overtimeHoursPerDay * overtimeDaysPerMonth * overtimeMonths;
-            document.getElementById('totalOvertimeHours').value = totalOvertimeHours > 0 ? totalOvertimeHours : '';
-        }
+            // Initialize state
+            overtimeHoursPerMonthEl.disabled = true;
+            manualNoteEl.style.display = 'none';
+
+            manualOvertimeInputEl.addEventListener('change', function() {
+                if (this.checked) {
+                    // Hide auto fields, enable monthly input
+                    autoOvertimeFieldsEl.style.display = 'none';
+                    overtimeHoursPerMonthEl.disabled = false;
+                    overtimeHoursPerMonthEl.focus();
+                    manualNoteEl.style.display = 'block';
+                } else {
+                    autoOvertimeFieldsEl.style.display = 'block';
+                    overtimeHoursPerMonthEl.disabled = true;
+                    overtimeHoursPerMonthEl.value = '';
+                    manualNoteEl.style.display = 'none';
+                }
+                setTimeout(setupEnterNavigation, 100);
+                calculateTotalOvertimeHours();
+            });
+
+            // Replaced calculation functions: unified to respect manual mode and treat months empty/0 as 1
+            function calculateOvertimeHours() {
+                // If monthly input is disabled, calculate from per-day * days-per-month
+                const overtimeHoursPerDay = parseFloat(document.getElementById('overtimeHoursPerDay').value) || 0;
+                const overtimeDaysPerMonth = parseInt(document.getElementById('overtimeDaysPerMonth').value) || 0;
+                const overtimeHoursPerMonthElLocal = document.getElementById('overtimeHoursPerMonth');
+                if (overtimeHoursPerMonthElLocal.disabled) {
+                    const calculatedHours = overtimeHoursPerDay * overtimeDaysPerMonth;
+                    overtimeHoursPerMonthElLocal.value = calculatedHours > 0 ? calculatedHours : '';
+                }
+                calculateTotalOvertimeHours();
+            }
+
+            function calculateTotalOvertimeHours() {
+    const overtimeHoursPerDay = parseFloat(document.getElementById('overtimeHoursPerDay').value) || 0;
+    const overtimeDaysPerMonth = parseInt(document.getElementById('overtimeDaysPerMonth').value) || 0;
+    let overtimeMonths = parseInt(document.getElementById('overtimeMonths').value);
+
+    // منطق جديد: إذا كانت فارغة أو 0 أو 1 => تعتبر 1
+    if (!overtimeMonths || overtimeMonths <= 1) {
+        overtimeMonths = 1;
+    }
+
+    const monthlyManual = parseFloat(document.getElementById('overtimeHoursPerMonth').value) || 0;
+    let total = 0;
+
+    if (manualOvertimeInputEl.checked && monthlyManual > 0) {
+        total = monthlyManual * overtimeMonths;
+    } else {
+        total = overtimeHoursPerDay * overtimeDaysPerMonth * overtimeMonths;
+    }
+
+    document.getElementById('totalOvertimeHours').value = total > 0 ? total : '';
+}
+
+            // Attach listeners (ensure we don't duplicate if already attached)
+            ['overtimeHoursPerDay','overtimeDaysPerMonth','overtimeHoursPerMonth','overtimeMonths'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.removeEventListener('input', calculateOvertimeHours);
+                    el.removeEventListener('input', calculateTotalOvertimeHours);
+                    el.addEventListener('input', () => {
+                        calculateOvertimeHours();
+                        calculateTotalOvertimeHours();
+                    });
+                }
+            });
+
 
         function calculateTotalVacation() {
             const extraVacationAgreed = document.getElementById('extraVacationAgreed').checked;
@@ -1054,6 +1314,9 @@ input:disabled {
         function calculateRights() {
             const wageType = document.getElementById('wageType').value;
             const lastWage = parseFloat(document.getElementById('lastWage').value) || 0;
+            const wageDiffChecked = document.getElementById('wageDiffCheckbox').checked;
+            const agreedWage = parseFloat(document.getElementById('agreedWage').value) || 0;
+
             const contractType = document.getElementById('contractType').value;
             const unpaidMonths = parseInt(document.getElementById('unpaidMonths').value) || 0;
             const unpaidDays = parseInt(document.getElementById('unpaidDays').value) || 0;
@@ -1068,8 +1331,13 @@ input:disabled {
             const overtimeHoursPerDay = parseFloat(document.getElementById('overtimeHoursPerDay').value) || 0;
             const overtimeDaysPerMonth = parseInt(document.getElementById('overtimeDaysPerMonth').value) || 0;
             const overtimeHoursPerMonth = parseFloat(document.getElementById('overtimeHoursPerMonth').value) || 0;
-            // If user didn't enter months, assume 1
-            const overtimeMonths = parseInt(document.getElementById('overtimeMonths').value) || 1;
+            
+            // التعديل الرئيسي: إذا كانت القيمة فارغة أو 0 أو 1، نعتبرها 1
+            let overtimeMonths = parseInt(document.getElementById('overtimeMonths').value);
+            if (!overtimeMonths || overtimeMonths <= 1) {
+                overtimeMonths = 1;
+            }
+            
             const holidayDays = parseInt(document.getElementById('holidayDays').value) || 0;
             const fridayDays = parseInt(document.getElementById('fridayDays').value) || 0;
             const contractDuration = parseInt(document.getElementById('contractDuration').value) || 0;
@@ -1078,6 +1346,17 @@ input:disabled {
             const arbitraryDismissal = document.getElementById('arbitraryDismissal').checked;
             const extraVacationAgreed = document.getElementById('extraVacationAgreed').checked;
             const manualOvertimeInput = document.getElementById('manualOvertimeInput').checked;
+
+            // إضافة خيارات الرواتب الإضافية
+            const extraSalariesChecked = document.getElementById('extraSalariesCheckbox').checked;
+            const thirteenthSalary = document.getElementById('thirteenthSalary').checked;
+            const fourteenthSalary = document.getElementById('fourteenthSalary').checked;
+            const fifteenthSalary = document.getElementById('fifteenthSalary').checked;
+            const sixteenthSalary = document.getElementById('sixteenthSalary').checked;
+
+            // إضافة الرصيد الادخاري
+            const savingsBalanceChecked = document.getElementById('savingsBalanceCheckbox').checked;
+            const savingsBalance = parseFloat(document.getElementById('savingsBalance').value) || 0;
 
             if (!wageType) {
                 alert(currentLanguage === 'ar' ? "يرجى اختيار نوع الأجر" : "Please select wage type");
@@ -1090,13 +1369,39 @@ input:disabled {
                 return;
             }
 
+            // مدة الخدمة بالشهور (قد تُستخدم احتياطاً)
             const totalServiceMonths = (serviceYears * 12) + serviceMonths + (serviceDays / 30);
-            const dailyWage = wageType === 'daily' ? lastWage : lastWage / 30;
-            const monthlyWage = wageType === 'monthly' ? lastWage : lastWage * 30;
+
+            // ---------- Wage used for calculations ----------
+            // إذا تم تفعيل فرق الأجور والراتب المتفق عليه مُدخل وصالح، نستخدم agreedWage كأجر معتمد
+            let wageUsed = lastWage;
+            if (wageDiffChecked && agreedWage > 0) {
+                wageUsed = agreedWage;
+            }
+
+            // تحويلات الأجر
+            const dailyWage = wageType === 'daily' ? wageUsed : (wageUsed / 30);
+            const monthlyWage = wageType === 'monthly' ? wageUsed : (wageUsed * 30);
             const hourlyWage = dailyWage / 8;
-            const unpaidSalaries = ((unpaidMonths + extraUnpaidMonths) * monthlyWage) + (unpaidDays * dailyWage);
+
+            // ---------- Unpaid salaries (use wageUsed for monthly/daily) ----------
+            // التعديل المهم: إذا كان العقد محدد المدة وتم إنهاؤه برضا الطرفين، لا نحتسب الرواتب المستحقة
+            let unpaidSalaries = 0;
+            let showUnpaidSalaries = true;
+            
+            if (contractType === 'definite' && terminationType === 'mutual') {
+                // في حالة إنهاء العقد المحدد المدة برضا الطرفين، لا يستحق العامل رواتب عن المدة المتبقية
+                unpaidSalaries = extraUnpaidMonths * monthlyWage; // فقط الأشهر الإضافية المستحقة
+                showUnpaidSalaries = false;
+            } else {
+                // في الحالات الأخرى، نحتسب جميع الرواتب المستحقة
+                unpaidSalaries = ((unpaidMonths + extraUnpaidMonths) * monthlyWage) + (unpaidDays * dailyWage);
+            }
+
+            // ---------- Vacation pay ----------
             const vacationPay = vacationDays * dailyWage;
 
+            // ---------- End of service ----------
             let endOfServiceCompensation = 0;
             let explanation = "";
             let socialSecurityNote = "";
@@ -1119,6 +1424,7 @@ input:disabled {
                 socialSecurityNote = translations[currentLanguage]['endOfServiceNote'];
             }
 
+            // ---------- Notice compensation ----------
             let noticeCompensation = 0;
             let noticeExplanation = "";
             if (contractType === 'definite') {
@@ -1129,7 +1435,7 @@ input:disabled {
                 noticeExplanation = noticeMonth ? translations[currentLanguage]['noticeCompensationYes'] : translations[currentLanguage]['noticeCompensationNo'];
             }
 
-            // حساب الأجور الإضافية
+            // ---------- Overtime pay ----------
             let overtimePay = 0;
             if (overtimeHoursPerMonth > 0) {
                 overtimePay = overtimeHoursPerMonth * overtimeMonths * hourlyWage * 1.25;
@@ -1137,14 +1443,74 @@ input:disabled {
                 overtimePay = overtimeHoursPerDay * overtimeDaysPerMonth * overtimeMonths * hourlyWage * 1.25;
             }
 
+            // ---------- Holiday & Friday pay ----------
             const holidayPay = holidayDays * dailyWage * 1.5;
             const fridayPay = fridayDays * dailyWage * 1.5;
 
-            const totalCompensation = unpaidSalaries + vacationPay + endOfServiceCompensation +
-                noticeCompensation + overtimePay + holidayPay + fridayPay + arbitraryDismissalCompensation;
+            // ---------- Wage difference calculation ----------
+            // التعديل المطلوب: استخدام آخر سنتين فقط من مدة الخدمة لحساب فرق الأجور
+            let wageDifferenceTotal = 0;
+            let wageDifferencePerMonth = 0;
+            let wageDifferenceExplanation = "";
+            let wageDifferenceCalculation = "";
+            if (wageDiffChecked && agreedWage > 0) {
+                // حساب فرق الأجر الشهري
+                const lastMonthly = wageType === 'monthly' ? lastWage : (lastWage * 30);
+                const agreedMonthly = wageType === 'monthly' ? agreedWage : (agreedWage * 30);
+                wageDifferencePerMonth = agreedMonthly - lastMonthly;
 
+                // استخدام آخر سنتين فقط من مدة الخدمة (الحد الأقصى 24 شهر)
+                let totalServiceMonthsForDiff = serviceYears * 12 + serviceMonths + (serviceDays / 30);
+                
+                // التعديل المطلوب: الحد الأقصى لاحتساب فرق الأجور هو 24 شهر (سنتين)
+                if (totalServiceMonthsForDiff > 24) {
+                    totalServiceMonthsForDiff = 24;
+                }
+                
+                wageDifferenceTotal = wageDifferencePerMonth * totalServiceMonthsForDiff;
+                // لا نعرض قيم سالبة (إذا دفَع صاحب العمل أكثر من المتفق عليه)
+                if (wageDifferenceTotal < 0) wageDifferenceTotal = 0;
+
+                wageDifferenceExplanation = translations[currentLanguage]['wageDifferenceExplanation'];
+                
+                // إنشاء نص يوضح كيفية الحساب
+                wageDifferenceCalculation = translations[currentLanguage]['wageDifferenceCalculation']
+                    .replace('${agreedWage}', agreedWage)
+                    .replace('${lastWage}', lastWage)
+                    .replace('${totalServiceMonthsForDiff}', totalServiceMonthsForDiff.toFixed(2))
+                    .replace('${wageDifferenceTotal}', wageDifferenceTotal.toFixed(2));
+            }
+
+            // ---------- حساب الرواتب الإضافية ----------
+            let extraSalariesTotal = 0;
+            let extraSalariesNumbers = [];
+
+            if (extraSalariesChecked) {
+                // جمع الأرقام المختارة
+                if (thirteenthSalary) extraSalariesNumbers.push("13");
+                if (fourteenthSalary) extraSalariesNumbers.push("14");
+                if (fifteenthSalary) extraSalariesNumbers.push("15");
+                if (sixteenthSalary) extraSalariesNumbers.push("16");
+
+                // حساب قيمة الرواتب الإضافية (كل راتب إضافي يساوي الراتب الشهري)
+                extraSalariesTotal = extraSalariesNumbers.length * monthlyWage;
+            }
+
+            // ---------- Total compensation ----------
+            const totalCompensation = unpaidSalaries + vacationPay + endOfServiceCompensation +
+                noticeCompensation + overtimePay + holidayPay + fridayPay + arbitraryDismissalCompensation + wageDifferenceTotal + extraSalariesTotal + savingsBalance;
+
+            // ---------- Build results HTML ----------
             let html = `
-                <div class="result-item"><span>${translations[currentLanguage]['unpaidSalaries']}:</span><span>${unpaidSalaries.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
+                <div class="result-item"><span style="color:#000000;font-weight:800">${translations[currentLanguage]['wageUsedLabel']}:</span><span style="color:#000000;font-weight:800">${wageUsed.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
+            `;
+
+            // إظهار بند الرواتب المستحقة فقط إذا كان مسموحاً به
+            if (showUnpaidSalaries || unpaidSalaries > 0) {
+                html += `<div class="result-item"><span>${translations[currentLanguage]['unpaidSalaries']}:</span><span>${unpaidSalaries.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
+            }
+
+            html += `
                 <div class="result-item"><span>${translations[currentLanguage]['vacationPay']}:</span><span>${vacationPay.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
                 <div class="result-item"><span>${translations[currentLanguage]['endOfService']}:</span><span>${endOfServiceCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
                 <div class="result-item"><span>${translations[currentLanguage]['noticeCompensation']}:</span><span>${noticeCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>
@@ -1157,17 +1523,46 @@ input:disabled {
                 html += `<div class="result-item"><span>${translations[currentLanguage]['arbitraryDismissalComp']}:</span><span>${arbitraryDismissalCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
             }
 
+            if (wageDifferenceTotal > 0) {
+                html += `<div class="result-item"><span>${translations[currentLanguage]['wageDifferenceLabel']}:</span><span>${wageDifferenceTotal.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
+                html += `<div class="result-note">${wageDifferenceExplanation}</div>`;
+                html += `<div class="result-note">${wageDifferenceCalculation}</div>`;
+            }
+
+            // إضافة الرواتب الإضافية إذا تم اختيارها
+            if (extraSalariesChecked && extraSalariesTotal > 0) {
+                const numbersText = extraSalariesNumbers.join(" و");
+                html += `<div class="result-item"><span>${translations[currentLanguage]['extraSalariesTotal']} (${numbersText}):</span><span>${extraSalariesTotal.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
+            }
+
+            // إضافة الرصيد الادخاري إذا تم اختياره
+            if (savingsBalanceChecked && savingsBalance > 0) {
+                html += `<div class="result-item"><span>${translations[currentLanguage]['savingsBalance']}:</span><span>${savingsBalance.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
+            }
+
             html += `<div class="result-item"><span>${translations[currentLanguage]['total']}:</span><span>${totalCompensation.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
             html += `<div class="result-note">${explanation}</div>`;
             html += `<div class="result-note">${noticeExplanation}</div>`;
+            
+            // إضافة ملاحظة خاصة بإنهاء العقد برضا الطرفين
+            if (contractType === 'definite' && terminationType === 'mutual') {
+                html += `<div class="result-note">${translations[currentLanguage]['mutualTerminationNote']}</div>`;
+            }
+            
             if (arbitraryDismissalExplanation) html += `<div class="result-note">${arbitraryDismissalExplanation}</div>`;
             if (socialSecurityNote) html += `<div class="result-note">${socialSecurityNote}</div>`;
             html += `<div class="result-note">${translations[currentLanguage]['vacationCalculationNote']}</div>`;
-            if (extraVacationAgreed) {
-                html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم استخدام قيمة الإجازات الإضافية المتفق عليها يدوياً' : 'Manually entered additional vacation value was used'}</div>`;
+            if (wageDiffChecked && agreedWage > 0) {
+                html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم استخدام الراتب المتفق عليه في جميع حسابات المستحقات وإضافة بند فرق الأجور.' : 'Agreed wage was used for all entitlement calculations and wage difference was added.'}</div>`;
             }
             if (manualOvertimeInput) {
                 html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم استخدام قيمة ساعات العمل الإضافي الشهرية المدخلة يدوياً' : 'Manually entered monthly overtime hours value was used'}</div>`;
+            }
+            if (extraSalariesChecked && extraSalariesTotal > 0) {
+                html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم إضافة الرواتب الإضافية المختارة (كل راتب إضافي يساوي الراتب الشهري)' : 'Selected extra salaries have been added (each extra salary equals monthly wage)'}</div>`;
+            }
+            if (savingsBalanceChecked && savingsBalance > 0) {
+                html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم إضافة الرصيد الادخاري إلى إجمالي المستحقات' : 'Savings balance has been added to total entitlements'}</div>`;
             }
 
             document.getElementById('resultContent').innerHTML = html;
