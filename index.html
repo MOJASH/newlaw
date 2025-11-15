@@ -268,6 +268,18 @@ input:disabled {
     margin-top: 8px;
     border-right: 4px solid var(--primary-color);
 }
+
+/* تنسيق ملاحظة الاحتساب النسبي */
+.proportional-note {
+    background-color: var(--blue-light);
+    border-right: 4px solid var(--primary-color);
+    padding: 8px 10px;
+    margin-top: 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #555;
+    display: none;
+}
 </style>
 </head>
 <body>
@@ -382,23 +394,31 @@ input:disabled {
                     </div>
 
                     <div class="extra-salaries-options" id="extraSalariesOptions" style="display:none;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="proportionalExtraSalaries" tabindex="34">
+                            <label for="proportionalExtraSalaries" data-translate="proportionalExtraSalaries">احتساب الرواتب الإضافية بشكل نسبي</label>
+                        </div>
+                        <!-- إضافة الملاحظة هنا -->
+                        <div class="proportional-note" id="proportionalNote" style="display:none;">
+                            <span data-translate="proportionalNoteText">يُجرى احتساب الراتب الإضافي بشكل نسبي وفق مدة الخدمة الفعلية المُدخلة بالأشهر والأيام.</span>
+                        </div>
                         <div class="compact-row">
                             <div class="checkbox-group">
-                                <input type="checkbox" id="thirteenthSalary" tabindex="34">
+                                <input type="checkbox" id="thirteenthSalary" tabindex="35">
                                 <label for="thirteenthSalary" data-translate="thirteenthSalary">الراتب الثالث عشر</label>
                             </div>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="fourteenthSalary" tabindex="35">
+                                <input type="checkbox" id="fourteenthSalary" tabindex="36">
                                 <label for="fourteenthSalary" data-translate="fourteenthSalary">الراتب الرابع عشر</label>
                             </div>
                         </div>
                         <div class="compact-row">
                             <div class="checkbox-group">
-                                <input type="checkbox" id="fifteenthSalary" tabindex="36">
+                                <input type="checkbox" id="fifteenthSalary" tabindex="37">
                                 <label for="fifteenthSalary" data-translate="fifteenthSalary">الراتب الخامس عشر</label>
                             </div>
                             <div class="checkbox-group">
-                                <input type="checkbox" id="sixteenthSalary" tabindex="37">
+                                <input type="checkbox" id="sixteenthSalary" tabindex="38">
                                 <label for="sixteenthSalary" data-translate="sixteenthSalary">الراتب السادس عشر</label>
                             </div>
                         </div>
@@ -406,14 +426,14 @@ input:disabled {
 
                     <!-- إضافة خيار الرصيد الادخاري -->
                     <div class="checkbox-group" style="margin-top: 12px;">
-                        <input type="checkbox" id="savingsBalanceCheckbox" tabindex="38">
+                        <input type="checkbox" id="savingsBalanceCheckbox" tabindex="39">
                         <label for="savingsBalanceCheckbox" data-translate="savingsBalanceCheckboxLabel">هل يوجد رصيد ادخاري؟</label>
                     </div>
 
                     <div class="savings-balance-group" id="savingsBalanceGroup">
                         <div class="input-group">
                             <label for="savingsBalance" data-translate="savingsBalanceLabel">الرصيد الادخاري (دينار)</label>
-                            <input type="number" id="savingsBalance" min="0" step="any" tabindex="39">
+                            <input type="number" id="savingsBalance" min="0" step="any" tabindex="40">
                         </div>
                     </div>
                 </div>
@@ -698,15 +718,19 @@ input:disabled {
                 wageDifferenceCalculation: "حساب فرق الأجور: (${agreedWage} - ${lastWage}) × ${totalServiceMonthsForDiff} أشهر = ${wageDifferenceTotal} دينار",
                 // إضافة الترجمات الجديدة للرواتب الإضافية
                 extraSalariesCheckboxLabel: "هل يوجد راتب ثالث عشر أو رابع عشر أو أكثر؟",
+                proportionalExtraSalaries: "احتساب الرواتب الإضافية بشكل نسبي",
                 thirteenthSalary: "الراتب الثالث عشر",
                 fourteenthSalary: "الراتب الرابع عشر",
                 fifteenthSalary: "الراتب الخامس عشر",
                 sixteenthSalary: "الراتب السادس عشر",
                 extraSalariesTotal: "مجموع الرواتب الإضافية",
+                proportionalExtraSalariesTotal: "مجموع الرواتب الإضافية (النسبي)",
                 // إضافة الترجمات الجديدة للرصيد الادخاري
                 savingsBalanceCheckboxLabel: "هل يوجد رصيد ادخاري؟",
                 savingsBalanceLabel: "الرصيد الادخاري (دينار)",
-                savingsBalance: "الرصيد الادخاري"
+                savingsBalance: "الرصيد الادخاري",
+                // إضافة ترجمة الملاحظة الجديدة
+                proportionalNoteText: "يُجرى احتساب الراتب الإضافي بشكل نسبي وفق مدة الخدمة الفعلية المُدخلة بالأشهر والأيام."
             },
             en: {
                 creatorInfo: "Created by: Lawyer Mohammed Al-Shouha",
@@ -807,15 +831,19 @@ input:disabled {
                 wageDifferenceCalculation: "Wage difference calculation: (${agreedWage} - ${lastWage}) × ${totalServiceMonthsForDiff} months = ${wageDifferenceTotal} JOD",
                 // إضافة الترجمات الجديدة للرواتب الإضافية
                 extraSalariesCheckboxLabel: "Is there a thirteenth, fourteenth, or more salary?",
+                proportionalExtraSalaries: "Calculate extra salaries proportionally",
                 thirteenthSalary: "Thirteenth Salary",
                 fourteenthSalary: "Fourteenth Salary",
                 fifteenthSalary: "Fifteenth Salary",
                 sixteenthSalary: "Sixteenth Salary",
                 extraSalariesTotal: "Total Extra Salaries",
+                proportionalExtraSalariesTotal: "Total Extra Salaries (Proportional)",
                 // إضافة الترجمات الجديدة للرصيد الادخاري
                 savingsBalanceCheckboxLabel: "Is there a savings balance?",
                 savingsBalanceLabel: "Savings Balance (JOD)",
-                savingsBalance: "Savings Balance"
+                savingsBalance: "Savings Balance",
+                // إضافة ترجمة الملاحظة الجديدة
+                proportionalNoteText: "Extra salary is calculated proportionally based on the actual service duration entered in months and days."
             }
         };
 
@@ -1054,6 +1082,8 @@ input:disabled {
             // إضافة مستمع لخانة اختيار الرواتب الإضافية
             const extraSalariesCheckbox = document.getElementById('extraSalariesCheckbox');
             const extraSalariesOptions = document.getElementById('extraSalariesOptions');
+            const proportionalExtraSalariesEl = document.getElementById('proportionalExtraSalaries');
+            const proportionalNoteEl = document.getElementById('proportionalNote');
             
             extraSalariesCheckbox.addEventListener('change', function() {
                 if (this.checked) {
@@ -1065,6 +1095,18 @@ input:disabled {
                     document.getElementById('fourteenthSalary').checked = false;
                     document.getElementById('fifteenthSalary').checked = false;
                     document.getElementById('sixteenthSalary').checked = false;
+                    proportionalExtraSalariesEl.checked = false;
+                    proportionalNoteEl.style.display = 'none';
+                }
+                setTimeout(setupEnterNavigation, 100);
+            });
+
+            // إضافة مستمع لخانة اختيار الاحتساب النسبي
+            proportionalExtraSalariesEl.addEventListener('change', function() {
+                if (this.checked) {
+                    proportionalNoteEl.style.display = 'block';
+                } else {
+                    proportionalNoteEl.style.display = 'none';
                 }
                 setTimeout(setupEnterNavigation, 100);
             });
@@ -1188,6 +1230,8 @@ input:disabled {
                 document.getElementById('fourteenthSalary').checked = false;
                 document.getElementById('fifteenthSalary').checked = false;
                 document.getElementById('sixteenthSalary').checked = false;
+                proportionalExtraSalariesEl.checked = false;
+                proportionalNoteEl.style.display = 'none';
                 // إعادة تعيين خيار الرصيد الادخاري
                 savingsBalanceCheckbox.checked = false;
                 savingsBalanceGroup.style.display = 'none';
@@ -1349,6 +1393,7 @@ input:disabled {
 
             // إضافة خيارات الرواتب الإضافية
             const extraSalariesChecked = document.getElementById('extraSalariesCheckbox').checked;
+            const proportionalExtraSalaries = document.getElementById('proportionalExtraSalaries').checked;
             const thirteenthSalary = document.getElementById('thirteenthSalary').checked;
             const fourteenthSalary = document.getElementById('fourteenthSalary').checked;
             const fifteenthSalary = document.getElementById('fifteenthSalary').checked;
@@ -1492,8 +1537,22 @@ input:disabled {
                 if (fifteenthSalary) extraSalariesNumbers.push("15");
                 if (sixteenthSalary) extraSalariesNumbers.push("16");
 
-                // حساب قيمة الرواتب الإضافية (كل راتب إضافي يساوي الراتب الشهري)
-                extraSalariesTotal = extraSalariesNumbers.length * monthlyWage;
+                if (proportionalExtraSalaries) {
+                    // حساب الرواتب الإضافية بشكل نسبي
+                    // إذا كانت مدة الخدمة تحتوي على سنوات فقط (بدون أشهر وبدون أيام) - ندفع الراتب كاملًا
+                    if (serviceMonths === 0 && serviceDays === 0 && serviceYears > 0) {
+                        extraSalariesTotal = extraSalariesNumbers.length * monthlyWage;
+                    } else {
+                        // تجاهل السنوات نهائيًا، واستخدام الأشهر والأيام فقط
+                        const monthlyPortion = (monthlyWage / 12) * serviceMonths;
+                        const dailyPortion = (monthlyWage / 12 / 30) * serviceDays;
+                        const proportionalValue = monthlyPortion + dailyPortion;
+                        extraSalariesTotal = extraSalariesNumbers.length * proportionalValue;
+                    }
+                } else {
+                    // حساب الرواتب الإضافية كاملة (السلوك الحالي)
+                    extraSalariesTotal = extraSalariesNumbers.length * monthlyWage;
+                }
             }
 
             // ---------- Total compensation ----------
@@ -1532,7 +1591,11 @@ input:disabled {
             // إضافة الرواتب الإضافية إذا تم اختيارها
             if (extraSalariesChecked && extraSalariesTotal > 0) {
                 const numbersText = extraSalariesNumbers.join(" و");
-                html += `<div class="result-item"><span>${translations[currentLanguage]['extraSalariesTotal']} (${numbersText}):</span><span>${extraSalariesTotal.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
+                const label = proportionalExtraSalaries ? 
+                    translations[currentLanguage]['proportionalExtraSalariesTotal'] : 
+                    translations[currentLanguage]['extraSalariesTotal'];
+                
+                html += `<div class="result-item"><span>${label} (${numbersText}):</span><span>${extraSalariesTotal.toFixed(2)} ${translations[currentLanguage]['dinar']}</span></div>`;
             }
 
             // إضافة الرصيد الادخاري إذا تم اختياره
@@ -1559,7 +1622,11 @@ input:disabled {
                 html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم استخدام قيمة ساعات العمل الإضافي الشهرية المدخلة يدوياً' : 'Manually entered monthly overtime hours value was used'}</div>`;
             }
             if (extraSalariesChecked && extraSalariesTotal > 0) {
-                html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم إضافة الرواتب الإضافية المختارة (كل راتب إضافي يساوي الراتب الشهري)' : 'Selected extra salaries have been added (each extra salary equals monthly wage)'}</div>`;
+                if (proportionalExtraSalaries) {
+                    html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم احتساب الرواتب الإضافية بشكل نسبي بناءً على مدة الخدمة بالأشهر والأيام' : 'Extra salaries were calculated proportionally based on service duration in months and days'}</div>`;
+                } else {
+                    html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم إضافة الرواتب الإضافية المختارة (كل راتب إضافي يساوي الراتب الشهري)' : 'Selected extra salaries have been added (each extra salary equals monthly wage)'}</div>`;
+                }
             }
             if (savingsBalanceChecked && savingsBalance > 0) {
                 html += `<div class="result-note">${currentLanguage === 'ar' ? 'تم إضافة الرصيد الادخاري إلى إجمالي المستحقات' : 'Savings balance has been added to total entitlements'}</div>`;
